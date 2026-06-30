@@ -6,7 +6,7 @@ node_modules/
 .env.*
 
 # Generated PDFs
-*.pdf
+
 
 # OS files
 .DS_Store
