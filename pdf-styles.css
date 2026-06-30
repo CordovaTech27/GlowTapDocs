@@ -1,0 +1,282 @@
+/* GlowTap Document Theme
+   Brand: GlowTap | Tagline: Tap. Book. Glow.
+   Primary: #6C3AED | Accent: Lavender/Pink | Neutral: White, Grey, Charcoal
+*/
+
+:root {
+  --gt-primary: #6C3AED;
+  --gt-primary-dark: #5B21B6;
+  --gt-primary-light: #EDE9FE;
+  --gt-accent-lavender: #DDD6FE;
+  --gt-accent-pink: #F472B6;
+  --gt-accent-gradient: linear-gradient(135deg, #6C3AED 0%, #A78BFA 50%, #F472B6 100%);
+  --gt-white: #FFFFFF;
+  --gt-grey-100: #F3F4F6;
+  --gt-grey-200: #E5E7EB;
+  --gt-grey-400: #9CA3AF;
+  --gt-grey-600: #4B5563;
+  --gt-charcoal: #1F2937;
+  --gt-charcoal-soft: #374151;
+}
+
+body {
+  font-family: 'Segoe UI', 'Inter', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  color: var(--gt-charcoal-soft);
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ── Cover Page ── */
+.doc-cover {
+  page-break-after: always;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 40px;
+  background: var(--gt-accent-gradient);
+  border-radius: 0;
+  margin: -20mm -15mm 0 -15mm;
+  position: relative;
+}
+
+.doc-cover::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(244, 114, 182, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.3) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.doc-cover-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.doc-cover .brand-logo-wide {
+  width: 320px;
+  max-width: 90%;
+  height: auto;
+  margin: 0 auto 40px;
+  display: block;
+}
+
+.doc-cover .brand-logo {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+}
+
+.doc-cover .brand-name {
+  font-size: 42pt;
+  font-weight: 700;
+  color: var(--gt-white);
+  letter-spacing: -1px;
+  margin: 0 0 8px;
+  border: none;
+  page-break-after: avoid;
+}
+
+.doc-cover .brand-tagline {
+  font-size: 14pt;
+  font-weight: 500;
+  color: var(--gt-accent-lavender);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 0 0 48px;
+}
+
+.doc-cover .doc-type {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 16px 32px;
+  margin-bottom: 32px;
+}
+
+.doc-cover .doc-type h2 {
+  font-size: 18pt;
+  color: var(--gt-white);
+  margin: 0 0 4px;
+  border: none;
+  padding: 0;
+}
+
+.doc-cover .doc-type p {
+  font-size: 11pt;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.doc-cover .doc-meta {
+  font-size: 10pt;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+}
+
+.doc-cover .doc-meta strong {
+  color: var(--gt-white);
+}
+
+/* ── Typography ── */
+h1 {
+  color: var(--gt-primary);
+  border-bottom: 3px solid var(--gt-primary);
+  padding-bottom: 8px;
+  font-size: 22pt;
+  font-weight: 700;
+  page-break-after: avoid;
+}
+
+h2 {
+  color: var(--gt-primary-dark);
+  border-bottom: 2px solid var(--gt-accent-lavender);
+  padding-bottom: 6px;
+  margin-top: 28px;
+  font-size: 16pt;
+  font-weight: 600;
+  page-break-after: avoid;
+}
+
+h3 {
+  color: var(--gt-primary);
+  font-size: 13pt;
+  font-weight: 600;
+  page-break-after: avoid;
+}
+
+h4 {
+  color: var(--gt-charcoal);
+  font-size: 11pt;
+  font-weight: 600;
+  page-break-after: avoid;
+}
+
+/* ── Tables ── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 14px 0;
+  font-size: 10pt;
+  page-break-inside: avoid;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+th, td {
+  border: 1px solid var(--gt-grey-200);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--gt-primary-light);
+  color: var(--gt-primary-dark);
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background-color: var(--gt-grey-100);
+}
+
+/* ── Code ── */
+code {
+  background-color: var(--gt-primary-light);
+  color: var(--gt-primary-dark);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9pt;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+pre {
+  background-color: var(--gt-charcoal);
+  color: var(--gt-grey-200);
+  padding: 14px 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--gt-accent-pink);
+  font-size: 8.5pt;
+  line-height: 1.45;
+  overflow-x: auto;
+  page-break-inside: avoid;
+}
+
+pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+/* ── Blockquote ── */
+blockquote {
+  border-left: 4px solid var(--gt-accent-pink);
+  margin: 14px 0;
+  padding: 10px 18px;
+  background: linear-gradient(90deg, var(--gt-primary-light) 0%, rgba(221, 214, 254, 0.3) 100%);
+  color: var(--gt-primary-dark);
+  border-radius: 0 6px 6px 0;
+}
+
+/* ── Horizontal Rule ── */
+hr {
+  border: none;
+  border-top: 2px solid var(--gt-accent-lavender);
+  margin: 28px 0;
+}
+
+ul, ol {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+li {
+  margin: 4px 0;
+}
+
+li::marker {
+  color: var(--gt-primary);
+}
+
+strong {
+  color: var(--gt-charcoal);
+}
+
+a {
+  color: var(--gt-primary);
+}
+
+/* ── Document meta block (below cover) ── */
+.doc-info-bar {
+  background: var(--gt-grey-100);
+  border-left: 4px solid var(--gt-primary);
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  border-radius: 0 6px 6px 0;
+  font-size: 10pt;
+  color: var(--gt-grey-600);
+}
+
+.doc-info-bar strong {
+  color: var(--gt-charcoal);
+}
+
+@media print {
+  body { font-size: 10pt; }
+  h1 { font-size: 20pt; }
+  h2 { font-size: 14pt; }
+  pre { font-size: 7.5pt; }
+  .doc-cover {
+    margin: -20mm -15mm 0 -15mm;
+  }
+}
