@@ -14,9 +14,8 @@
       --pink: #FF03C8;
       --text: #1E2A32;
       --muted: #6B7A88;
-      --border: #E3DFEA;
-      --bg: #F4F2F7;
---sidebar-bg: #F4F2F7;
+      --border: #E2E8F0;
+      --bg: #F8F9FC;
       --white: #FFFFFF;
       --green: #059669;
       --amber: #D97706;
@@ -44,8 +43,8 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
-        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(123, 0, 255, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 5% 90%, rgba(255, 3, 200, 0.05) 0%, transparent 55%);
       z-index: 0;
     }
 
@@ -54,7 +53,7 @@
 
     .sidebar {
       width: 280px;
-      background: var(--sidebar-bg, var(--bg));
+      background: var(--white);
       border-right: 1px solid var(--border);
       box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
       display: flex;
@@ -72,7 +71,7 @@
       flex: none;
       padding: 0;
       border: none;
-      background: var(--sidebar-bg, var(--bg));
+      background: var(--white);
       overflow: hidden;
     }
     .sidebar-logo img { display: block; width: 280px; height: 100px; }

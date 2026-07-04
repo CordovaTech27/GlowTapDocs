@@ -10,27 +10,19 @@
     :root {
       --purple: #7B00FF;
       --purple-mid: #9B2FD9;
-      --purple-dark: #5B21B6;
       --purple-light: #F3EEFF;
-      --lavender: #DDD6FE;
       --pink: #FF03C8;
-      --pink-soft: #FDF2F8;
       --text: #1E2A32;
       --muted: #6B7A88;
-      --border: #E3DFEA;
-      --bg: #F4F2F7;
-      --sidebar-bg: #F4F2F7;
-      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --bg: #F8F9FC;
       --white: #FFFFFF;
       --green: #059669;
       --amber: #D97706;
       --red: #DC2626;
       --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
-      --gradient-soft: linear-gradient(135deg, rgba(243, 238, 255, 0.92) 0%, rgba(255, 255, 255, 0.98) 55%, rgba(237, 233, 254, 0.45) 100%);
-      --gradient-header: linear-gradient(120deg, rgba(123, 0, 255, 0.06) 0%, rgba(155, 47, 217, 0.04) 100%);
-      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.06);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
       --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
-      --shadow-glow: 0 0 0 1px rgba(123, 0, 255, 0.06), 0 8px 28px rgba(155, 47, 217, 0.12);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,8 +43,8 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
-        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(123, 0, 255, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 5% 90%, rgba(255, 3, 200, 0.05) 0%, transparent 55%);
       z-index: 0;
     }
 
@@ -69,7 +61,7 @@
 
     .sidebar {
       width: 280px;
-      background: var(--sidebar-bg, var(--bg));
+      background: var(--white);
       border-right: 1px solid var(--border);
       box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
       display: flex;
@@ -87,7 +79,7 @@
       flex: none;
       padding: 0;
       border: none;
-      background: var(--sidebar-bg, var(--bg));
+      background: var(--white);
       overflow: hidden;
     }
 
@@ -170,21 +162,20 @@
       gap: 10px;
       padding: 10px 12px;
       border-radius: 12px;
-      background: linear-gradient(135deg, rgba(243, 238, 255, 0.6) 0%, rgba(255, 255, 255, 0.95) 100%);
-      border: 1px solid rgba(123, 0, 255, 0.1);
+      background: var(--bg);
+      border: 1px solid var(--border);
     }
 
     .avatar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: var(--gradient-brand);
-      color: var(--white);
+      background: #EDE9FE;
+      color: var(--purple);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(123, 0, 255, 0.2);
     }
 
     .svg-icon {
@@ -235,52 +226,6 @@
     .page-head h1 { font-size: 1.5rem; font-weight: 700; }
     .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
     .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
-
-    .reports-hero {
-      background: var(--gradient-header);
-      border: 1px solid rgba(123, 0, 255, 0.12);
-      border-radius: 20px;
-      padding: 24px 28px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow-glow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .reports-hero::before {
-      content: '';
-      position: absolute;
-      top: -40%;
-      right: -8%;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: rgba(123, 0, 255, 0.08);
-      filter: blur(40px);
-      pointer-events: none;
-    }
-
-    .reports-hero .page-head { margin-bottom: 0; position: relative; z-index: 1; }
-
-    .reports-hero h1 {
-      background: var(--gradient-brand);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .report-section-head {
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--purple-dark);
-      margin: 8px 0 14px;
-      padding: 10px 16px;
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(243, 238, 255, 0.85) 0%, rgba(237, 233, 254, 0.45) 60%, transparent 100%);
-      border: 1px solid rgba(123, 0, 255, 0.1);
-    }
 
     .btn {
       padding: 9px 18px;
@@ -1053,80 +998,30 @@
     }
 
     .report-card {
-      background: var(--surface, #FFFFFF);
-      border: 1px solid rgba(123, 0, 255, 0.1);
-      border-radius: 18px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 20px;
       box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      min-height: 168px;
-      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .report-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-glow);
-      border-color: rgba(123, 0, 255, 0.22);
-    }
-
-    .report-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--gradient-brand);
-      opacity: 0.65;
+      gap: 10px;
+      min-height: 148px;
     }
 
     .report-card.primary {
       grid-column: 1 / -1;
-      border-color: rgba(123, 0, 255, 0.15);
-      background: linear-gradient(135deg, rgba(243, 238, 255, 0.85) 0%, rgba(237, 233, 254, 0.35) 45%, rgba(255, 255, 255, 0.98) 100%);
+      border-color: #FDE68A;
+      background: linear-gradient(135deg, rgba(255, 251, 235, 0.95) 0%, #fff 55%);
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
       flex-wrap: wrap;
       min-height: auto;
-      box-shadow: var(--shadow-glow);
     }
 
-    .report-card.primary::before {
-      height: 4px;
-      opacity: 1;
-    }
-
-    .report-card-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-    }
-
-    .report-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .report-icon .svg-icon { width: 22px; height: 22px; }
-
-    .report-icon.purple { background: linear-gradient(135deg, #EDE9FE, #DDD6FE); color: var(--purple); box-shadow: 0 4px 12px rgba(123, 0, 255, 0.15); }
-    .report-icon.pink { background: linear-gradient(135deg, #FCE7F3, #FBCFE8); color: #DB2777; box-shadow: 0 4px 12px rgba(255, 3, 200, 0.12); }
-    .report-icon.lavender { background: linear-gradient(135deg, #F3EEFF, #E9D5FF); color: #7C3AED; box-shadow: 0 4px 12px rgba(155, 47, 217, 0.12); }
-    .report-icon.violet { background: linear-gradient(135deg, #EDE9FE, #C4B5FD); color: #6D28D9; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.12); }
-    .report-icon.amber { background: linear-gradient(135deg, #FFFBEB, #FDE68A); color: var(--amber); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.12); }
-
-    .report-card h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .report-card h3 { font-size: 0.95rem; font-weight: 700; }
     .report-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.45; flex: 1; }
 
     .report-card .card-actions {
@@ -1134,16 +1029,6 @@
       gap: 10px;
       flex-shrink: 0;
       flex-wrap: wrap;
-      margin-top: auto;
-    }
-
-    .report-card .btn-primary {
-      padding: 10px 20px;
-      font-size: 0.85rem;
-    }
-
-    .report-card .btn-outline {
-      border-color: rgba(123, 0, 255, 0.3);
     }
 
     .report-type-select {
@@ -1551,18 +1436,15 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 1px solid rgba(123, 0, 255, 0.15);
-      background: linear-gradient(135deg, rgba(243, 238, 255, 0.85) 0%, rgba(237, 233, 254, 0.4) 100%);
-      font-size: 0.82rem;
-      color: var(--purple-dark);
-      margin-bottom: 20px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #BFDBFE;
+      background: #EFF6FF;
+      font-size: 0.8rem;
+      color: #1E40AF;
+      margin-bottom: 16px;
       line-height: 1.5;
-      box-shadow: 0 4px 16px rgba(123, 0, 255, 0.06);
     }
-
-    .info-banner .svg-icon { color: var(--purple); }
 
     .amount-breakdown {
       display: grid;
@@ -1763,15 +1645,13 @@
 
   <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
     <div class="app-content" data-figma-layer="Content Reports">
-      <div class="reports-hero">
-        <div class="page-head">
-          <div>
-            <h1>Reports</h1>
-            <p>Platform analytics and defaulter reports. <span class="screen-tag">RPT-01</span></p>
-          </div>
-          <div class="page-actions">
-            <button type="button" class="btn btn-primary"><svg class="svg-icon"><use href="#i-download"/></svg> Export All</button>
-          </div>
+      <div class="page-head">
+        <div>
+          <h1>Reports</h1>
+          <p>Platform analytics and defaulter reports. <span class="screen-tag">RPT-01</span></p>
+        </div>
+        <div class="page-actions">
+          <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-download"/></svg> Export All</button>
         </div>
       </div>
 
@@ -1781,128 +1661,67 @@
       </div>
 
       <!-- RPT-01 Reports Index -->
-      <div class="report-section-head">Priority Reports</div>
       <div class="report-index-grid" data-figma-frame="RPT-01 Reports Index">
         <div class="report-card primary">
-          <div class="report-card-head">
-            <div class="report-icon amber"><svg class="svg-icon"><use href="#i-alert-triangle"/></svg></div>
-            <div>
-              <h3>Daily Defaulter Report — Primary</h3>
-              <p>Salons with overdue subscription payments beyond grace period. Includes contact details, outstanding amount, and recommended follow-up actions for the ops team.</p>
-            </div>
+          <div>
+            <h3>Daily Defaulter Report — Primary</h3>
+            <p>Salons with overdue subscription payments beyond grace period. Includes contact details, outstanding amount, and recommended follow-up actions for the ops team.</p>
           </div>
           <div class="card-actions">
             <button type="button" class="btn btn-primary">Open Report</button>
             <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-download"/></svg> Export CSV</button>
           </div>
         </div>
-      </div>
 
-      <div class="report-section-head">Revenue &amp; Growth</div>
-      <div class="report-index-grid">
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon purple"><svg class="svg-icon"><use href="#i-coins"/></svg></div>
-            <div>
-              <h3>Revenue Summary</h3>
-              <p>MRR, ARR, subscription revenue, commission revenue, and combined platform revenue.</p>
-            </div>
-          </div>
-          <a href="#modal-revenue-summary" class="btn btn-primary">View Report</a>
+          <h3>Revenue Summary</h3>
+          <p>MRR, ARR, subscription revenue, commission revenue, and combined platform revenue.</p>
+          <a href="#modal-revenue-summary" class="btn btn-outline">View Report</a>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon pink"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></div>
-            <div>
-              <h3>Commission Report</h3>
-              <p>Commission earned by salon, city, and period; average rate and top earners.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Commission Report</h3>
+          <p>Commission earned by salon, city, and period; average rate and top earners.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon lavender"><svg class="svg-icon"><use href="#i-store"/></svg></div>
-            <div>
-              <h3>Salon Growth</h3>
-              <p>New onboardings, approvals pending, and rejection rate trends.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Salon Growth</h3>
+          <p>New onboardings, approvals pending, and rejection rate trends.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon violet"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
-            <div>
-              <h3>Branch Activity</h3>
-              <p>Branch additions, approvals pending, and utilization by plan tier.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
-        </div>
-      </div>
-
-      <div class="report-section-head">Operations &amp; Performance</div>
-      <div class="report-index-grid">
-        <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon purple"><svg class="svg-icon"><use href="#i-credit-card"/></svg></div>
-            <div>
-              <h3>Transaction Volume</h3>
-              <p>End-user B2C transaction trends by salon, city, and service category.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Branch Activity</h3>
+          <p>Branch additions, approvals pending, and utilization by plan tier.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon pink"><svg class="svg-icon"><use href="#i-line-chart"/></svg></div>
-            <div>
-              <h3>Churn &amp; Retention</h3>
-              <p>Salons that did not renew and downgrade patterns over time.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Transaction Volume</h3>
+          <p>End-user B2C transaction trends by salon, city, and service category.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon lavender"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></div>
-            <div>
-              <h3>Support SLA</h3>
-              <p>Ticket volume, resolution time, and open backlog by priority.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Churn &amp; Retention</h3>
+          <p>Salons that did not renew and downgrade patterns over time.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon violet"><svg class="svg-icon"><use href="#i-receipt"/></svg></div>
-            <div>
-              <h3>Discount Utilization</h3>
-              <p>RC/NRC discounts applied and revenue impact analysis.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Support SLA</h3>
+          <p>Ticket volume, resolution time, and open backlog by priority.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon purple"><svg class="svg-icon"><use href="#i-package"/></svg></div>
-            <div>
-              <h3>Plan Distribution</h3>
-              <p>Salons by plan tier and upgrade/downgrade funnel.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Discount Utilization</h3>
+          <p>RC/NRC discounts applied and revenue impact analysis.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
         <div class="report-card">
-          <div class="report-card-head">
-            <div class="report-icon pink"><svg class="svg-icon"><use href="#i-building"/></svg></div>
-            <div>
-              <h3>Geographic Performance</h3>
-              <p>Salon count and revenue breakdown by city and region.</p>
-            </div>
-          </div>
-          <button type="button" class="btn btn-primary">View Report</button>
+          <h3>Plan Distribution</h3>
+          <p>Salons by plan tier and upgrade/downgrade funnel.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
+        </div>
+        <div class="report-card">
+          <h3>Geographic Performance</h3>
+          <p>Salon count and revenue breakdown by city and region.</p>
+          <button type="button" class="btn btn-outline">View Report</button>
         </div>
       </div>
     </div>
