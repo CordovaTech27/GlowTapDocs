@@ -29,6 +29,14 @@ const docs = [
     date: 'June 28, 2026',
   },
   {
+    input: 'Customer-Functional-Spec.md',
+    output: 'Customer-Functional-Spec.pdf',
+    docTitle: 'Functional Specification',
+    docSubtitle: 'End Customer App — Discovery, Booking & Payments',
+    version: '1.2',
+    date: 'June 30, 2026',
+  },
+  {
     input: 'Super-Admin-Solutioning-Spec.md',
     output: 'Super-Admin-Solutioning-Spec.pdf',
     docTitle: 'Solutioning & Technical Architecture',
@@ -40,8 +48,8 @@ const docs = [
     output: 'GlowTap-Pricing-Timeline.pdf',
     docTitle: 'Pricing & Timeline',
     docSubtitle: 'SDLC Delivery Plan — Design + Development Phases',
-    version: '1.3',
-    date: 'June 27, 2026',
+    version: '1.4',
+    date: 'June 30, 2026',
   },
   {
     input: 'Super-Admin-Figma-Screen-Guide.md',

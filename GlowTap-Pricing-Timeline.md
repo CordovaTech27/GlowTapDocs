@@ -1,8 +1,8 @@
 # GlowTap Platform
 ## Pricing & Timeline Document
 
-**Version:** 1.3  
-**Date:** June 27, 2026  
+**Version:** 1.4  
+**Date:** June 30, 2026  
 **Audience:** Stakeholders, project sponsors, delivery team  
 **Purpose:** Define project phases, SDLC-aligned delivery schedule, milestone-based pricing, payment terms, and change-management SLAs for the GlowTap platform (Super Admin, Salon Admin, End Customer).
 
@@ -27,9 +27,9 @@ GlowTap delivery follows a **strict three-phase sequence**. Each phase gates the
 | Phase | Order | Scope | Investment |
 |-------|-------|-------|------------|
 | **Phase 1 — Solutioning** | **1st** | Functional + Solutioning documents (all portals) | Part of **₹2,30,000** (M1, M2) |
-| **Phase 2 — Design** | **2nd** | UI/UX screen designs (Super Admin, Admin, Customer) | **₹60,000** |
+| **Phase 2 — Design** | **2nd** | UI/UX screen designs (Super Admin, Admin, Customer) | **₹50,000** |
 | **Phase 3 — Development** | **3rd** | DB architecture, backend APIs, frontend (React) | Part of **₹2,30,000** (M3–M5) |
-| **Grand Total** | | | **₹2,90,000** |
+| **Grand Total** | | | **₹2,80,000** |
 
 ### Phase Gate Rules
 
@@ -149,12 +149,12 @@ Deliver **first-draft UI/UX screen designs** in Figma for all three portals — 
 |-----------|-------------|--------|------------|
 | **D1 — Advance** | Design kickoff (post-Phase 1) | **₹10,000** | ₹10,000 |
 | **D2 — Super Admin Screen Closure** | Super Admin designs approved | **₹15,000** | ₹25,000 |
-| **D3 — Admin Portal Design** | Salon Admin designs accepted | **₹20,000** | ₹45,000 |
-| **D4 — Customer Screen Design** | Customer designs accepted | **₹15,000** | **₹60,000** |
+| **D3 — Admin Portal Design** | Salon Admin designs accepted | **₹15,000** | ₹40,000 |
+| **D4 — Customer Screen Design** | Customer designs accepted | **₹10,000** | **₹50,000** |
 
-**Phase 2 Total: ₹60,000**
+**Phase 2 Total: ₹50,000**
 
-> Revised from ₹40,000 to **₹60,000** for complexity, logo integration, and iteration volume.
+> Payment schedule: **₹10,000** advance (D1), **₹15,000** after Super Admin (D2), **₹15,000** after Admin (D3), **₹10,000** after Customer (D4).
 
 > **Phase 2 full closure (D4)** is required for frontend. **Phase 3A backend closure** is also required. Frontend kickoff occurs when **both** are complete.
 
@@ -298,9 +298,9 @@ Phase sequence (development tracks):
 | Phase | Order | Total |
 |-------|-------|-------|
 | **Phase 1 — Solutioning** | 1st | ₹40,000 *(M1 + M2)* |
-| **Phase 2 — Design** | 2nd | ₹60,000 *(D1–D4)* |
+| **Phase 2 — Design** | 2nd | ₹50,000 *(D1–D4)* |
 | **Phase 3 — Development** | 3rd | ₹1,90,000 *(M3–M5)* |
-| **Grand Total** | | **₹2,90,000** |
+| **Grand Total** | | **₹2,80,000** |
 
 ### Payment Schedule (Chronological)
 
@@ -311,17 +311,17 @@ Phase sequence (development tracks):
 | 3 | 1 | M2 — Solution docs closure | ₹20,000 | Admin (July 1) + Customer (July 5) approved |
 | 4 | 2 | D2 — Super Admin designs | ₹15,000 | Super Admin screens — July 10 |
 | 5 | 3 | M3 — DB + Architecture + Perf | ₹30,000 | July 20–25 accepted |
-| 6 | 2 | D3 — Admin designs | ₹20,000 | Admin portal — July 25 |
+| 6 | 2 | D3 — Admin designs | ₹15,000 | Admin portal — July 25 |
 | 7 | 3 | M4 — Backend + unit tests | ₹80,000 | End of August — APIs + Swagger |
-| 8 | 2 | D4 — Customer designs | ₹15,000 | Customer screens — August 10 |
+| 8 | 2 | D4 — Customer designs | ₹10,000 | Customer screens — August 10 |
 | 9 | 3 | M5 — Frontend (React) | ₹80,000 | 20-day sprint complete (post design + backend closure) |
 
 ```
 Phase 1  Solutioning   ₹20K ──► ₹20K                    = ₹40,000
-Phase 2  Design         ₹10K ──► ₹15K ──► ₹20K ──► ₹15K = ₹60,000
+Phase 2  Design         ₹10K ──► ₹15K ──► ₹15K ──► ₹10K = ₹50,000
 Phase 3  Development              ₹30K ──► ₹80K ──► ₹80K = ₹1,90,000
          ─────────────────────────────────────────────────────────────
-         Grand Total                                      ₹2,90,000
+         Grand Total                                      ₹2,80,000
 ```
 
 ---

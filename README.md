@@ -4,7 +4,7 @@ Documentation, specifications, wireframes, and reference assets for the GlowTap 
 
 ## Contents
 
-- Functional and solutioning specs for Super Admin and Salon Admin portals
+- Functional and solutioning specs for Super Admin, Salon Admin, and End Customer portals
 - Figma build guides and wireframes
 - Brand theme and pricing timeline
 - Reference React components for UI patterns
