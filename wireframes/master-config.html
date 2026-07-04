@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — Master Configuration</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-light: #F3EEFF;
+      --pink: #FF03C8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    .app-screen { display: flex; flex: 1; width: 100%; min-height: 100vh; position: relative; z-index: 1; }
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg, var(--bg));
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
+    }
+    .sidebar-logo img { display: block; width: 280px; height: 100px; }
+
+    .nav { flex: 1; overflow-y: auto; padding: 12px 10px; list-style: none; }
+    .nav a {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px;
+      font-size: 0.875rem; font-weight: 600; color: #4A5568;
+      text-decoration: none; margin-bottom: 2px;
+    }
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+    .nav a.active {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+    .badge {
+      margin-left: auto; font-size: 0.68rem; font-weight: 700;
+      padding: 2px 7px; border-radius: 999px;
+      background: rgba(123, 0, 255, 0.12); color: var(--purple);
+    }
+    .nav a.active .badge { background: rgba(255, 255, 255, 0.2); color: var(--white); }
+    .svg-icon { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+    .nav-footer { padding: 8px 10px 12px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
+    .nav-footer-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px;
+      color: #4A5568; text-decoration: none; font-size: 0.82rem; font-weight: 600;
+    }
+    .nav-footer-link:hover { background: var(--purple-light); color: var(--purple); }
+
+    .sidebar-user { padding: 0 10px 10px; }
+    .sidebar-user-card { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; background: var(--bg); }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--gradient-brand); color: var(--white);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .app-main-scroll {
+      flex: 1; display: flex; flex-direction: column;
+      min-width: 0; min-height: 100vh;
+      overflow-y: auto; overflow-x: hidden;
+    }
+    .app-content { padding: 28px; flex: 1; }
+
+    .btn {
+      padding: 9px 16px; border-radius: 999px; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; border: none; font-family: inherit;
+      display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    }
+    .btn-outline { background: var(--white); border: 1px solid rgba(123, 0, 255, 0.25); color: var(--purple); }
+    .btn-primary { background: var(--gradient-brand); color: var(--white); box-shadow: var(--shadow-purple); }
+    .btn-ghost { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+    .btn-danger { background: #FEF2F2; color: #B91C1C; border: 1px solid #FECACA; }
+
+    .page-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+    .page-head h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .screen-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .module-nav { display: none; }
+    .module-nav a {
+      padding: 8px 14px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
+      color: var(--muted); text-decoration: none; border: 1px solid var(--border); background: var(--white);
+    }
+    .cfg-views:not(:has(.cfg-page:target)) .module-nav a[href="#cfg-hub"],
+    .cfg-views:has(#cfg-hub:target) .module-nav a[href="#cfg-hub"],
+    .cfg-views:has(#cfg-reasons:target) .module-nav a[href="#cfg-reasons"],
+    .cfg-views:has(#cfg-pricing:target) .module-nav a[href="#cfg-pricing"],
+    .cfg-views:has(#cfg-templates:target) .module-nav a[href="#cfg-templates"],
+    .cfg-views:has(#cfg-tax:target) .module-nav a[href="#cfg-tax"],
+    .cfg-views:has(#cfg-entitlements:target) .module-nav a[href="#cfg-entitlements"],
+    .cfg-views:has(#cfg-gateway:target) .module-nav a[href="#cfg-gateway"] {
+      background: var(--gradient-brand); color: var(--white); border-color: transparent; box-shadow: var(--shadow-purple);
+    }
+    .cfg-page { display: none !important; }
+    #cfg-hub { display: block !important; }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-head h2 { font-size: 0.95rem; font-weight: 700; }
+    .card-body { padding: 20px; }
+
+    .grid { display: grid; gap: 16px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 1100px) { .g3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 900px) { .g2, .g3 { grid-template-columns: 1fr; } .sidebar { display:none; } }
+
+    .config-tile {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--white);
+      box-shadow: var(--shadow-card);
+    }
+    .tile-top { display: flex; gap: 12px; align-items: flex-start; }
+    .tile-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--purple-light); color: var(--purple); flex-shrink: 0;
+    }
+    .config-tile h3 { font-size: 0.94rem; margin-bottom: 4px; }
+    .config-tile p { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
+    .chip-row { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-size: 0.7rem; font-weight: 600; color: var(--purple);
+      background: var(--purple-light); border: 1px solid #DDD6FE; border-radius: 999px; padding: 5px 10px;
+    }
+
+    .filters-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .filter-row { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
+    @media (max-width: 1100px) { .filter-row { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 768px) { .filter-row { grid-template-columns: 1fr; } }
+    .field label, .form-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .field input, .field select, .form-field input, .form-field select, .form-field textarea {
+      width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px;
+      font-size: 0.85rem; font-family: inherit; background: var(--bg); color: var(--text);
+    }
+    .form-field textarea { min-height: 88px; resize: vertical; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-field.full { grid-column: 1 / -1; }
+    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.84rem; }
+    .data-table thead { background: var(--bg); position: sticky; top: 0; z-index: 1; }
+    .data-table th {
+      text-align: left; padding: 11px 12px; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--muted); border-bottom: 1px solid var(--border); font-weight: 700; white-space: nowrap;
+    }
+    .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--bg); vertical-align: middle; }
+    .data-table tbody tr:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+      border: 1px solid transparent;
+    }
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .status-badge.active { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.active::before { background: #10B981; }
+    .status-badge.draft { background: #F1F5F9; color: #64748B; border-color: #E2E8F0; }
+    .status-badge.draft::before { background: #94A3B8; }
+    .status-badge.deprecated { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.deprecated::before { background: #F59E0B; }
+
+    .mapping-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr auto;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--white);
+      margin-bottom: 10px;
+      align-items: end;
+    }
+    @media (max-width: 900px) { .mapping-row { grid-template-columns: 1fr; } }
+
+    .template-preview {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 0.82rem;
+      color: var(--text);
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    .matrix-wrap { overflow: auto; border: 1px solid var(--border); border-radius: 12px; }
+    .matrix { min-width: 900px; border-collapse: collapse; width: 100%; font-size: 0.8rem; }
+    .matrix th, .matrix td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 10px 12px; text-align: center; }
+    .matrix th:first-child, .matrix td:first-child { text-align: left; font-weight: 600; min-width: 180px; }
+    .matrix thead th { background: var(--bg); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .check { color: #10B981; font-weight: 700; }
+    .cross { color: #94A3B8; font-weight: 700; }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal:target { display: flex; }
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 42, 50, 0.54);
+    }
+    .modal-box {
+      position: relative;
+      z-index: 1;
+      width: 90vw;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-head {
+      padding: 18px 24px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .modal-head h2 { font-size: 1.05rem; font-weight: 700; }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--bg); color: var(--muted);
+      display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      background: var(--bg);
+      min-height: 0;
+    }
+    .modal-foot {
+      padding: 14px 24px 18px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--white);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/></symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/></symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24"><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/><path d="M10 15H6a4 4 0 0 0-4 4v2"/><path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/><path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/><path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="i-badge-percent" viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="m9 15 6-6"/><path d="M9.5 9h.01"/><path d="M14.5 15h.01"/></symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="CFG-01 Master Configuration">
+    <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+      <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+        <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+      </div>
+      <ul class="nav">
+        <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+        <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+        <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+        <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+        <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+        <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+        <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+        <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+        <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+        <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+        <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+        <li><a href="master-config.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+        <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+      </ul>
+      <div class="nav-footer">
+      <a href="notifications.html" class="nav-footer-link"><svg class="svg-icon"><use href="#i-bell"/></svg>Notifications <span class="badge">3</span></a>
+        <a href="login.html" class="nav-footer-link"><svg class="svg-icon"><use href="#i-log-out"/></svg>Sign out</a>
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-user-card">
+          <div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div>
+          <div><div style="font-size:0.8rem;font-weight:600;">Super Admin</div><div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div></div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+      <div class="app-content" data-figma-layer="Content Master Config">
+        <div class="page-head">
+          <div>
+            <h1>Master Configuration</h1>
+            <p>Centralized platform settings managed by Super Admin. <span class="screen-tag">CFG-01 – CFG-07</span></p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-outline">Export Config</button>
+          </div>
+        </div>
+
+        <div class="cfg-views">
+          <nav class="module-nav" aria-label="Master configuration screens">
+            <a href="#cfg-hub">Settings Hub</a>
+            <a href="#cfg-reasons">Reason Codes</a>
+            <a href="#cfg-pricing">Pricing Rules</a>
+            <a href="#cfg-templates">Notification Templates</a>
+            <a href="#cfg-tax">Tax / GST</a>
+            <a href="#cfg-entitlements">Feature Entitlements</a>
+            <a href="#cfg-gateway">Gateway &amp; Platform</a>
+          </nav>
+
+          <div id="cfg-hub" class="cfg-page" data-figma-frame="CFG-01 Settings Hub">
+            <div class="grid g3">
+              <article class="config-tile"><div class="tile-top"><div class="tile-icon"><svg class="svg-icon"><use href="#i-shield"/></svg></div><div><h3>Reason Codes</h3><p>Suspend, terminate, reject, and ticket reason + sub-reason catalog.</p><div class="chip-row"><span class="chip">32 active reasons</span><span class="chip">6 categories</span></div></div></div><div style="margin-top:14px;"><a href="#modal-cfg-reasons" class="btn btn-outline">Configure</a></div></article>
+              <article class="config-tile"><div class="tile-top"><div class="tile-icon"><svg class="svg-icon"><use href="#i-badge-percent"/></svg></div><div><h3>Pricing Rules</h3><p>Reason code to fee/penalty mapping for suspension/termination/disputes.</p><div class="chip-row"><span class="chip">14 mappings</span><span class="chip">7 day grace default</span></div></div></div><div style="margin-top:14px;"><a href="#modal-cfg-pricing" class="btn btn-outline">Configure</a></div></article>
+              <article class="config-tile"><div class="tile-top"><div class="tile-icon"><svg class="svg-icon"><use href="#i-bell"/></svg></div><div><h3>Notification Templates</h3><p>Email and SMS templates for onboarding, renewal, suspension and ticket events.</p><div class="chip-row"><span class="chip">18 templates</span><span class="chip">2 channels</span></div></div></div><div style="margin-top:14px;"><a href="#modal-cfg-templates" class="btn btn-outline">Configure</a></div></article>
+              <article class="config-tile"><div class="tile-top"><div class="tile-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></div><div><h3>Tax / GST Settings</h3><p>Regional GST/IGST rates and invoice tax behavior.</p><div class="chip-row"><span class="chip">Default 18%</span><span class="chip">5 regions</span></div></div></div><div style="margin-top:14px;"><a href="#modal-cfg-tax" class="btn btn-outline">Configure</a></div></article>
+              <article class="config-tile"><div class="tile-top"><div class="tile-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></div><div><h3>Feature Entitlements</h3><p>Plan tier to module access matrix for appointments, manpower, services and analytics.</p><div class="chip-row"><span class="chip">4 plan tiers</span><span class="chip">12 features</span></div></div></div><div style="margin-top:14px;"><a href="#modal-cfg-entitlements" class="btn btn-outline">Configure</a></div></article>
+              <article class="config-tile"><div class="tile-top"><div class="tile-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></div><div><h3>Payment Gateway &amp; Platform</h3><p>Gateway toggles, retry policies, default commission and grace period defaults.</p><div class="chip-row"><span class="chip">3 gateways</span><span class="chip">Commission 8%</span></div></div></div><div style="margin-top:14px;"><a href="#modal-cfg-gateway" class="btn btn-outline">Configure</a></div></article>
+            </div>
+          </div>
+
+          <div id="cfg-reasons" class="cfg-page" data-figma-frame="CFG-02 Reason Codes">
+            <div class="filters-card">
+              <div class="filter-row">
+                <div class="field"><label for="reason-search">Search</label><input id="reason-search" type="search" placeholder="Reason name, code..." /></div>
+                <div class="field"><label for="reason-type">Type</label><select id="reason-type"><option selected>All types</option><option>Suspend</option><option>Terminate</option><option>Reject</option><option>Ticket</option></select></div>
+                <div class="field"><label for="reason-status">Status</label><select id="reason-status"><option selected>All statuses</option><option>Active</option><option>Draft</option><option>Deprecated</option></select></div>
+                <button type="button" class="btn btn-primary">+ Add Reason Code</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Reason Code Catalog</h2><span style="font-size:0.78rem;color:var(--muted);">32 rows</span></div>
+              <div class="card-body" style="padding:0;">
+                <table class="data-table">
+                  <thead><tr><th>Code</th><th>Reason</th><th>Type</th><th>Sub-reasons</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead>
+                  <tbody>
+                    <tr><td>RSN-SUS-001</td><td>Non-payment suspension</td><td>Suspend</td><td>Invoice overdue, Retry failed</td><td><span class="status-badge active">Active</span></td><td>27 Jun 2026</td><td><button class="btn btn-outline" type="button">Edit</button></td></tr>
+                    <tr><td>RSN-TER-004</td><td>Early termination by salon</td><td>Terminate</td><td>Business closure, migration</td><td><span class="status-badge active">Active</span></td><td>21 Jun 2026</td><td><button class="btn btn-outline" type="button">Edit</button></td></tr>
+                    <tr><td>RSN-REJ-002</td><td>KYC mismatch</td><td>Reject</td><td>ID mismatch, address mismatch</td><td><span class="status-badge active">Active</span></td><td>12 Jun 2026</td><td><button class="btn btn-outline" type="button">Edit</button></td></tr>
+                    <tr><td>RSN-TKT-011</td><td>Payment gateway issue</td><td>Ticket</td><td>Timeout, auth failure, callback fail</td><td><span class="status-badge draft">Draft</span></td><td>30 Jun 2026</td><td><button class="btn btn-outline" type="button">Edit</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div id="cfg-pricing" class="cfg-page" data-figma-frame="CFG-03 Pricing Rules">
+            <div class="card">
+              <div class="card-head"><h2>Reason Code → Pricing Impact Mapping</h2><button class="btn btn-primary" type="button">+ Add Rule</button></div>
+              <div class="card-body">
+                <div class="mapping-row">
+                  <div class="form-field"><label>Reason code</label><select><option selected>RSN-TER-004 · Early termination by salon</option></select></div>
+                  <div class="form-field"><label>Rule type</label><select><option selected>Penalty (NRC)</option><option>Fee waiver</option><option>Discount forfeiture</option></select></div>
+                  <div class="form-field"><label>Amount</label><input type="text" value="₹2,000" /></div>
+                  <button type="button" class="btn btn-danger">Remove</button>
+                </div>
+                <div class="mapping-row">
+                  <div class="form-field"><label>Reason code</label><select><option selected>RSN-SUS-001 · Non-payment suspension</option></select></div>
+                  <div class="form-field"><label>Rule type</label><select><option selected>Grace period</option></select></div>
+                  <div class="form-field"><label>Days</label><input type="text" value="7" /></div>
+                  <button type="button" class="btn btn-danger">Remove</button>
+                </div>
+                <div class="mapping-row">
+                  <div class="form-field"><label>Reason code</label><select><option selected>RSN-TER-007 · Policy violation</option></select></div>
+                  <div class="form-field"><label>Rule type</label><select><option selected>Forfeit discounts</option></select></div>
+                  <div class="form-field"><label>Scope</label><input type="text" value="RC + NRC" /></div>
+                  <button type="button" class="btn btn-danger">Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="cfg-templates" class="cfg-page" data-figma-frame="CFG-04 Notification Templates">
+            <div class="filters-card">
+              <div class="filter-row">
+                <div class="field"><label for="tpl-search">Search</label><input id="tpl-search" type="search" placeholder="Template name/event..." /></div>
+                <div class="field"><label for="tpl-channel">Channel</label><select id="tpl-channel"><option selected>All channels</option><option>Email</option><option>SMS</option></select></div>
+                <div class="field"><label for="tpl-event">Event</label><select id="tpl-event"><option selected>All events</option><option>Onboarding</option><option>Renewal</option><option>Suspension</option><option>Ticket update</option></select></div>
+                <button type="button" class="btn btn-primary">+ New Template</button>
+              </div>
+            </div>
+            <div class="grid g2">
+              <div class="card">
+                <div class="card-head"><h2>Template List</h2></div>
+                <div class="card-body">
+                  <table class="data-table">
+                    <thead><tr><th>Name</th><th>Channel</th><th>Event</th><th>Status</th></tr></thead>
+                    <tbody>
+                      <tr><td>Salon Approved — Welcome</td><td>Email</td><td>Onboarding</td><td><span class="status-badge active">Active</span></td></tr>
+                      <tr><td>Renewal Reminder D-30</td><td>Email + SMS</td><td>Renewal</td><td><span class="status-badge active">Active</span></td></tr>
+                      <tr><td>Suspension Notice</td><td>Email</td><td>Suspension</td><td><span class="status-badge active">Active</span></td></tr>
+                      <tr><td>Ticket Status Update</td><td>Email</td><td>Ticket</td><td><span class="status-badge draft">Draft</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-head"><h2>Template Preview</h2></div>
+                <div class="card-body">
+                  <div class="form-grid">
+                    <div class="form-field"><label>Subject</label><input type="text" value="Your GlowTap Salon Has Been Approved" /></div>
+                    <div class="form-field"><label>Channel</label><select><option selected>Email</option><option>SMS</option></select></div>
+                    <div class="form-field full"><label>Body</label><textarea>Hi {{owner_name}},
+
+Congratulations! Your salon {{salon_name}} is now approved.
+Login credentials:
+Email: {{email}}
+Temp Password: {{temp_password}}
+
+Regards,
+GlowTap Team</textarea></div>
+                  </div>
+                  <div class="template-preview" style="margin-top:12px;">Hi Priya,\n\nCongratulations! Your salon Glow Studio is now approved.\nEmail: priya@glowstudio.in\nTemp Password: GT@9217\n\nRegards,\nGlowTap Team</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="cfg-tax" class="cfg-page" data-figma-frame="CFG-05 Tax GST Settings">
+            <div class="card">
+              <div class="card-head"><h2>Tax / GST Configuration</h2><button class="btn btn-primary" type="button">Save Tax Settings</button></div>
+              <div class="card-body">
+                <div class="form-grid">
+                  <div class="form-field"><label>Default GST (%)</label><input type="text" value="18" /></div>
+                  <div class="form-field"><label>Tax mode</label><select><option selected>Tax exclusive pricing</option><option>Tax inclusive pricing</option></select></div>
+                  <div class="form-field"><label>Inter-state tax rule</label><select><option selected>Apply IGST</option><option>Apply CGST + SGST</option></select></div>
+                  <div class="form-field"><label>Round-off</label><select><option selected>Nearest rupee</option><option>2 decimals</option></select></div>
+                </div>
+                <div style="margin-top:16px;">
+                  <table class="data-table">
+                    <thead><tr><th>Region</th><th>GST %</th><th>CGST %</th><th>SGST %</th><th>IGST %</th><th>Status</th></tr></thead>
+                    <tbody>
+                      <tr><td>Karnataka</td><td>18</td><td>9</td><td>9</td><td>18</td><td><span class="status-badge active">Active</span></td></tr>
+                      <tr><td>Maharashtra</td><td>18</td><td>9</td><td>9</td><td>18</td><td><span class="status-badge active">Active</span></td></tr>
+                      <tr><td>Tamil Nadu</td><td>18</td><td>9</td><td>9</td><td>18</td><td><span class="status-badge active">Active</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="cfg-entitlements" class="cfg-page" data-figma-frame="CFG-06 Feature Entitlements Matrix">
+            <div class="card">
+              <div class="card-head"><h2>Plan Feature Entitlements Matrix</h2><button class="btn btn-primary" type="button">Save Matrix</button></div>
+              <div class="card-body">
+                <div class="matrix-wrap">
+                  <table class="matrix">
+                    <thead><tr><th>Feature</th><th>Starter 1M</th><th>Growth 6M</th><th>Pro 12M</th><th>Enterprise 24M</th></tr></thead>
+                    <tbody>
+                      <tr><td>Appointments</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td></tr>
+                      <tr><td>Manpower</td><td class="cross">No</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td></tr>
+                      <tr><td>Services Catalog</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td></tr>
+                      <tr><td>Advanced Analytics</td><td class="cross">No</td><td class="cross">No</td><td class="check">Yes</td><td class="check">Yes</td></tr>
+                      <tr><td>Marketing Campaigns</td><td class="cross">No</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td></tr>
+                      <tr><td>API Access</td><td class="cross">No</td><td class="cross">No</td><td class="cross">No</td><td class="check">Yes</td></tr>
+                      <tr><td>Max Branches</td><td>1</td><td>3</td><td>10</td><td>Unlimited</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="cfg-gateway" class="cfg-page" data-figma-frame="CFG-07 Payment Gateway Platform Settings">
+            <div class="grid g2">
+              <div class="card">
+                <div class="card-head"><h2>Payment Gateway Settings</h2></div>
+                <div class="card-body">
+                  <div class="form-grid">
+                    <div class="form-field"><label>Primary Gateway</label><select><option selected>Razorpay</option><option>Stripe</option><option>Cashfree</option></select></div>
+                    <div class="form-field"><label>Retry attempts</label><input type="text" value="3 attempts / 72h" /></div>
+                    <div class="form-field"><label>Auto-retry failed renewals</label><select><option selected>Enabled</option><option>Disabled</option></select></div>
+                    <div class="form-field"><label>Webhook signature check</label><select><option selected>Enabled</option><option>Disabled</option></select></div>
+                    <div class="form-field full"><label>Active gateways</label><input type="text" value="Razorpay, Stripe" /></div>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-head"><h2>Platform Defaults</h2></div>
+                <div class="card-body">
+                  <div class="form-grid">
+                    <div class="form-field"><label>Default commission (%)</label><input type="text" value="8" /></div>
+                    <div class="form-field"><label>Commission range</label><input type="text" value="1% – 25%" /></div>
+                    <div class="form-field"><label>Apply commission on refunds</label><select><option selected>Pro-rata reversal</option><option>No reversal</option></select></div>
+                    <div class="form-field"><label>Commission settlement cycle</label><select><option selected>Real-time ledger</option><option>Daily batch</option><option>Weekly batch</option></select></div>
+                    <div class="form-field"><label>Defaulter grace period (days)</label><input type="text" value="7" /></div>
+                    <div class="form-field"><label>Auto-create ticket on failed payment</label><select><option selected>Enabled</option><option>Disabled</option></select></div>
+                  </div>
+                  <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+                    <button type="button" class="btn btn-outline">Test Gateway Health</button>
+                    <button type="button" class="btn btn-primary">Save Platform Defaults</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-cfg-reasons" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head"><h2>Reason Codes <span class="screen-tag">CFG-02</span></h2><a href="#" class="modal-close">×</a></div>
+      <div class="modal-body">
+        <div class="filters-card">
+          <div class="filter-row">
+            <div class="field"><label>Search</label><input type="search" placeholder="Reason name, code..." /></div>
+            <div class="field"><label>Type</label><select><option>All types</option><option>Suspend</option><option>Terminate</option><option>Reject</option><option>Ticket</option></select></div>
+            <div class="field"><label>Status</label><select><option>All statuses</option><option>Active</option><option>Draft</option><option>Deprecated</option></select></div>
+            <button class="btn btn-primary" type="button">+ Add Reason Code</button>
+          </div>
+        </div>
+        <div class="card"><div class="card-body" style="padding:0;"><table class="data-table"><thead><tr><th>Code</th><th>Reason</th><th>Type</th><th>Sub-reasons</th><th>Status</th><th>Updated</th></tr></thead><tbody><tr><td>RSN-SUS-001</td><td>Non-payment suspension</td><td>Suspend</td><td>Invoice overdue, Retry failed</td><td><span class="status-badge active">Active</span></td><td>27 Jun 2026</td></tr><tr><td>RSN-TKT-011</td><td>Payment gateway issue</td><td>Ticket</td><td>Timeout, auth failure, callback fail</td><td><span class="status-badge draft">Draft</span></td><td>30 Jun 2026</td></tr></tbody></table></div></div>
+      </div>
+      <div class="modal-foot"><a href="#" class="btn btn-ghost">Close</a><button class="btn btn-primary" type="button">Save Changes</button></div>
+    </div>
+  </div>
+
+  <div id="modal-cfg-pricing" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head"><h2>Pricing Rules <span class="screen-tag">CFG-03</span></h2><a href="#" class="modal-close">×</a></div>
+      <div class="modal-body">
+        <div class="card"><div class="card-head"><h2>Reason Code → Pricing Impact Mapping</h2><button class="btn btn-primary" type="button">+ Add Rule</button></div><div class="card-body"><div class="mapping-row"><div class="form-field"><label>Reason code</label><select><option>RSN-TER-004 · Early termination by salon</option></select></div><div class="form-field"><label>Rule type</label><select><option>Penalty (NRC)</option></select></div><div class="form-field"><label>Amount</label><input type="text" value="₹2,000" /></div><button class="btn btn-danger" type="button">Remove</button></div><div class="mapping-row"><div class="form-field"><label>Reason code</label><select><option>RSN-SUS-001 · Non-payment suspension</option></select></div><div class="form-field"><label>Rule type</label><select><option>Grace period</option></select></div><div class="form-field"><label>Days</label><input type="text" value="7" /></div><button class="btn btn-danger" type="button">Remove</button></div></div></div>
+      </div>
+      <div class="modal-foot"><a href="#" class="btn btn-ghost">Close</a><button class="btn btn-primary" type="button">Save Rules</button></div>
+    </div>
+  </div>
+
+  <div id="modal-cfg-templates" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head"><h2>Notification Templates <span class="screen-tag">CFG-04</span></h2><a href="#" class="modal-close">×</a></div>
+      <div class="modal-body">
+        <div class="grid g2">
+          <div class="card"><div class="card-head"><h2>Template List</h2></div><div class="card-body"><table class="data-table"><thead><tr><th>Name</th><th>Channel</th><th>Event</th><th>Status</th></tr></thead><tbody><tr><td>Salon Approved — Welcome</td><td>Email</td><td>Onboarding</td><td><span class="status-badge active">Active</span></td></tr><tr><td>Ticket Status Update</td><td>Email</td><td>Ticket</td><td><span class="status-badge draft">Draft</span></td></tr></tbody></table></div></div>
+          <div class="card"><div class="card-head"><h2>Template Preview</h2></div><div class="card-body"><div class="form-field"><label>Subject</label><input type="text" value="Your GlowTap Salon Has Been Approved" /></div><div class="form-field"><label>Body</label><textarea>Hi {{owner_name}},
+
+Congratulations! Your salon {{salon_name}} is now approved.</textarea></div><div class="template-preview">Hi Priya, your salon Glow Studio is now approved.</div></div></div>
+        </div>
+      </div>
+      <div class="modal-foot"><a href="#" class="btn btn-ghost">Close</a><button class="btn btn-primary" type="button">Save Template</button></div>
+    </div>
+  </div>
+
+  <div id="modal-cfg-tax" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head"><h2>Tax / GST Settings <span class="screen-tag">CFG-05</span></h2><a href="#" class="modal-close">×</a></div>
+      <div class="modal-body">
+        <div class="card"><div class="card-head"><h2>Tax / GST Configuration</h2></div><div class="card-body"><div class="form-grid"><div class="form-field"><label>Default GST (%)</label><input type="text" value="18" /></div><div class="form-field"><label>Tax mode</label><select><option>Tax exclusive pricing</option></select></div><div class="form-field"><label>Inter-state tax rule</label><select><option>Apply IGST</option></select></div><div class="form-field"><label>Round-off</label><select><option>Nearest rupee</option></select></div></div><div style="margin-top:16px;"><table class="data-table"><thead><tr><th>Region</th><th>GST %</th><th>Status</th></tr></thead><tbody><tr><td>Karnataka</td><td>18</td><td><span class="status-badge active">Active</span></td></tr><tr><td>Maharashtra</td><td>18</td><td><span class="status-badge active">Active</span></td></tr></tbody></table></div></div></div>
+      </div>
+      <div class="modal-foot"><a href="#" class="btn btn-ghost">Close</a><button class="btn btn-primary" type="button">Save Tax Settings</button></div>
+    </div>
+  </div>
+
+  <div id="modal-cfg-entitlements" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head"><h2>Feature Entitlements Matrix <span class="screen-tag">CFG-06</span></h2><a href="#" class="modal-close">×</a></div>
+      <div class="modal-body">
+        <div class="card"><div class="card-head"><h2>Plan Feature Entitlements Matrix</h2></div><div class="card-body"><div class="matrix-wrap"><table class="matrix"><thead><tr><th>Feature</th><th>Starter 1M</th><th>Growth 6M</th><th>Pro 12M</th><th>Enterprise 24M</th></tr></thead><tbody><tr><td>Appointments</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td></tr><tr><td>Manpower</td><td class="cross">No</td><td class="check">Yes</td><td class="check">Yes</td><td class="check">Yes</td></tr><tr><td>Advanced Analytics</td><td class="cross">No</td><td class="cross">No</td><td class="check">Yes</td><td class="check">Yes</td></tr><tr><td>Max Branches</td><td>1</td><td>3</td><td>10</td><td>Unlimited</td></tr></tbody></table></div></div></div>
+      </div>
+      <div class="modal-foot"><a href="#" class="btn btn-ghost">Close</a><button class="btn btn-primary" type="button">Save Matrix</button></div>
+    </div>
+  </div>
+
+  <div id="modal-cfg-gateway" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head"><h2>Payment Gateway &amp; Platform Settings <span class="screen-tag">CFG-07</span></h2><a href="#" class="modal-close">×</a></div>
+      <div class="modal-body">
+        <div class="grid g2">
+          <div class="card"><div class="card-head"><h2>Payment Gateway Settings</h2></div><div class="card-body"><div class="form-grid"><div class="form-field"><label>Primary Gateway</label><select><option>Razorpay</option></select></div><div class="form-field"><label>Retry attempts</label><input type="text" value="3 attempts / 72h" /></div><div class="form-field"><label>Auto-retry failed renewals</label><select><option>Enabled</option></select></div><div class="form-field"><label>Webhook signature check</label><select><option>Enabled</option></select></div></div></div></div>
+          <div class="card"><div class="card-head"><h2>Platform Defaults</h2></div><div class="card-body"><div class="form-grid"><div class="form-field"><label>Default commission (%)</label><input type="text" value="8" /></div><div class="form-field"><label>Commission range</label><input type="text" value="1% – 25%" /></div><div class="form-field"><label>Defaulter grace period</label><input type="text" value="7 days" /></div><div class="form-field"><label>Auto-create ticket on failed payment</label><select><option>Enabled</option></select></div></div></div></div>
+        </div>
+      </div>
+      <div class="modal-foot"><a href="#" class="btn btn-ghost">Close</a><button class="btn btn-primary" type="button">Save Settings</button></div>
+    </div>
+  </div>
+</body>
+</html>

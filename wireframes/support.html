@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — Support &amp; Ticketing</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-light: #F3EEFF;
+      --pink: #FF03C8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    .app-screen {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg, var(--bg));
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
+    }
+
+    .sidebar-logo img {
+      display: block;
+      width: 280px;
+      height: 100px;
+    }
+
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+    .nav a.active { background: var(--gradient-brand); color: var(--white); box-shadow: var(--shadow-purple); }
+
+    .nav .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .nav-footer {
+      padding: 8px 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-footer-link:hover { background: var(--purple-light); color: var(--purple); }
+
+    .nav-footer-link .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-user { padding: 14px; border-top: 1px solid var(--border); }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-main-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .app-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-head h1 { font-size: 1.5rem; font-weight: 700; }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn .svg-icon { width: 16px; height: 16px; }
+
+    .btn-outline {
+      background: var(--white);
+      border: 1px solid rgba(123, 0, 255, 0.25);
+      color: var(--purple);
+    }
+
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .btn-danger {
+      background: var(--white);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      color: var(--red);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-warning {
+      background: var(--white);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      color: var(--amber);
+    }
+
+    .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Filters — BRN-01 */
+    .filters-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .status-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .status-tab {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-tab.on {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    @media (max-width: 1100px) {
+      .filter-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .filter-row { grid-template-columns: 1fr; }
+      .split-layout { grid-template-columns: 1fr !important; }
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: rgba(123, 0, 255, 0.4);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1);
+    }
+
+    /* Master-detail — SAL-01 + SAL-02 */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .panel-head .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .panel-scroll {
+      max-height: 720px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .lead-list { list-style: none; }
+
+    .lead-item {
+      display: block;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--bg);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .lead-item:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .lead-item.selected {
+      background: rgba(243, 238, 255, 0.55);
+      border-left-color: var(--purple);
+    }
+
+    .lead-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .lead-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .lead-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .lead-meta { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border: 1px solid;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-badge.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.pending::before { background: #F59E0B; }
+    .status-badge.awaiting { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.awaiting::before { background: #3B82F6; }
+    .status-badge.approved { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.approved::before { background: #10B981; }
+    .status-badge.rejected { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.rejected::before { background: #EF4444; }
+    .status-badge.paid { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.paid::before { background: #10B981; }
+
+    .status-badge.upgrade { background: #F3EEFF; color: #6D28D9; border-color: #DDD6FE; }
+    .status-badge.upgrade::before { background: #7B00FF; }
+
+    .limit-banner svg { flex-shrink: 0; margin-top: 2px; color: var(--amber); }
+
+    .limit-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .limit-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #FDE68A;
+      background: rgba(255, 251, 235, 0.9);
+      font-size: 0.85rem;
+      color: #92400E;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .limit-box h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .limit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .limit-row span:first-child { color: var(--muted); }
+    .limit-row strong { font-weight: 700; }
+    .limit-row strong.at-limit { color: var(--amber); }
+
+    .limit-track {
+      height: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .limit-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .limit-fill.full { background: linear-gradient(90deg, var(--amber) 0%, #F59E0B 100%); }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .hours-grid span:nth-child(odd) { color: var(--muted); }
+    .hours-grid span:nth-child(even) { font-weight: 600; text-align: right; }
+
+    .review-body { padding: 20px; }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .review-grid { grid-template-columns: 1fr; }
+    }
+
+    .detail-block h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+      font-size: 0.85rem;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row dt { color: var(--muted); flex-shrink: 0; }
+    .detail-row dd { font-weight: 600; text-align: right; }
+
+    .kyc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .kyc-grid { grid-template-columns: 1fr; }
+    }
+
+    .kyc-doc {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .kyc-doc .doc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .kyc-doc .doc-icon .svg-icon { width: 18px; height: 18px; }
+
+    .kyc-doc strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+    .kyc-doc span { font-size: 0.72rem; color: var(--muted); }
+    .kyc-doc a {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .commission-box {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid #EDE9FE;
+      background: linear-gradient(135deg, rgba(243, 238, 255, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+
+    .commission-box label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .commission-box p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .commission-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .commission-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--purple);
+    }
+
+    .commission-val {
+      min-width: 52px;
+      text-align: center;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .screen-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Modals — SAL-M01, M02, M03 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal:target { display: flex; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 42, 50, 0.5);
+    }
+
+    .modal-box {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 20px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal-head h2 { font-size: 1.1rem; font-weight: 700; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover { background: var(--purple-light); color: var(--purple); }
+
+    .modal-body { padding: 0 24px 20px; }
+
+    .modal-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .modal-summary {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+    }
+
+    .modal-summary div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .modal-summary span { color: var(--muted); }
+    .modal-summary strong { font-weight: 700; }
+
+    .modal-field { margin-bottom: 14px; }
+
+    .modal-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-field select, .modal-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .modal-field textarea { min-height: 88px; resize: vertical; }
+
+    .checklist { list-style: none; margin-bottom: 16px; }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .checklist input { accent-color: var(--purple); width: 16px; height: 16px; }
+
+    .modal-foot {
+      padding: 16px 24px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal.modal-xl {
+      padding: 16px;
+      align-items: center;
+    }
+
+    .modal.modal-xl .modal-box {
+      max-width: 90vw;
+      width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal.modal-xl .modal-head {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal.modal-xl .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      min-height: 0;
+    }
+
+    .modal.modal-xl .modal-foot {
+      flex-shrink: 0;
+      border-top: 1px solid var(--border);
+      padding: 14px 24px 20px;
+    }
+
+    .ticket-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .ticket-detail-grid { grid-template-columns: 1fr; }
+    }
+
+    .ticket-detail-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ticket-detail-head h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .ticket-detail-head p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* TKT-03 ticket detail modal */
+    .modal-ticket .modal-box {
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .ticket-modal-header {
+      padding: 22px 28px 20px;
+      background: linear-gradient(135deg, rgba(243, 238, 255, 0.65) 0%, var(--white) 55%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ticket-modal-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .ticket-modal-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ticket-id {
+      font-family: ui-monospace, monospace;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--purple);
+      letter-spacing: -0.02em;
+    }
+
+    .ticket-subject {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+      margin-bottom: 8px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .ticket-submeta {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .ticket-modal-body {
+      background: var(--bg);
+      padding: 20px 24px 24px !important;
+    }
+
+    .ticket-section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+    }
+
+    .ticket-section:last-child { margin-bottom: 0; }
+
+    .ticket-section h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .ticket-section h4 .hint {
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.72rem;
+    }
+
+    .ticket-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .ticket-meta-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .ticket-meta-grid { grid-template-columns: 1fr; }
+    }
+
+    .meta-cell label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .meta-cell .meta-val {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .meta-cell select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      background: var(--white);
+      color: var(--text);
+    }
+
+    .meta-cell a {
+      color: var(--purple);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .ticket-two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .ticket-two-col { grid-template-columns: 1fr; }
+    }
+
+    .ticket-desc-text {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .ticket-modal-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--white);
+    }
+
+    .ticket-foot-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .modal-ticket .modal-head {
+      display: none;
+    }
+
+    html.figma-export,
+    html.figma-export body {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+    }
+
+    html.figma-export .app-screen {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .sidebar {
+      width: 280px;
+      height: 1024px;
+      min-height: 1024px;
+      position: relative;
+      top: auto;
+    }
+
+    html.figma-export .app-main-scroll {
+      width: 1160px;
+      height: 1024px;
+      min-height: 1024px;
+      flex: none;
+      overflow-y: auto;
+    }
+
+    html.figma-export .app-content {
+      width: 1160px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .panel-scroll {
+      height: 720px;
+      max-height: 720px;
+    }
+
+    /* TXN-01 table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .data-table thead {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .data-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--bg);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr { transition: background 0.15s; }
+    .data-table tbody tr:hover { background: rgba(243, 238, 255, 0.35); }
+    .data-table tbody tr.selected { background: rgba(243, 238, 255, 0.55); }
+    .data-table tbody tr.selected td:first-child { box-shadow: inset 4px 0 0 var(--purple); }
+
+    .data-table .txn-cell strong { display: block; font-weight: 700; font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--purple); }
+    .data-table .txn-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .salon-cell strong { display: block; font-weight: 600; }
+    .data-table .salon-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .amount-val { font-weight: 700; }
+    .data-table a.row-link { display: block; color: inherit; text-decoration: none; }
+
+    .status-badge.success { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.success::before { background: #10B981; }
+    .status-badge.failed { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.failed::before { background: #EF4444; }
+    .status-badge.refunded { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.refunded::before { background: #3B82F6; }
+    .status-badge.disputed { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.disputed::before { background: #F59E0B; }
+
+    .amount-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .amount-breakdown { grid-template-columns: 1fr; }
+    }
+
+    .amount-card {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .amount-card.highlight {
+      background: linear-gradient(135deg, rgba(243,238,255,0.8), #fff);
+      border-color: #EDE9FE;
+    }
+
+    .amount-card label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .amount-card .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .amount-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    .gateway-ref {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    .info-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #BFDBFE;
+      background: #EFF6FF;
+      font-size: 0.8rem;
+      color: #1E40AF;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .info-banner.warn {
+      border-color: #FDE68A;
+      background: #FFFBEB;
+      color: #92400E;
+    }
+
+    /* TKT module views */
+    .tkt-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .tkt-kpi-row { grid-template-columns: 1fr; }
+    }
+
+    .tkt-kpi {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .tkt-kpi.warn { border-color: #FECACA; background: linear-gradient(135deg, #FEF2F2 0%, var(--white) 100%); }
+    .tkt-kpi .label { font-size: 0.78rem; color: var(--muted); font-weight: 500; }
+    .tkt-kpi .value { font-size: 1.5rem; font-weight: 700; margin-top: 6px; }
+    .tkt-kpi .value.purple { color: var(--purple); }
+    .tkt-kpi .sub { font-size: 0.72rem; color: var(--green); font-weight: 600; margin-top: 4px; }
+    .tkt-kpi.warn .sub { color: var(--red); }
+
+    .content-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    body:has(#modal-create-ticket:target) #tkt-list,
+    body:has(#modal-ticket-detail:target) #tkt-list { display: block; }
+
+    #tkt-list { display: block; }
+
+    .priority-pill {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .priority-pill.critical { background: #FEE2E2; color: var(--red); }
+    .priority-pill.high { background: #FEE2E2; color: #B91C1C; }
+    .priority-pill.medium { background: #FFEDD5; color: #C2410C; }
+    .priority-pill.low { background: #F1F5F9; color: var(--muted); }
+
+    .sla-ok { font-size: 0.78rem; font-weight: 600; color: var(--green); }
+    .sla-overdue { font-size: 0.78rem; font-weight: 700; color: var(--red); }
+    .sla-paused { font-size: 0.78rem; font-weight: 600; color: var(--amber); }
+
+    .note-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: var(--bg);
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+
+    .note-item.internal {
+      border-left: 3px solid var(--purple);
+    }
+
+    .note-item strong { display: block; font-size: 0.75rem; margin-bottom: 4px; }
+    .note-item p { color: var(--text); margin: 0; }
+
+    .ticket-timeline {
+      list-style: none;
+      font-size: 0.82rem;
+    }
+
+    .ticket-timeline li {
+      padding: 10px 0 10px 16px;
+      border-left: 2px solid var(--border);
+      margin-left: 6px;
+      position: relative;
+    }
+
+    .ticket-timeline li::before {
+      content: '';
+      position: absolute;
+      left: -5px;
+      top: 14px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+
+    .ticket-timeline .time {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .ticket-timeline li span:last-child {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .data-table .mono {
+      font-family: ui-monospace, monospace;
+      font-size: 0.78rem;
+      color: var(--purple);
+      font-weight: 600;
+    }
+
+    .permission-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .permission-grid { grid-template-columns: 1fr; }
+    }
+
+    .perm-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .perm-chip input { accent-color: var(--purple); }
+
+    .perm-chip.readonly {
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .form-grid-inline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid-inline { grid-template-columns: 1fr; }
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--white);
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 88px;
+      line-height: 1.45;
+    }
+
+    .form-field input:read-only,
+    .form-field input[readonly] {
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    .login-history {
+      list-style: none;
+      font-size: 0.82rem;
+    }
+
+    .login-history li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .login-history li span { color: var(--muted); }
+
+    .status-badge.active { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.active::before { background: #10B981; }
+    .status-badge.published { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.published::before { background: #10B981; }
+    .status-badge.scheduled { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.scheduled::before { background: #3B82F6; }
+    .status-badge.draft { background: #F1F5F9; color: #64748B; border-color: #E2E8F0; }
+    .status-badge.draft::before { background: #94A3B8; }
+    .status-badge.disabled-user { background: #F1F5F9; color: #64748B; border-color: #E2E8F0; }
+    .status-badge.disabled-user::before { background: #94A3B8; }
+
+    .modal-field input[type="text"],
+    .modal-field input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    </symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+      <path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+    </symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+    </symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/>
+      <path d="M10 15H6a4 4 0 0 0-4 4v2"/>
+      <path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/>
+      <path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/>
+      <path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+    </symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+      <path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/>
+      <path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+      <path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>
+    </symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+      <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+    </symbol>
+    <symbol id="i-ticket-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+      <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+      <path d="M16 13h-6"/><path d="M13 10v6"/>
+    </symbol>
+    <symbol id="i-paperclip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+    </symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="TKT-01 Support Ticketing">
+  <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+    </div>
+    <ul class="nav">
+      <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="notifications.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-bell"/></svg>
+        Notifications
+        <span class="badge">3</span>
+      </a>
+      <a href="login.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-log-out"/></svg>
+        Sign out
+      </a>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-card">
+        <div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+    <div class="app-content" data-figma-layer="Content Support">
+      <div class="page-head">
+        <div>
+          <h1>Support &amp; Ticketing</h1>
+          <p>Platform-level and salon-raised support tickets. <span class="screen-tag">TKT-01 – TKT-03</span></p>
+        </div>
+        <div class="page-actions">
+          <a href="#modal-create-ticket" class="btn btn-primary"><svg class="svg-icon"><use href="#i-ticket-plus"/></svg> Create Ticket</a>
+        </div>
+      </div>
+
+      <div class="tkt-kpi-row">
+        <div class="tkt-kpi">
+          <div class="label">Open Tickets</div>
+          <div class="value purple">18</div>
+        </div>
+        <div class="tkt-kpi">
+          <div class="label">Avg Resolution</div>
+          <div class="value">6.2 hrs</div>
+          <div class="sub">−12% vs last month</div>
+        </div>
+        <div class="tkt-kpi warn">
+          <div class="label">Overdue SLA</div>
+          <div class="value">3</div>
+          <div class="sub">Critical priority</div>
+        </div>
+      </div>
+
+      <div class="tkt-views">
+        <!-- TKT-01 Tickets List -->
+        <div id="tkt-list" class="tkt-page" data-figma-frame="TKT-01 Tickets List">
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Created</button>
+              <button type="button" class="status-tab">In Progress</button>
+              <button type="button" class="status-tab">On Hold</button>
+              <button type="button" class="status-tab">Awaiting User</button>
+              <button type="button" class="status-tab">Resolved</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="tkt-search">Search</label>
+                <input type="search" id="tkt-search" placeholder="Ticket ID, subject, salon…" />
+              </div>
+              <div class="field">
+                <label for="tkt-priority">Priority</label>
+                <select id="tkt-priority">
+                  <option selected>All priorities</option>
+                  <option>Critical</option>
+                  <option>High</option>
+                  <option>Medium</option>
+                  <option>Low</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="tkt-assignee">Assignee</label>
+                <select id="tkt-assignee">
+                  <option selected>Anyone</option>
+                  <option>Unassigned</option>
+                  <option>Ops Team A</option>
+                  <option>Billing Team</option>
+                  <option>Support Lead</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-head" style="padding:16px 20px;border-bottom:1px solid var(--border);">
+              <h2 style="font-size:0.95rem;font-weight:700;">All Tickets</h2>
+              <span class="meta" style="font-size:0.78rem;color:var(--muted);">142 total · 18 open</span>
+            </div>
+            <div class="panel-scroll" style="max-height:none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Ticket ID</th>
+                    <th>Subject</th>
+                    <th>Salon</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Assignee</th>
+                    <th>Created</th>
+                    <th>SLA</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">TKT-1042</td>
+                    <td class="salon-cell"><strong>Payment gateway timeout</strong><span>Escalated from salon portal</span></td>
+                    <td>Luxe Curls Studio</td>
+                    <td><span class="priority-pill high">High</span></td>
+                    <td><span class="status-badge active">In Progress</span></td>
+                    <td>Ops Team A</td>
+                    <td>20 Jun 2026</td>
+                    <td><span class="sla-ok">6h left</span></td>
+                    <td><a href="#modal-ticket-detail" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">View</a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TKT-1041</td>
+                    <td class="salon-cell"><strong>Branch limit exceeded</strong><span>Auto-created</span></td>
+                    <td>Glow Studio</td>
+                    <td><span class="priority-pill medium">Medium</span></td>
+                    <td><span class="status-badge scheduled">Created</span></td>
+                    <td>—</td>
+                    <td>20 Jun 2026</td>
+                    <td><span class="sla-ok">22h left</span></td>
+                    <td><a href="#modal-ticket-detail" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">View</a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TKT-1039</td>
+                    <td class="salon-cell"><strong>Subscription renewal failed</strong><span>Failed payment</span></td>
+                    <td>The Groom Room</td>
+                    <td><span class="priority-pill critical">Critical</span></td>
+                    <td><span class="status-badge active">In Progress</span></td>
+                    <td>Billing Team</td>
+                    <td>19 Jun 2026</td>
+                    <td><span class="sla-overdue">Overdue</span></td>
+                    <td><a href="#modal-ticket-detail" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">View</a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TKT-1035</td>
+                    <td class="salon-cell"><strong>Unable to add sub-admin</strong><span>Salon admin raised</span></td>
+                    <td>Blush Beauty Lounge</td>
+                    <td><span class="priority-pill medium">Medium</span></td>
+                    <td><span class="status-badge draft">On Hold</span></td>
+                    <td>Support Lead</td>
+                    <td>18 Jun 2026</td>
+                    <td><span class="sla-paused">Paused</span></td>
+                    <td><a href="#modal-ticket-detail" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">View</a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TKT-1028</td>
+                    <td class="salon-cell"><strong>Refund not reflected</strong><span>Awaiting confirmation</span></td>
+                    <td>Serenity Spa</td>
+                    <td><span class="priority-pill high">High</span></td>
+                    <td><span class="status-badge scheduled">Awaiting User</span></td>
+                    <td>Ops Team A</td>
+                    <td>15 Jun 2026</td>
+                    <td><span class="sla-ok">4h left</span></td>
+                    <td><a href="#modal-ticket-detail" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">View</a></td>
+                  </tr>
+                  <tr>
+                    <td class="mono">TKT-1010</td>
+                    <td class="salon-cell"><strong>Logo upload issue</strong><span>Resolved</span></td>
+                    <td>Classic Cuts</td>
+                    <td><span class="priority-pill low">Low</span></td>
+                    <td><span class="status-badge published">Resolved</span></td>
+                    <td>Ops Team A</td>
+                    <td>10 Jun 2026</td>
+                    <td>—</td>
+                    <td><a href="#modal-ticket-detail" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">View</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- TKT-03 Ticket Detail Modal -->
+  <div id="modal-ticket-detail" class="modal modal-xl modal-ticket" data-figma-frame="TKT-03 Ticket Detail">
+    <a href="#tkt-list" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <header class="ticket-modal-header">
+        <div class="ticket-modal-title-row">
+          <div class="ticket-modal-badges">
+            <span class="ticket-id">TKT-1042</span>
+            <span class="status-badge active">In Progress</span>
+            <span class="priority-pill high">High</span>
+            <span class="screen-tag" style="margin-left:4px;">TKT-03</span>
+          </div>
+          <a href="#tkt-list" class="modal-close" aria-label="Close">×</a>
+        </div>
+        <h2 class="ticket-subject">Payment gateway timeout during checkout</h2>
+        <p class="ticket-submeta">Luxe Curls Studio · Escalated from salon portal · Created 20 Jun 2026, 09:14 IST · <span class="sla-ok">6h SLA remaining</span></p>
+      </header>
+
+      <div class="modal-body ticket-modal-body">
+        <section class="ticket-section">
+          <h4>Overview</h4>
+          <div class="ticket-meta-grid">
+            <div class="meta-cell">
+              <label for="tkt-status">Status</label>
+              <select id="tkt-status">
+                <option>Created</option>
+                <option selected>In Progress</option>
+                <option>On Hold</option>
+                <option>Awaiting User Confirmation</option>
+                <option>Resolved</option>
+              </select>
+            </div>
+            <div class="meta-cell">
+              <label for="tkt-assign">Assignee</label>
+              <select id="tkt-assign">
+                <option selected>Ops Team A</option>
+                <option>Billing Team</option>
+                <option>Support Lead</option>
+                <option>Unassigned</option>
+              </select>
+            </div>
+            <div class="meta-cell">
+              <label>Salon</label>
+              <div class="meta-val">Luxe Curls Studio<br><a href="all-salons.html">ORG-018</a></div>
+            </div>
+            <div class="meta-cell">
+              <label>Reason</label>
+              <div class="meta-val">Payments → Gateway error</div>
+            </div>
+            <div class="meta-cell">
+              <label>Source</label>
+              <div class="meta-val">Salon admin portal</div>
+            </div>
+            <div class="meta-cell">
+              <label>SLA window</label>
+              <div class="meta-val"><span class="sla-ok">8h · 6h left</span></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="ticket-two-col">
+          <section class="ticket-section">
+            <h4>Description</h4>
+            <p class="ticket-desc-text">Salon admin reports checkout fails with timeout after OTP entry. Affects card payments only; UPI works. Started after yesterday's deployment.</p>
+          </section>
+
+          <section class="ticket-section">
+            <h4>Internal Notes <span class="hint">(salon cannot see)</span></h4>
+            <div class="note-item internal">
+              <strong>Ops Team A</strong> · 20 Jun 2026 10:30
+              <p>Escalated to payment gateway vendor. Ticket ref PG-8821 opened.</p>
+            </div>
+            <div class="form-field" style="margin-top:14px;">
+              <label for="internal-note">Add note</label>
+              <textarea id="internal-note" rows="3" placeholder="Internal note for ops team…"></textarea>
+            </div>
+            <button type="button" class="btn btn-outline" style="margin-top:10px;font-size:0.78rem;">Add Note</button>
+          </section>
+        </div>
+
+        <section class="ticket-section">
+          <h4>Ticket History</h4>
+          <ul class="ticket-timeline">
+            <li><span class="time">20 Jun 2026 · 10:30</span><strong>Status changed to In Progress</strong><span>Assigned to Ops Team A · Super Admin</span></li>
+            <li><span class="time">20 Jun 2026 · 09:14</span><strong>Ticket created</strong><span>Escalated from salon portal · Luxe Curls Studio</span></li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="modal-foot ticket-modal-foot">
+        <a href="#tkt-list" class="btn btn-ghost">Close</a>
+        <div class="ticket-foot-actions">
+          <button type="button" class="btn btn-outline">Put On Hold</button>
+          <button type="button" class="btn btn-outline">Mark Resolved</button>
+          <button type="button" class="btn btn-ghost">Reopen</button>
+          <a href="#tkt-list" class="btn btn-primary">Update Ticket</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TKT-M01 Create Ticket -->
+  <div id="modal-create-ticket" class="modal" data-figma-frame="TKT-M01 Create Ticket">
+    <a href="#tkt-list" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box" style="max-width:560px;">
+      <div class="modal-head">
+        <h2>Create Ticket <span class="screen-tag">TKT-M01</span></h2>
+        <a href="#tkt-list" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <label for="tkt-reason">Reason</label>
+          <select id="tkt-reason">
+            <option value="">Select reason…</option>
+            <option>Payments</option>
+            <option>Subscription &amp; Billing</option>
+            <option>Branch / Plan limits</option>
+            <option>Technical / Bug</option>
+            <option>Account access</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="tkt-sub-reason">Sub-reason</label>
+          <select id="tkt-sub-reason">
+            <option value="">Select sub-reason…</option>
+            <option>Gateway error</option>
+            <option>Refund issue</option>
+            <option>Renewal failure</option>
+            <option>Upgrade request</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="tkt-priority-new">Priority</label>
+          <select id="tkt-priority-new">
+            <option>Low</option>
+            <option selected>Medium</option>
+            <option>High</option>
+            <option>Critical</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="tkt-desc">Description</label>
+          <textarea id="tkt-desc" placeholder="Describe the issue in detail…"></textarea>
+        </div>
+        <div class="modal-field">
+          <label for="tkt-salon-link">Link to salon / branch / user <span style="font-weight:400;text-transform:none;">(optional)</span></label>
+          <input type="text" id="tkt-salon-link" placeholder="Salon name, org ID, branch, or user ID…" />
+        </div>
+        <div class="modal-field">
+          <label>Attachments</label>
+          <button type="button" class="btn btn-outline" style="width:100%;justify-content:center;"><svg class="svg-icon"><use href="#i-paperclip"/></svg> Attach files</button>
+          <p style="font-size:0.72rem;color:var(--muted);margin-top:6px;">Screenshots, documents · max 10 MB each</p>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#tkt-list" class="btn btn-ghost">Cancel</a>
+        <a href="#tkt-list" class="btn btn-primary">Create Ticket</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

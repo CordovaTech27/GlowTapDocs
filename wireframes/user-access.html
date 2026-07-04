@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — User Access Control</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-light: #F3EEFF;
+      --pink: #FF03C8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    .app-screen {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg, var(--bg));
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
+    }
+
+    .sidebar-logo img {
+      display: block;
+      width: 280px;
+      height: 100px;
+    }
+
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+    .nav a.active { background: var(--gradient-brand); color: var(--white); box-shadow: var(--shadow-purple); }
+
+    .nav .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .nav-footer {
+      padding: 8px 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-footer-link:hover { background: var(--purple-light); color: var(--purple); }
+
+    .nav-footer-link .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-user { padding: 14px; border-top: 1px solid var(--border); }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-main-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .app-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-head h1 { font-size: 1.5rem; font-weight: 700; }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn .svg-icon { width: 16px; height: 16px; }
+
+    .btn-outline {
+      background: var(--white);
+      border: 1px solid rgba(123, 0, 255, 0.25);
+      color: var(--purple);
+    }
+
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .btn-danger {
+      background: var(--white);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      color: var(--red);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-warning {
+      background: var(--white);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      color: var(--amber);
+    }
+
+    .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Filters — BRN-01 */
+    .filters-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .status-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .status-tab {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-tab.on {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    @media (max-width: 1100px) {
+      .filter-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .filter-row { grid-template-columns: 1fr; }
+      .split-layout { grid-template-columns: 1fr !important; }
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: rgba(123, 0, 255, 0.4);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1);
+    }
+
+    /* Master-detail — SAL-01 + SAL-02 */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .panel-head .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .panel-scroll {
+      max-height: 720px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .lead-list { list-style: none; }
+
+    .lead-item {
+      display: block;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--bg);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .lead-item:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .lead-item.selected {
+      background: rgba(243, 238, 255, 0.55);
+      border-left-color: var(--purple);
+    }
+
+    .lead-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .lead-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .lead-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .lead-meta { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border: 1px solid;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-badge.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.pending::before { background: #F59E0B; }
+    .status-badge.awaiting { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.awaiting::before { background: #3B82F6; }
+    .status-badge.approved { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.approved::before { background: #10B981; }
+    .status-badge.rejected { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.rejected::before { background: #EF4444; }
+    .status-badge.paid { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.paid::before { background: #10B981; }
+
+    .status-badge.upgrade { background: #F3EEFF; color: #6D28D9; border-color: #DDD6FE; }
+    .status-badge.upgrade::before { background: #7B00FF; }
+
+    .limit-banner svg { flex-shrink: 0; margin-top: 2px; color: var(--amber); }
+
+    .limit-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .limit-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #FDE68A;
+      background: rgba(255, 251, 235, 0.9);
+      font-size: 0.85rem;
+      color: #92400E;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .limit-box h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .limit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .limit-row span:first-child { color: var(--muted); }
+    .limit-row strong { font-weight: 700; }
+    .limit-row strong.at-limit { color: var(--amber); }
+
+    .limit-track {
+      height: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .limit-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .limit-fill.full { background: linear-gradient(90deg, var(--amber) 0%, #F59E0B 100%); }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .hours-grid span:nth-child(odd) { color: var(--muted); }
+    .hours-grid span:nth-child(even) { font-weight: 600; text-align: right; }
+
+    .review-body { padding: 20px; }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .review-grid { grid-template-columns: 1fr; }
+    }
+
+    .detail-block h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+      font-size: 0.85rem;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row dt { color: var(--muted); flex-shrink: 0; }
+    .detail-row dd { font-weight: 600; text-align: right; }
+
+    .kyc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .kyc-grid { grid-template-columns: 1fr; }
+    }
+
+    .kyc-doc {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .kyc-doc .doc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .kyc-doc .doc-icon .svg-icon { width: 18px; height: 18px; }
+
+    .kyc-doc strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+    .kyc-doc span { font-size: 0.72rem; color: var(--muted); }
+    .kyc-doc a {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .commission-box {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid #EDE9FE;
+      background: linear-gradient(135deg, rgba(243, 238, 255, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+
+    .commission-box label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .commission-box p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .commission-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .commission-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--purple);
+    }
+
+    .commission-val {
+      min-width: 52px;
+      text-align: center;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .screen-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Modals — SAL-M01, M02, M03 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal:target { display: flex; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 42, 50, 0.5);
+    }
+
+    .modal-box {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 20px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal-head h2 { font-size: 1.1rem; font-weight: 700; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover { background: var(--purple-light); color: var(--purple); }
+
+    .modal-body { padding: 0 24px 20px; }
+
+    .modal-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .modal-summary {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+    }
+
+    .modal-summary div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .modal-summary span { color: var(--muted); }
+    .modal-summary strong { font-weight: 700; }
+
+    .modal-field { margin-bottom: 14px; }
+
+    .modal-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-field select, .modal-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .modal-field textarea { min-height: 88px; resize: vertical; }
+
+    .checklist { list-style: none; margin-bottom: 16px; }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .checklist input { accent-color: var(--purple); width: 16px; height: 16px; }
+
+    .modal-foot {
+      padding: 16px 24px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    html.figma-export,
+    html.figma-export body {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+    }
+
+    html.figma-export .app-screen {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .sidebar {
+      width: 280px;
+      height: 1024px;
+      min-height: 1024px;
+      position: relative;
+      top: auto;
+    }
+
+    html.figma-export .app-main-scroll {
+      width: 1160px;
+      height: 1024px;
+      min-height: 1024px;
+      flex: none;
+      overflow-y: auto;
+    }
+
+    html.figma-export .app-content {
+      width: 1160px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .panel-scroll {
+      height: 720px;
+      max-height: 720px;
+    }
+
+    /* TXN-01 table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .data-table thead {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .data-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--bg);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr { transition: background 0.15s; }
+    .data-table tbody tr:hover { background: rgba(243, 238, 255, 0.35); }
+    .data-table tbody tr.selected { background: rgba(243, 238, 255, 0.55); }
+    .data-table tbody tr.selected td:first-child { box-shadow: inset 4px 0 0 var(--purple); }
+
+    .data-table .txn-cell strong { display: block; font-weight: 700; font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--purple); }
+    .data-table .txn-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .salon-cell strong { display: block; font-weight: 600; }
+    .data-table .salon-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .amount-val { font-weight: 700; }
+    .data-table a.row-link { display: block; color: inherit; text-decoration: none; }
+
+    .status-badge.success { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.success::before { background: #10B981; }
+    .status-badge.failed { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.failed::before { background: #EF4444; }
+    .status-badge.refunded { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.refunded::before { background: #3B82F6; }
+    .status-badge.disputed { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.disputed::before { background: #F59E0B; }
+
+    .amount-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .amount-breakdown { grid-template-columns: 1fr; }
+    }
+
+    .amount-card {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .amount-card.highlight {
+      background: linear-gradient(135deg, rgba(243,238,255,0.8), #fff);
+      border-color: #EDE9FE;
+    }
+
+    .amount-card label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .amount-card .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .amount-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    .gateway-ref {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    .info-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #BFDBFE;
+      background: #EFF6FF;
+      font-size: 0.8rem;
+      color: #1E40AF;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .info-banner.warn {
+      border-color: #FDE68A;
+      background: #FFFBEB;
+      color: #92400E;
+    }
+
+    /* USR module tabs */
+    .module-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .module-nav a {
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    .module-nav a.on,
+    .usr-views:has(#usr-salon:target) .module-nav a[href="#usr-salon"],
+    .usr-views:has(#usr-sub:target) .module-nav a[href="#usr-sub"],
+    .usr-views:has(#usr-end:target) .module-nav a[href="#usr-end"],
+    .usr-views:not(:has(.usr-page:target)) .module-nav a[href="#usr-salon"] {
+      background: var(--gradient-brand);
+      color: var(--white);
+      border-color: transparent;
+      box-shadow: var(--shadow-purple);
+    }
+
+    .usr-page { display: none; }
+    .usr-views:not(:has(.usr-page:target)) #usr-salon { display: block; }
+    #usr-salon:target, #usr-sub:target, #usr-end:target { display: block; }
+    .usr-views:has(:target) #usr-salon:not(:target) { display: none; }
+
+    .permission-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .permission-grid { grid-template-columns: 1fr; }
+    }
+
+    .perm-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .perm-chip input { accent-color: var(--purple); }
+
+    .perm-chip.readonly {
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .form-grid-inline {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid-inline { grid-template-columns: 1fr; }
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--white);
+    }
+
+    .form-field input:read-only,
+    .form-field input[readonly] {
+      background: var(--bg);
+      color: var(--muted);
+    }
+
+    .login-history {
+      list-style: none;
+      font-size: 0.82rem;
+    }
+
+    .login-history li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .login-history li span { color: var(--muted); }
+
+    .status-badge.active { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.active::before { background: #10B981; }
+    .status-badge.disabled-user { background: #F1F5F9; color: #64748B; border-color: #E2E8F0; }
+    .status-badge.disabled-user::before { background: #94A3B8; }
+
+    .modal-field input[type="text"],
+    .modal-field input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    </symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+      <path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+    </symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+    </symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/>
+      <path d="M10 15H6a4 4 0 0 0-4 4v2"/>
+      <path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/>
+      <path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/>
+      <path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+    </symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+      <path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/>
+      <path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+      <path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>
+    </symbol>
+    <symbol id="i-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+    </symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="USR-01 User Access Control">
+  <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+    </div>
+    <ul class="nav">
+      <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="notifications.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-bell"/></svg>
+        Notifications
+        <span class="badge">3</span>
+      </a>
+      <a href="login.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-log-out"/></svg>
+        Sign out
+      </a>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-card">
+        <div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+    <div class="app-content" data-figma-layer="Content User Access">
+            <div class="page-head">
+        <div>
+          <h1>User Access Control</h1>
+          <p>View and manage Salon Admins, Sub-Admins, and End Users. <span class="screen-tag">USR-01 – USR-06</span></p>
+        </div>
+        <div class="page-actions">
+          <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-download"/></svg> Export</button>
+        </div>
+      </div>
+
+      <div class="usr-views">
+        <nav class="module-nav" aria-label="User type tabs">
+          <a href="#usr-salon">Salon Admins</a>
+          <a href="#usr-sub">Sub-Admins</a>
+          <a href="#usr-end">End Users</a>
+        </nav>
+
+        <!-- USR-01 + USR-02 Salon Admins -->
+        <div id="usr-salon" class="usr-page">
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Active</button>
+              <button type="button" class="status-tab">Disabled</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="salon-search">Search</label>
+                <input type="search" id="salon-search" placeholder="Name, email, phone, salon…" />
+              </div>
+              <div class="field">
+                <label for="salon-org">Organization</label>
+                <select id="salon-org">
+                  <option selected>All salons</option>
+                  <option>Blush Beauty Lounge</option>
+                  <option>Serenity Spa &amp; Salon</option>
+                  <option>Classic Cuts</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="split-layout" data-figma-layer="Salon Admins Split">
+            <div class="panel" data-figma-frame="USR-01 Salon Admins List">
+              <div class="panel-head">
+                <h2>Salon Admins</h2>
+                <span class="meta">186 total</span>
+              </div>
+              <div class="panel-scroll">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Salon</th>
+                      <th>Last Login</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="salon-cell"><a href="#salon-detail" class="row-link"><strong>Anita Desai</strong><span>anita@serenityspa.in</span></a></td>
+                      <td>Serenity Spa</td>
+                      <td>20 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr class="selected">
+                      <td class="salon-cell"><a href="#salon-detail" class="row-link"><strong>Kavitha Reddy</strong><span>kavitha@blushbeauty.in</span></a></td>
+                      <td>Blush Beauty</td>
+                      <td>19 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td class="salon-cell"><a href="#salon-detail" class="row-link"><strong>Vikram Iyer</strong><span>vikram@classiccuts.in</span></a></td>
+                      <td>Classic Cuts</td>
+                      <td>15 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td class="salon-cell"><a href="#salon-detail" class="row-link"><strong>Meera Nair</strong><span>meera@stylehub.in</span></a></td>
+                      <td>Style Hub</td>
+                      <td>8 Jun 2026</td>
+                      <td><span class="status-badge disabled-user">Disabled</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel" id="salon-detail" data-figma-frame="USR-02 Salon Admin Detail">
+              <div class="panel-head">
+                <h2>Kavitha Reddy</h2>
+                <span class="status-badge active">Active</span>
+              </div>
+              <div class="panel-scroll review-body">
+                <div class="review-grid">
+                  <div class="detail-block">
+                    <h3>Profile</h3>
+                    <div class="form-grid-inline">
+                      <div class="form-field">
+                        <label for="sa-name">Full name</label>
+                        <input type="text" id="sa-name" value="Kavitha Reddy" />
+                      </div>
+                      <div class="form-field">
+                        <label for="sa-email">Email</label>
+                        <input type="email" id="sa-email" value="kavitha@blushbeauty.in" />
+                      </div>
+                      <div class="form-field">
+                        <label for="sa-phone">Phone</label>
+                        <input type="text" id="sa-phone" value="+91 98765 43210" />
+                      </div>
+                      <div class="form-field">
+                        <label for="sa-status">Status</label>
+                        <input type="text" id="sa-status" value="Active" readonly />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="detail-block">
+                    <h3>Organization</h3>
+                    <dl>
+                      <div class="detail-row"><dt>Salon</dt><dd>Blush Beauty Lounge</dd></div>
+                      <div class="detail-row"><dt>Org ID</dt><dd>ORG-002</dd></div>
+                      <div class="detail-row"><dt>Plan</dt><dd>Pro 12M</dd></div>
+                      <div class="detail-row"><dt>Created</dt><dd>12 Mar 2025 · on approval</dd></div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Branch Access</h3>
+                  <dl>
+                    <div class="detail-row"><dt>Koramangala</dt><dd>All modules</dd></div>
+                    <div class="detail-row"><dt>Indiranagar</dt><dd>All modules</dd></div>
+                    <div class="detail-row"><dt>HSR Layout</dt><dd>All modules</dd></div>
+                    <div class="detail-row"><dt>Whitefield</dt><dd>All modules</dd></div>
+                  </dl>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Activity</h3>
+                  <dl>
+                    <div class="detail-row"><dt>Last login</dt><dd>19 Jun 2026 · 09:42 IST</dd></div>
+                    <div class="detail-row"><dt>Total logins (30d)</dt><dd>24</dd></div>
+                  </dl>
+                  <h3 style="margin-top:16px;">Login History</h3>
+                  <ul class="login-history">
+                    <li><strong>19 Jun 2026</strong><span>09:42 · Chrome · Bangalore</span></li>
+                    <li><strong>18 Jun 2026</strong><span>14:10 · Safari · Mobile</span></li>
+                    <li><strong>17 Jun 2026</strong><span>08:55 · Chrome · Bangalore</span></li>
+                  </ul>
+                </div>
+
+                <div class="action-row">
+                  <button type="button" class="btn btn-primary">Save Changes</button>
+                  <a href="#modal-reset-password" class="btn btn-outline">Reset Password</a>
+                  <a href="#modal-disable-user" class="btn btn-danger">Disable User</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- USR-03 + USR-04 Sub-Admins -->
+        <div id="usr-sub" class="usr-page" data-figma-frame="USR-03 Sub-Admins List">
+          <div class="info-banner warn">
+            <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;"><use href="#i-alert-triangle"/></svg>
+            <span><strong>View-only.</strong> Sub-admins are created by Salon Admins. Super Admin cannot edit branch or module permissions — disable only for fraud or policy violations.</span>
+          </div>
+
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Active</button>
+              <button type="button" class="status-tab">Disabled</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="sub-search">Search</label>
+                <input type="search" id="sub-search" placeholder="Name, email, salon…" />
+              </div>
+              <div class="field">
+                <label for="sub-salon">Parent salon</label>
+                <select id="sub-salon">
+                  <option selected>All salons</option>
+                  <option>Blush Beauty Lounge</option>
+                  <option>Serenity Spa &amp; Salon</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="split-layout">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Sub-Admins</h2>
+                <span class="meta">42 total</span>
+              </div>
+              <div class="panel-scroll">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Branch</th>
+                      <th>Last Login</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="selected">
+                      <td class="salon-cell"><a href="#sub-detail" class="row-link"><strong>Ravi Kumar</strong><span>ravi@serenityspa.in</span></a></td>
+                      <td>Serenity — Bandra</td>
+                      <td>18 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td class="salon-cell"><a href="#sub-detail" class="row-link"><strong>Priya N</strong><span>priya@blushbeauty.in</span></a></td>
+                      <td>Blush — Koramangala</td>
+                      <td>17 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td class="salon-cell"><a href="#sub-detail" class="row-link"><strong>Arjun Menon</strong><span>arjun@classiccuts.in</span></a></td>
+                      <td>Classic — T. Nagar</td>
+                      <td>10 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel" id="sub-detail" data-figma-frame="USR-04 Sub-Admin Detail">
+              <div class="panel-head">
+                <h2>Ravi Kumar</h2>
+                <span class="status-badge active">Active</span>
+              </div>
+              <div class="panel-scroll review-body">
+                <div class="review-grid">
+                  <div class="detail-block">
+                    <h3>Profile (read-only)</h3>
+                    <dl>
+                      <div class="detail-row"><dt>Name</dt><dd>Ravi Kumar</dd></div>
+                      <div class="detail-row"><dt>Email</dt><dd>ravi@serenityspa.in</dd></div>
+                      <div class="detail-row"><dt>Phone</dt><dd>+91 98765 11122</dd></div>
+                      <div class="detail-row"><dt>Created by</dt><dd>Anita Desai (Salon Admin)</dd></div>
+                    </dl>
+                  </div>
+                  <div class="detail-block">
+                    <h3>Parent Organization</h3>
+                    <dl>
+                      <div class="detail-row"><dt>Salon</dt><dd>Serenity Spa &amp; Salon</dd></div>
+                      <div class="detail-row"><dt>Org ID</dt><dd>ORG-001</dd></div>
+                      <div class="detail-row"><dt>Last login</dt><dd>18 Jun 2026</dd></div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Branch Access (read-only)</h3>
+                  <dl>
+                    <div class="detail-row"><dt>Assigned branch</dt><dd>Serenity Spa — Bandra</dd></div>
+                    <div class="detail-row"><dt>Branch ID</dt><dd>BRN-014</dd></div>
+                  </dl>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Module Permissions (read-only)</h3>
+                  <div class="permission-grid">
+                    <label class="perm-chip readonly"><input type="checkbox" checked disabled /> Appointments</label>
+                    <label class="perm-chip readonly"><input type="checkbox" checked disabled /> Manpower</label>
+                    <label class="perm-chip readonly"><input type="checkbox" checked disabled /> Services</label>
+                  </div>
+                </div>
+
+                <div class="action-row">
+                  <a href="#modal-disable-user" class="btn btn-danger">Disable User</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- USR-05 + USR-06 End Users -->
+        <div id="usr-end" class="usr-page" data-figma-frame="USR-05 End Users List">
+          <div class="info-banner">
+            <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;"><use href="#i-alert-triangle"/></svg>
+            <span>End users self-register via the consumer app. Super Admin can <strong>view profiles</strong> and <strong>disable</strong> accounts for abuse or fraud — no manual creation.</span>
+          </div>
+
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Active</button>
+              <button type="button" class="status-tab">Disabled</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="eu-search">Search</label>
+                <input type="search" id="eu-search" placeholder="Name, email, phone…" />
+              </div>
+              <div class="field">
+                <label for="eu-city">City</label>
+                <select id="eu-city">
+                  <option selected>All cities</option>
+                  <option>Bangalore</option>
+                  <option>Mumbai</option>
+                  <option>Chennai</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="split-layout">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>End Users</h2>
+                <span class="meta">12,480 total</span>
+              </div>
+              <div class="panel-scroll">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Contact</th>
+                      <th>Last Login</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="selected">
+                      <td class="salon-cell"><a href="#end-detail" class="row-link"><strong>Riya P.</strong><span>EU-44821</span></a></td>
+                      <td>r***a@email.com</td>
+                      <td>20 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td class="salon-cell"><a href="#end-detail" class="row-link"><strong>Arun K.</strong><span>EU-44809</span></a></td>
+                      <td>a***n@email.com</td>
+                      <td>19 Jun 2026</td>
+                      <td><span class="status-badge active">Active</span></td>
+                    </tr>
+                    <tr>
+                      <td class="salon-cell"><a href="#end-detail" class="row-link"><strong>Spam Account</strong><span>EU-12004</span></a></td>
+                      <td>spam@test.com</td>
+                      <td>10 Jun 2026</td>
+                      <td><span class="status-badge disabled-user">Disabled</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel" id="end-detail" data-figma-frame="USR-06 End User Detail">
+              <div class="panel-head">
+                <h2>Riya P.</h2>
+                <span class="status-badge active">Active</span>
+              </div>
+              <div class="panel-scroll review-body">
+                <div class="review-grid">
+                  <div class="detail-block">
+                    <h3>Profile</h3>
+                    <dl>
+                      <div class="detail-row"><dt>User ID</dt><dd>EU-44821</dd></div>
+                      <div class="detail-row"><dt>Email</dt><dd>r***a@email.com</dd></div>
+                      <div class="detail-row"><dt>Phone</dt><dd>+91 ***** 7821</dd></div>
+                      <div class="detail-row"><dt>City</dt><dd>Bangalore</dd></div>
+                      <div class="detail-row"><dt>Registered</dt><dd>3 Jan 2026</dd></div>
+                    </dl>
+                  </div>
+                  <div class="detail-block">
+                    <h3>Activity Summary</h3>
+                    <dl>
+                      <div class="detail-row"><dt>Last login</dt><dd>20 Jun 2026 · 11:20</dd></div>
+                      <div class="detail-row"><dt>Bookings</dt><dd>14 total</dd></div>
+                      <div class="detail-row"><dt>Transactions</dt><dd>12 successful</dd></div>
+                      <div class="detail-row"><dt>Lifetime spend</dt><dd>₹48,200</dd></div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Recent Bookings</h3>
+                  <dl>
+                    <div class="detail-row"><dt>APT-772901</dt><dd>Blush Beauty · 20 Jun · Paid</dd></div>
+                    <div class="detail-row"><dt>APT-771204</dt><dd>Serenity Spa · 12 Jun · Paid</dd></div>
+                    <div class="detail-row"><dt>APT-769881</dt><dd>Glow Studio · 2 Jun · Cancelled</dd></div>
+                  </dl>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Recent Transactions</h3>
+                  <dl>
+                    <div class="detail-row"><dt>TXN-982340</dt><dd>₹12,000 · Blush Beauty · Success</dd></div>
+                    <div class="detail-row"><dt>TXN-981102</dt><dd>₹4,500 · Serenity Spa · Success</dd></div>
+                  </dl>
+                </div>
+
+                <div class="action-row">
+                  <a href="#modal-disable-user" class="btn btn-danger">Disable User</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- USR-M01 Disable User -->
+  <div id="modal-disable-user" class="modal" data-figma-frame="USR-M01 Disable User">
+    <a href="#usr-salon" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Disable User <span class="screen-tag">USR-M01</span></h2>
+        <a href="#usr-salon" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Block login for <strong>Kavitha Reddy</strong> (Salon Admin). Account data is retained; action is logged in the audit trail.</p>
+        <div class="modal-summary">
+          <div><span>User</span><strong>Kavitha Reddy</strong></div>
+          <div><span>Email</span><strong>kavitha@blushbeauty.in</strong></div>
+          <div><span>Type</span><strong>Salon Admin</strong></div>
+          <div><span>Organization</span><strong>Blush Beauty Lounge</strong></div>
+        </div>
+        <div class="modal-field">
+          <label for="disable-reason">Reason</label>
+          <select id="disable-reason">
+            <option value="">Select reason…</option>
+            <option>Fraud / suspicious activity</option>
+            <option>Policy violation</option>
+            <option>Account abuse</option>
+            <option>Requested by salon (verified)</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="disable-notes">Notes (audit log)</label>
+          <textarea id="disable-notes" placeholder="Required details for audit trail…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#usr-salon" class="btn btn-ghost">Cancel</a>
+        <a href="#usr-salon" class="btn btn-danger">Disable User</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- USR-M02 Reset Password -->
+  <div id="modal-reset-password" class="modal" data-figma-frame="USR-M02 Reset Password">
+    <a href="#usr-salon" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Reset Password <span class="screen-tag">USR-M02</span></h2>
+        <a href="#usr-salon" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Trigger a password reset for <strong>Kavitha Reddy</strong>. A secure reset link will be sent to the registered email.</p>
+        <div class="modal-summary">
+          <div><span>Salon Admin</span><strong>Kavitha Reddy</strong></div>
+          <div><span>Email</span><strong>kavitha@blushbeauty.in</strong></div>
+          <div><span>Salon</span><strong>Blush Beauty Lounge</strong></div>
+        </div>
+        <div class="modal-field">
+          <label for="reset-email">Send reset link to</label>
+          <input type="email" id="reset-email" value="kavitha@blushbeauty.in" />
+        </div>
+        <div class="info-banner" style="margin-bottom:0;">
+          <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;"><use href="#i-alert-triangle"/></svg>
+          <span>Salon Admin only. Sub-admins and end users cannot reset passwords from this screen.</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#usr-salon" class="btn btn-ghost">Cancel</a>
+        <a href="#usr-salon" class="btn btn-primary">Send Reset Link</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

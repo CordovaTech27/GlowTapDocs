@@ -14,8 +14,9 @@
       --pink: #FF03C8;
       --text: #1E2A32;
       --muted: #6B7A88;
-      --border: #E2E8F0;
-      --bg: #F8F9FC;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
       --white: #FFFFFF;
       --green: #059669;
       --amber: #D97706;
@@ -43,8 +44,8 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(123, 0, 255, 0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 5% 90%, rgba(255, 3, 200, 0.05) 0%, transparent 55%);
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
       z-index: 0;
     }
 
@@ -61,7 +62,7 @@
 
     .sidebar {
       width: 280px;
-      background: var(--white);
+      background: var(--sidebar-bg, var(--bg));
       border-right: 1px solid var(--border);
       box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
       display: flex;
@@ -73,27 +74,20 @@
     }
 
     .sidebar-logo {
-      padding: 20px 20px 12px;
-      border-bottom: 1px solid var(--border);
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
     }
 
-    .sidebar-logo span {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.25rem;
-      background: var(--gradient-brand);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .sidebar-logo small {
+    .sidebar-logo img {
       display: block;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 2px;
+      width: 280px;
+      height: 100px;
     }
 
     .nav {
@@ -945,27 +939,26 @@
 
   <div class="app-screen" data-figma-frame="BRN-01 Branch Approvals">
   <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
-    <div class="sidebar-logo">
-      <span>GlowTap</span>
-      <small>Tap. Book. Glow.</small>
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
     </div>
     <ul class="nav">
       <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
       <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
       <li><a href="branch-approvals.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
-      <li><a href="#"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
     </ul>
     <div class="nav-footer">
-      <a href="#" class="nav-footer-link">
+      <a href="notifications.html" class="nav-footer-link">
         <svg class="svg-icon"><use href="#i-bell"/></svg>
         Notifications
         <span class="badge">3</span>

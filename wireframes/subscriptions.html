@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — Subscription Management</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-light: #F3EEFF;
+      --pink: #FF03C8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    .app-screen {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg, var(--bg));
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
+    }
+
+    .sidebar-logo img {
+      display: block;
+      width: 280px;
+      height: 100px;
+    }
+
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+    .nav a.active { background: var(--gradient-brand); color: var(--white); box-shadow: var(--shadow-purple); }
+
+    .nav .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .nav-footer {
+      padding: 8px 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-footer-link:hover { background: var(--purple-light); color: var(--purple); }
+
+    .nav-footer-link .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-user { padding: 14px; border-top: 1px solid var(--border); }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-main-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .app-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-head h1 { font-size: 1.5rem; font-weight: 700; }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn .svg-icon { width: 16px; height: 16px; }
+
+    .btn-outline {
+      background: var(--white);
+      border: 1px solid rgba(123, 0, 255, 0.25);
+      color: var(--purple);
+    }
+
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .btn-danger {
+      background: var(--white);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      color: var(--red);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-warning {
+      background: var(--white);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      color: var(--amber);
+    }
+
+    .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Filters — BRN-01 */
+    .filters-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .status-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .status-tab {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-tab.on {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    @media (max-width: 1100px) {
+      .filter-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .filter-row { grid-template-columns: 1fr; }
+      .split-layout { grid-template-columns: 1fr !important; }
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: rgba(123, 0, 255, 0.4);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1);
+    }
+
+    /* Master-detail — SAL-01 + SAL-02 */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .panel-head .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .panel-scroll {
+      max-height: 720px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .lead-list { list-style: none; }
+
+    .lead-item {
+      display: block;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--bg);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .lead-item:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .lead-item.selected {
+      background: rgba(243, 238, 255, 0.55);
+      border-left-color: var(--purple);
+    }
+
+    .lead-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .lead-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .lead-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .lead-meta { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border: 1px solid;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-badge.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.pending::before { background: #F59E0B; }
+    .status-badge.awaiting { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.awaiting::before { background: #3B82F6; }
+    .status-badge.approved { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.approved::before { background: #10B981; }
+    .status-badge.rejected { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.rejected::before { background: #EF4444; }
+    .status-badge.paid { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.paid::before { background: #10B981; }
+
+    .status-badge.upgrade { background: #F3EEFF; color: #6D28D9; border-color: #DDD6FE; }
+    .status-badge.upgrade::before { background: #7B00FF; }
+
+    .limit-banner svg { flex-shrink: 0; margin-top: 2px; color: var(--amber); }
+
+    .limit-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .limit-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #FDE68A;
+      background: rgba(255, 251, 235, 0.9);
+      font-size: 0.85rem;
+      color: #92400E;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .limit-box h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .limit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .limit-row span:first-child { color: var(--muted); }
+    .limit-row strong { font-weight: 700; }
+    .limit-row strong.at-limit { color: var(--amber); }
+
+    .limit-track {
+      height: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .limit-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .limit-fill.full { background: linear-gradient(90deg, var(--amber) 0%, #F59E0B 100%); }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .hours-grid span:nth-child(odd) { color: var(--muted); }
+    .hours-grid span:nth-child(even) { font-weight: 600; text-align: right; }
+
+    .review-body { padding: 20px; }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .review-grid { grid-template-columns: 1fr; }
+    }
+
+    .detail-block h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+      font-size: 0.85rem;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row dt { color: var(--muted); flex-shrink: 0; }
+    .detail-row dd { font-weight: 600; text-align: right; }
+
+    .kyc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .kyc-grid { grid-template-columns: 1fr; }
+    }
+
+    .kyc-doc {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .kyc-doc .doc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .kyc-doc .doc-icon .svg-icon { width: 18px; height: 18px; }
+
+    .kyc-doc strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+    .kyc-doc span { font-size: 0.72rem; color: var(--muted); }
+    .kyc-doc a {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .commission-box {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid #EDE9FE;
+      background: linear-gradient(135deg, rgba(243, 238, 255, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+
+    .commission-box label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .commission-box p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .commission-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .commission-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--purple);
+    }
+
+    .commission-val {
+      min-width: 52px;
+      text-align: center;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .screen-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Modals — SAL-M01, M02, M03 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal:target { display: flex; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 42, 50, 0.5);
+    }
+
+    .modal-box {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 20px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal-head h2 { font-size: 1.1rem; font-weight: 700; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover { background: var(--purple-light); color: var(--purple); }
+
+    .modal-body { padding: 0 24px 20px; }
+
+    .modal-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .modal-summary {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+    }
+
+    .modal-summary div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .modal-summary span { color: var(--muted); }
+    .modal-summary strong { font-weight: 700; }
+
+    .modal-field { margin-bottom: 14px; }
+
+    .modal-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-field select, .modal-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .modal-field textarea { min-height: 88px; resize: vertical; }
+
+    .checklist { list-style: none; margin-bottom: 16px; }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .checklist input { accent-color: var(--purple); width: 16px; height: 16px; }
+
+    .modal-foot {
+      padding: 16px 24px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    html.figma-export,
+    html.figma-export body {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+    }
+
+    html.figma-export .app-screen {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .sidebar {
+      width: 280px;
+      height: 1024px;
+      min-height: 1024px;
+      position: relative;
+      top: auto;
+    }
+
+    html.figma-export .app-main-scroll {
+      width: 1160px;
+      height: 1024px;
+      min-height: 1024px;
+      flex: none;
+      overflow-y: auto;
+    }
+
+    html.figma-export .app-content {
+      width: 1160px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .panel-scroll {
+      height: 720px;
+      max-height: 720px;
+    }
+
+    /* SUB module nav */
+    .module-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .module-nav a {
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    .module-nav a.on,
+    .sub-views:has(#sub-overview:target) .module-nav a[href="#sub-overview"],
+    .sub-views:has(#sub-plans:target) .module-nav a[href="#sub-plans"],
+    .sub-views:has(#sub-edit:target) .module-nav a[href="#sub-edit"],
+    .sub-views:has(#sub-transactions:target) .module-nav a[href="#sub-transactions"],
+    .sub-views:not(:has(.sub-page:target)) .module-nav a[href="#sub-overview"] {
+      background: var(--gradient-brand);
+      color: var(--white);
+      border-color: transparent;
+      box-shadow: var(--shadow-purple);
+    }
+
+    .sub-page { display: none; }
+    .sub-views:not(:has(.sub-page:target)) #sub-overview { display: block; }
+    #sub-overview:target, #sub-plans:target, #sub-edit:target, #sub-transactions:target { display: block; }
+    .sub-views:has(:target) #sub-overview:not(:target) { display: none; }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 1100px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .grid-4, .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .metric-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .metric-card.purple { background: linear-gradient(135deg, rgba(243,238,255,0.9), #fff); border-color: #EDE9FE; }
+    .metric-card.pink { background: linear-gradient(135deg, rgba(253,242,248,0.9), #fff); border-color: #FCE7F3; }
+    .metric-card.blue { background: linear-gradient(135deg, rgba(239,246,255,0.9), #fff); border-color: #DBEAFE; }
+    .metric-card.green { background: linear-gradient(135deg, rgba(236,253,245,0.9), #fff); border-color: #D1FAE5; }
+
+    .metric-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+    .metric-card label { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+    .metric-card .val { font-size: 1.4rem; font-weight: 700; margin-top: 6px; font-family: 'Outfit', sans-serif; }
+    .metric-card .val.purple { color: var(--purple); }
+    .metric-card .sub { font-size: 0.72rem; color: var(--green); font-weight: 600; margin-top: 6px; }
+    .metric-card .sub.warn { color: var(--amber); }
+
+    .metric-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .metric-icon.purple { background: #EDE9FE; color: var(--purple); }
+    .metric-icon.pink { background: #FCE7F3; color: #DB2777; }
+    .metric-icon.blue { background: #DBEAFE; color: #2563EB; }
+    .metric-icon.green { background: #D1FAE5; color: var(--green); }
+    .metric-icon .svg-icon { width: 18px; height: 18px; }
+
+    .content-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .content-card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .content-card-head h2 { font-size: 0.95rem; font-weight: 700; }
+    .content-card-body { padding: 20px; }
+
+    .plan-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 0.82rem;
+    }
+
+    .plan-row span:first-child { width: 100px; color: var(--muted); font-weight: 500; flex-shrink: 0; }
+    .plan-row span:last-child { width: 36px; text-align: right; font-weight: 700; flex-shrink: 0; }
+
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .renewal-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg);
+      font-size: 0.82rem;
+    }
+
+    .renewal-row:last-child { border-bottom: none; }
+
+    .revenue-model {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 768px) { .revenue-model { grid-template-columns: 1fr; } }
+
+    .revenue-box {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .revenue-box.purple { background: linear-gradient(135deg, rgba(243,238,255,0.7), #fff); border-color: #EDE9FE; }
+    .revenue-box.pink { background: linear-gradient(135deg, rgba(255,240,250,0.7), #fff); border-color: #FBCFE8; }
+    .revenue-box h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .revenue-box p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat-box {
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .stat-box .s-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+    .stat-box .s-val { font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
+    .stat-box .s-val.purple { color: var(--purple); }
+
+    /* SUB-02 / SUB-04 tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .data-table thead { background: var(--bg); position: sticky; top: 0; z-index: 1; }
+
+    .data-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--bg);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr { transition: background 0.15s; }
+    .data-table tbody tr:hover { background: rgba(243, 238, 255, 0.35); }
+    .data-table tbody tr.selected { background: rgba(243, 238, 255, 0.55); }
+    .data-table tbody tr.selected td:first-child { box-shadow: inset 4px 0 0 var(--purple); }
+    .data-table a.row-link { color: inherit; text-decoration: none; }
+    .data-table .mono { font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--purple); font-weight: 600; }
+    .data-table .sub { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+    .status-badge.active, .status-badge.success, .status-badge.paid { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.active::before, .status-badge.success::before, .status-badge.paid::before { background: #10B981; }
+    .status-badge.failed { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.failed::before { background: #EF4444; }
+    .status-badge.deprecated { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.deprecated::before { background: #F59E0B; }
+
+    .btn-icon {
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--white); color: var(--purple); display: inline-flex;
+      align-items: center; justify-content: center; text-decoration: none;
+    }
+
+    .btn-icon .svg-icon { width: 14px; height: 14px; }
+
+    /* SUB-03 form */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) { .form-grid { grid-template-columns: 1fr; } }
+
+    .form-field { margin-bottom: 14px; }
+    .form-field.full { grid-column: 1 / -1; }
+
+    .form-field > label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-field input:not([type="checkbox"]):not([type="radio"]),
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .form-field textarea { min-height: 72px; resize: vertical; }
+
+    .form-section {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-section h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 20px;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 640px) {
+      .checkbox-grid { grid-template-columns: 1fr; }
+    }
+
+    .checkbox-grid label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .checkbox-grid input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      flex-shrink: 0;
+      margin: 0;
+      padding: 0;
+      accent-color: var(--purple);
+    }
+
+    .discount-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 2fr;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) { .discount-row { grid-template-columns: 1fr; } }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .info-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #BFDBFE;
+      background: #EFF6FF;
+      font-size: 0.8rem;
+      color: #1E40AF;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .amount-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) { .amount-breakdown { grid-template-columns: 1fr; } }
+
+    .amount-card {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .amount-card.highlight {
+      background: linear-gradient(135deg, rgba(243,238,255,0.8), #fff);
+      border-color: #EDE9FE;
+    }
+
+    .amount-card label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .amount-card .val { font-size: 1.2rem; font-weight: 700; font-family: 'Outfit', sans-serif; }
+    .amount-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    </symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+      <path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+    </symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+    </symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/>
+      <path d="M10 15H6a4 4 0 0 0-4 4v2"/>
+      <path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/>
+      <path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/>
+      <path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+    </symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+      <path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/>
+      <path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+      <path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 12h14"/><path d="M12 5v14"/>
+    </symbol>
+    <symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/>
+      <path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/>
+    </symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M3 10h18"/>
+    </symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+    </symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="SUB-01 Subscription Management">
+  <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+    </div>
+    <ul class="nav">
+      <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="notifications.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-bell"/></svg>
+        Notifications
+        <span class="badge">3</span>
+      </a>
+      <a href="login.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-log-out"/></svg>
+        Sign out
+      </a>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-card">
+        <div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+    <div class="app-content" data-figma-layer="Content Subscriptions">
+      <div class="page-head">
+        <div>
+          <h1>Subscription Management</h1>
+          <p>Plans, billing, salon subscriptions, and revenue from salon → GlowTap payments. <span class="screen-tag">SUB-01 – SUB-05</span></p>
+        </div>
+        <div class="page-actions">
+          <a href="#sub-edit" class="btn btn-primary"><svg class="svg-icon"><use href="#i-plus"/></svg> Create Plan</a>
+        </div>
+      </div>
+
+      <div class="sub-views">
+        <nav class="module-nav" aria-label="Subscription sections">
+          <a href="#sub-overview">Overview</a>
+          <a href="#sub-plans">Plans</a>
+          <a href="#sub-edit">Create / Edit Plan</a>
+          <a href="#sub-transactions">Subscription Transactions</a>
+        </nav>
+
+        <!-- SUB-01 Plan Overview -->
+        <div id="sub-overview" class="sub-page" data-figma-frame="SUB-01 Plan Overview">
+          <div class="grid-4">
+            <div class="metric-card purple">
+              <div class="metric-top">
+                <div><label>Total MRR</label><div class="val purple">₹18.5L</div><div class="sub">+8.4% this month</div></div>
+                <div class="metric-icon purple"><svg class="svg-icon"><use href="#i-receipt"/></svg></div>
+              </div>
+            </div>
+            <div class="metric-card pink">
+              <div class="metric-top">
+                <div><label>Upcoming Renewals (30d)</label><div class="val">34</div><div class="sub warn">7 at churn risk</div></div>
+                <div class="metric-icon pink"><svg class="svg-icon"><use href="#i-calendar"/></svg></div>
+              </div>
+            </div>
+            <div class="metric-card blue">
+              <div class="metric-top">
+                <div><label>Active Subscriptions</label><div class="val">248</div><div class="sub">Across all plans</div></div>
+                <div class="metric-icon blue"><svg class="svg-icon"><use href="#i-package"/></svg></div>
+              </div>
+            </div>
+            <div class="metric-card green">
+              <div class="metric-top">
+                <div><label>Subscription Revenue (MTD)</label><div class="val">₹22.1L</div><div class="sub">Salon → GlowTap</div></div>
+                <div class="metric-icon green"><svg class="svg-icon"><use href="#i-coins"/></svg></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="content-card">
+              <div class="content-card-head"><h2>Salons by Plan</h2></div>
+              <div class="content-card-body">
+                <div class="plan-row"><span>Starter 1M</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span>54</span></div>
+                <div class="plan-row"><span>Growth 6M</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span>94</span></div>
+                <div class="plan-row"><span>Pro 12M</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span>72</span></div>
+                <div class="plan-row"><span>Enterprise 24M</span><div class="bar-track"><div class="bar-fill" style="width:18%"></div></div><span>28</span></div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="content-card-head"><h2>Revenue by Plan</h2></div>
+              <div class="content-card-body">
+                <div class="stat-grid">
+                  <div class="stat-box"><div class="s-label">Starter 1M</div><div class="s-val">₹5.4L</div></div>
+                  <div class="stat-box"><div class="s-label">Growth 6M</div><div class="s-val purple">₹7.8L</div></div>
+                  <div class="stat-box"><div class="s-label">Pro 12M</div><div class="s-val purple">₹6.5L</div></div>
+                  <div class="stat-box"><div class="s-label">Enterprise 24M</div><div class="s-val purple">₹4.8L</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="content-card">
+              <div class="content-card-head"><h2>Upcoming Renewals</h2></div>
+              <div class="content-card-body">
+                <div class="renewal-row"><span>Blush Beauty Lounge — Pro 12M</span><span style="color:var(--amber);">Jul 2 · 7d</span></div>
+                <div class="renewal-row"><span>Classic Cuts — Growth 6M</span><span>Aug 1 · 30d</span></div>
+                <div class="renewal-row"><span>Serenity Spa — Enterprise 24M</span><span>Mar 15 · 90d</span></div>
+                <div class="renewal-row"><span>Glow Studio — Starter 1M</span><span style="color:var(--red);">Overdue · churn risk</span></div>
+              </div>
+            </div>
+            <div class="content-card">
+              <div class="content-card-head"><h2>Churn Risk Indicators</h2></div>
+              <div class="content-card-body">
+                <div class="renewal-row"><span>Failed payment (retry pending)</span><strong style="color:var(--amber);">7 salons</strong></div>
+                <div class="renewal-row"><span>Renewal in 7 days, no auto-pay</span><strong>4 salons</strong></div>
+                <div class="renewal-row"><span>Downgrade requested</span><strong>2 salons</strong></div>
+                <div class="renewal-row"><span>Grace period active</span><strong>3 salons</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-head"><h2>GlowTap Revenue Model</h2></div>
+            <div class="content-card-body">
+              <div class="revenue-model">
+                <div class="revenue-box purple">
+                  <h4>Subscription Revenue</h4>
+                  <p>Salon → GlowTap fixed/recurring fees from plan purchase, renewals, upgrades, and RC/NRC discounts.</p>
+                </div>
+                <div class="revenue-box pink">
+                  <h4>Commission Revenue</h4>
+                  <p>End user → salon → GlowTap variable % per B2C transaction. Tracked in Transactions module.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-02 Plans List -->
+        <div id="sub-plans" class="sub-page" data-figma-frame="SUB-02 Plans List">
+          <div class="content-card">
+            <div class="content-card-head">
+              <h2>Subscription Plans</h2>
+              <a href="#sub-edit" class="btn btn-outline"><svg class="svg-icon"><use href="#i-plus"/></svg> Create Plan</a>
+            </div>
+            <div class="content-card-body" style="padding:0;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Plan</th>
+                    <th>Code</th>
+                    <th>Duration</th>
+                    <th>NRC</th>
+                    <th>RC / mo</th>
+                    <th>Max Branches</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Starter 1M</strong></td>
+                    <td class="mono">STARTER_1M</td>
+                    <td>1 month</td>
+                    <td>₹999</td>
+                    <td>₹999</td>
+                    <td>1</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td><a href="#sub-edit" class="btn-icon" title="Edit"><svg class="svg-icon"><use href="#i-pencil"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Growth 6M</strong></td>
+                    <td class="mono">GROWTH_6M</td>
+                    <td>6 months</td>
+                    <td>₹4,999</td>
+                    <td>₹833</td>
+                    <td>3</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td><a href="#sub-edit" class="btn-icon" title="Edit"><svg class="svg-icon"><use href="#i-pencil"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Professional 12M</strong></td>
+                    <td class="mono">PRO_12M</td>
+                    <td>12 months</td>
+                    <td>₹8,999</td>
+                    <td>₹750</td>
+                    <td>10</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td><a href="#sub-edit" class="btn-icon" title="Edit"><svg class="svg-icon"><use href="#i-pencil"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Enterprise 24M</strong></td>
+                    <td class="mono">ENT_24M</td>
+                    <td>24 months</td>
+                    <td>₹14,999</td>
+                    <td>₹625</td>
+                    <td>Unlimited</td>
+                    <td><span class="status-badge active">Active</span></td>
+                    <td><a href="#sub-edit" class="btn-icon" title="Edit"><svg class="svg-icon"><use href="#i-pencil"/></svg></a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Legacy 3M</strong></td>
+                    <td class="mono">LEGACY_3M</td>
+                    <td>3 months</td>
+                    <td>₹2,499</td>
+                    <td>₹833</td>
+                    <td>2</td>
+                    <td><span class="status-badge deprecated">Deprecated</span></td>
+                    <td><a href="#sub-edit" class="btn-icon" title="Edit"><svg class="svg-icon"><use href="#i-pencil"/></svg></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-03 Create / Edit Plan -->
+        <div id="sub-edit" class="sub-page" data-figma-frame="SUB-03 Create Edit Plan">
+          <div class="content-card">
+            <div class="content-card-head">
+              <h2>Edit Plan — Professional 12M</h2>
+              <a href="#sub-plans" class="btn btn-outline"><svg class="svg-icon"><use href="#i-arrow-left"/></svg> Back to Plans</a>
+            </div>
+            <div class="content-card-body">
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="plan-name">Plan name</label>
+                  <input type="text" id="plan-name" value="Professional 12M" />
+                </div>
+                <div class="form-field">
+                  <label for="plan-code">Plan code</label>
+                  <input type="text" id="plan-code" value="PRO_12M" />
+                </div>
+                <div class="form-field">
+                  <label for="duration">Duration</label>
+                  <select id="duration">
+                    <option>1 month</option>
+                    <option>6 months</option>
+                    <option selected>12 months</option>
+                    <option>24 months</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="status">Status</label>
+                  <select id="status">
+                    <option selected>Active</option>
+                    <option>Deprecated (no new sign-ups)</option>
+                    <option>Retired</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="nrc">Base price — NRC (₹)</label>
+                  <input type="number" id="nrc" value="8999" />
+                </div>
+                <div class="form-field">
+                  <label for="rc">Recurring price — RC / month (₹)</label>
+                  <input type="number" id="rc" value="750" />
+                </div>
+                <div class="form-field">
+                  <label for="max-branches">Max branches</label>
+                  <input type="number" id="max-branches" value="10" />
+                </div>
+                <div class="form-field full">
+                  <label>Feature entitlements</label>
+                  <div class="checkbox-grid">
+                    <label><input type="checkbox" checked /> Appointments</label>
+                    <label><input type="checkbox" checked /> Manpower management</label>
+                    <label><input type="checkbox" checked /> Services catalog</label>
+                    <label><input type="checkbox" checked /> Analytics (Pro tier)</label>
+                    <label><input type="checkbox" checked /> Multi-branch</label>
+                    <label><input type="checkbox" /> API access</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3>Contract Discounts</h3>
+                <p style="font-size:0.8rem;color:var(--muted);margin-bottom:14px;">Discounts tied to contract length — shown to salon owners during purchase.</p>
+                <div class="discount-row">
+                  <div class="form-field" style="margin:0;">
+                    <label>6M contract</label>
+                    <input type="text" value="10% off NRC" />
+                  </div>
+                  <div class="form-field" style="margin:0;">
+                    <label>Display text</label>
+                    <input type="text" value="Save 10% with 6-month plan" />
+                  </div>
+                  <div class="form-field" style="margin:0;">
+                    <label>Valid until</label>
+                    <input type="date" value="2026-12-31" />
+                  </div>
+                </div>
+                <div class="discount-row">
+                  <div class="form-field" style="margin:0;">
+                    <label>12M contract</label>
+                    <input type="text" value="20% off NRC" />
+                  </div>
+                  <div class="form-field" style="margin:0;">
+                    <label>Display text</label>
+                    <input type="text" value="Save 20% with our 12-month plan" />
+                  </div>
+                  <div class="form-field" style="margin:0;">
+                    <label>Valid until</label>
+                    <input type="date" value="2026-12-31" />
+                  </div>
+                </div>
+                <div class="discount-row">
+                  <div class="form-field" style="margin:0;">
+                    <label>24M contract</label>
+                    <input type="text" value="2 free months" />
+                  </div>
+                  <div class="form-field" style="margin:0;">
+                    <label>Display text</label>
+                    <input type="text" value="Get 2 months free on 24-month commitment" />
+                  </div>
+                  <div class="form-field" style="margin:0;">
+                    <label>Valid until</label>
+                    <input type="date" value="" placeholder="No expiry" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <h3>Plan Change Rules</h3>
+                <div class="info-banner" style="margin-bottom:0;">
+                  <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;"><use href="#i-alert-triangle"/></svg>
+                  <span><strong>Upgrade:</strong> immediate effect, prorated billing. <strong>Downgrade:</strong> effective at next renewal; branch count must fit new plan limit.</span>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <a href="#sub-plans" class="btn btn-ghost">Cancel</a>
+                <a href="#sub-plans" class="btn btn-primary">Save Plan</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUB-04 + SUB-05 Subscription Transactions -->
+        <div id="sub-transactions" class="sub-page" data-figma-frame="SUB-04 Subscription Transactions">
+          <div class="info-banner">
+            <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;margin-top:2px;"><use href="#i-receipt"/></svg>
+            <span>Tracks <strong>salon → GlowTap</strong> payments: purchases, renewals, upgrades, refunds, and credits. End-user B2C payments are in <strong>Transactions</strong>.</span>
+          </div>
+
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab">All</button>
+              <button type="button" class="status-tab on">Paid</button>
+              <button type="button" class="status-tab">Failed</button>
+              <button type="button" class="status-tab">Refunded</button>
+              <button type="button" class="status-tab">Credit</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="sub-date-from">Date from</label>
+                <input type="date" id="sub-date-from" value="2026-06-01" />
+              </div>
+              <div class="field">
+                <label for="sub-date-to">Date to</label>
+                <input type="date" id="sub-date-to" value="2026-06-30" />
+              </div>
+              <div class="field">
+                <label for="sub-salon">Salon</label>
+                <select id="sub-salon">
+                  <option>All salons</option>
+                  <option selected>Blush Beauty Lounge</option>
+                  <option>Serenity Spa &amp; Salon</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="sub-plan-filter">Plan</label>
+                <select id="sub-plan-filter">
+                  <option>All plans</option>
+                  <option selected>Professional 12M</option>
+                  <option>Growth 6M</option>
+                </select>
+              </div>
+            </div>
+            <div class="filter-row" style="margin-top:12px;">
+              <div class="field">
+                <label for="invoice-no">Invoice number</label>
+                <input type="text" id="invoice-no" placeholder="INV-2026-…" />
+              </div>
+            </div>
+          </div>
+
+          <div class="split-layout" data-figma-layer="Split MasterDetail">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Subscription Payments</h2>
+                <span class="meta">842 this month</span>
+              </div>
+              <div class="panel-scroll" data-figma-layer="Sub txn list Scroll" data-figma-overflow="vertical">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Invoice</th>
+                      <th>Salon</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="selected">
+                      <td><a href="#sub-transactions" class="row-link"><span class="mono">INV-2026-8842</span><span class="sub">20 Jun · Renewal</span></a></td>
+                      <td><strong>Blush Beauty Lounge</strong><span class="sub">Pro 12M</span></td>
+                      <td><strong>₹21,600</strong></td>
+                      <td><span class="status-badge paid">Paid</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#sub-transactions" class="row-link"><span class="mono">INV-2026-8841</span><span class="sub">19 Jun · Purchase</span></a></td>
+                      <td><strong>Glow Studio</strong><span class="sub">Starter 1M</span></td>
+                      <td><strong>₹999</strong></td>
+                      <td><span class="status-badge paid">Paid</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#sub-transactions" class="row-link"><span class="mono">INV-2026-8840</span><span class="sub">18 Jun · Upgrade</span></a></td>
+                      <td><strong>Classic Cuts</strong><span class="sub">Growth 6M</span></td>
+                      <td><strong>₹2,400</strong></td>
+                      <td><span class="status-badge paid">Paid</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#sub-transactions" class="row-link"><span class="mono">INV-2026-8839</span><span class="sub">17 Jun · Renewal</span></a></td>
+                      <td><strong>The Groom Room</strong><span class="sub">Pro 12M</span></td>
+                      <td><strong>₹21,600</strong></td>
+                      <td><span class="status-badge failed">Failed</span></td>
+                    </tr>
+                    <tr>
+                      <td><a href="#sub-transactions" class="row-link"><span class="mono">INV-2026-8838</span><span class="sub">16 Jun · Credit</span></a></td>
+                      <td><strong>Serenity Spa</strong><span class="sub">NRC discount</span></td>
+                      <td><strong>−₹1,500</strong></td>
+                      <td><span class="status-badge paid">Credit</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SUB-05 Subscription Transaction Detail -->
+            <div class="panel" data-figma-frame="SUB-05 Subscription Transaction Detail">
+              <div class="panel-head">
+                <h2>INV-2026-8842</h2>
+                <span class="status-badge paid">Paid</span>
+              </div>
+              <div class="panel-scroll review-body" data-figma-layer="Sub txn detail Scroll" data-figma-overflow="vertical">
+                <div class="amount-breakdown">
+                  <div class="amount-card highlight">
+                    <label>Amount Paid</label>
+                    <div class="val">₹21,600</div>
+                    <div class="sub">Salon → GlowTap</div>
+                  </div>
+                  <div class="amount-card">
+                    <label>Plan</label>
+                    <div class="val" style="font-size:1rem;">Professional 12M</div>
+                    <div class="sub">Renewal</div>
+                  </div>
+                  <div class="amount-card">
+                    <label>Discount Applied</label>
+                    <div class="val" style="font-size:1rem;">₹2,400</div>
+                    <div class="sub">12M contract — 20% off NRC</div>
+                  </div>
+                </div>
+
+                <div class="review-grid">
+                  <div class="detail-block">
+                    <h3>Invoice &amp; Payment</h3>
+                    <dl>
+                      <div class="detail-row"><dt>Invoice number</dt><dd>INV-2026-8842</dd></div>
+                      <div class="detail-row"><dt>Transaction type</dt><dd>Renewal</dd></div>
+                      <div class="detail-row"><dt>Date / time</dt><dd>20 Jun 2026 · 09:42 IST</dd></div>
+                      <div class="detail-row"><dt>Status</dt><dd><span class="status-badge paid">Paid</span></dd></div>
+                      <div class="detail-row"><dt>Payment method</dt><dd>UPI · Auto-pay</dd></div>
+                      <div class="detail-row"><dt>Gateway ref</dt><dd>sub_Rzp9mK2nP4xQ</dd></div>
+                    </dl>
+                  </div>
+                  <div class="detail-block">
+                    <h3>Salon</h3>
+                    <dl>
+                      <div class="detail-row"><dt>Salon</dt><dd>Blush Beauty Lounge</dd></div>
+                      <div class="detail-row"><dt>Org ID</dt><dd>ORG-002</dd></div>
+                      <div class="detail-row"><dt>Owner</dt><dd>Kavitha Reddy</dd></div>
+                      <div class="detail-row"><dt>Plan period</dt><dd>20 Jun 2026 – 19 Jun 2027</dd></div>
+                    </dl>
+                  </div>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Line Items</h3>
+                  <dl>
+                    <div class="detail-row"><dt>Base NRC (Professional 12M)</dt><dd>₹24,000</dd></div>
+                    <div class="detail-row"><dt>Contract discount (20%)</dt><dd>−₹2,400</dd></div>
+                    <div class="detail-row"><dt>RC (monthly)</dt><dd>₹750 × 12 = ₹9,000</dd></div>
+                    <div class="detail-row"><dt>Total charged</dt><dd><strong>₹21,600</strong></dd></div>
+                  </dl>
+                </div>
+
+                <div class="detail-block" style="margin-top:24px;">
+                  <h3>Payment History</h3>
+                  <dl>
+                    <div class="detail-row"><dt>Attempt 1</dt><dd>20 Jun 09:42 — Success</dd></div>
+                    <div class="detail-row"><dt>Previous renewal</dt><dd>20 Jun 2025 — INV-2025-7102</dd></div>
+                    <div class="detail-row"><dt>Retry status</dt><dd>N/A — paid on first attempt</dd></div>
+                  </dl>
+                </div>
+
+                <div class="action-row">
+                  <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-download"/></svg> Download Invoice</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — All Salons</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-light: #F3EEFF;
+      --pink: #FF03C8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    .app-screen {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg, var(--bg));
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
+    }
+
+    .sidebar-logo img {
+      display: block;
+      width: 280px;
+      height: 100px;
+    }
+
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+    .nav a.active { background: var(--gradient-brand); color: var(--white); box-shadow: var(--shadow-purple); }
+
+    .nav .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .nav-footer {
+      padding: 8px 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-footer-link:hover { background: var(--purple-light); color: var(--purple); }
+
+    .nav-footer-link .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-user { padding: 14px; border-top: 1px solid var(--border); }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-main-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .app-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-head h1 { font-size: 1.5rem; font-weight: 700; }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn .svg-icon { width: 16px; height: 16px; }
+
+    .btn-outline {
+      background: var(--white);
+      border: 1px solid rgba(123, 0, 255, 0.25);
+      color: var(--purple);
+    }
+
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .btn-danger {
+      background: var(--white);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      color: var(--red);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Filters — BRN-01 */
+    .filters-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .status-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .status-tab {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-tab.on {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    @media (max-width: 1100px) {
+      .filter-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .filter-row { grid-template-columns: 1fr; }
+      .split-layout { grid-template-columns: 1fr !important; }
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: rgba(123, 0, 255, 0.4);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1);
+    }
+
+    /* Master-detail — SAL-01 + SAL-02 */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .split-detail {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      gap: 0;
+    }
+
+    .split-detail > .panel { width: 100%; }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .panel-head .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .panel-scroll {
+      max-height: 720px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .lead-list { list-style: none; }
+
+    .lead-item {
+      display: block;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--bg);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .lead-item:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .lead-item.selected {
+      background: rgba(243, 238, 255, 0.55);
+      border-left-color: var(--purple);
+    }
+
+    .lead-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .lead-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .lead-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .lead-meta { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border: 1px solid;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-badge.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.pending::before { background: #F59E0B; }
+    .status-badge.awaiting { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.awaiting::before { background: #3B82F6; }
+    .status-badge.approved { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.approved::before { background: #10B981; }
+    .status-badge.rejected { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.rejected::before { background: #EF4444; }
+    .status-badge.paid { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.paid::before { background: #10B981; }
+
+    .status-badge.upgrade { background: #F3EEFF; color: #6D28D9; border-color: #DDD6FE; }
+    .status-badge.upgrade::before { background: #7B00FF; }
+
+    .limit-banner svg { flex-shrink: 0; margin-top: 2px; color: var(--amber); }
+
+    .limit-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .limit-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #FDE68A;
+      background: rgba(255, 251, 235, 0.9);
+      font-size: 0.85rem;
+      color: #92400E;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .limit-box h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .limit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .limit-row span:first-child { color: var(--muted); }
+    .limit-row strong { font-weight: 700; }
+    .limit-row strong.at-limit { color: var(--amber); }
+
+    .limit-track {
+      height: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .limit-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .limit-fill.full { background: linear-gradient(90deg, var(--amber) 0%, #F59E0B 100%); }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .hours-grid span:nth-child(odd) { color: var(--muted); }
+    .hours-grid span:nth-child(even) { font-weight: 600; text-align: right; }
+
+    .review-body { padding: 20px; }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .review-grid { grid-template-columns: 1fr; }
+    }
+
+    .detail-block h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+      font-size: 0.85rem;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row dt { color: var(--muted); flex-shrink: 0; }
+    .detail-row dd { font-weight: 600; text-align: right; }
+
+    .kyc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .kyc-grid { grid-template-columns: 1fr; }
+    }
+
+    .kyc-doc {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .kyc-doc .doc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .kyc-doc .doc-icon .svg-icon { width: 18px; height: 18px; }
+
+    .kyc-doc strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+    .kyc-doc span { font-size: 0.72rem; color: var(--muted); }
+    .kyc-doc a {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .commission-box {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid #EDE9FE;
+      background: linear-gradient(135deg, rgba(243, 238, 255, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+
+    .commission-box label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .commission-box p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .commission-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .commission-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--purple);
+    }
+
+    .commission-val {
+      min-width: 52px;
+      text-align: center;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .screen-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Modals — SAL-M01, M02, M03 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal:target { display: flex; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 42, 50, 0.5);
+    }
+
+    .modal-box {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 20px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal-head h2 { font-size: 1.1rem; font-weight: 700; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover { background: var(--purple-light); color: var(--purple); }
+
+    .modal-body { padding: 0 24px 20px; }
+
+    .modal-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .modal-summary {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+    }
+
+    .modal-summary div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .modal-summary span { color: var(--muted); }
+    .modal-summary strong { font-weight: 700; }
+
+    .modal-field { margin-bottom: 14px; }
+
+    .modal-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-field select, .modal-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .modal-field textarea { min-height: 88px; resize: vertical; }
+
+    .checklist { list-style: none; margin-bottom: 16px; }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .checklist input { accent-color: var(--purple); width: 16px; height: 16px; }
+
+    .modal-foot {
+      padding: 16px 24px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    html.figma-export,
+    html.figma-export body {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+    }
+
+    html.figma-export .app-screen {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .sidebar {
+      width: 280px;
+      height: 1024px;
+      min-height: 1024px;
+      position: relative;
+      top: auto;
+    }
+
+    html.figma-export .app-main-scroll {
+      width: 1160px;
+      height: 1024px;
+      min-height: 1024px;
+      flex: none;
+      overflow-y: auto;
+    }
+
+    html.figma-export .app-content {
+      width: 1160px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .panel-scroll {
+      height: 720px;
+      max-height: 720px;
+    }
+
+    /* ORG-01 table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .data-table thead {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .data-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--bg);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr { transition: background 0.15s; }
+
+    .data-table tbody tr:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .data-table tbody tr.selected {
+      background: rgba(243, 238, 255, 0.55);
+    }
+
+    .data-table tbody tr.selected td:first-child {
+      box-shadow: inset 4px 0 0 var(--purple);
+    }
+
+    .data-table .salon-cell strong { display: block; font-weight: 700; }
+    .data-table .salon-cell .branch-count {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 0.9em;
+    }
+    .data-table .salon-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .commission-val { font-weight: 700; color: var(--purple); }
+    .data-table .earnings-val { font-weight: 600; }
+
+    .data-table a.row-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .status-badge.active { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.active::before { background: #10B981; }
+    .status-badge.suspended { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.suspended::before { background: #F59E0B; }
+    .status-badge.terminated { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.terminated::before { background: #EF4444; }
+
+    /* ORG-02 tabs */
+    .detail-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-tab {
+      padding: 8px 16px;
+      border-radius: 10px 10px 0 0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid transparent;
+      border-bottom: none;
+      margin-bottom: -1px;
+    }
+
+    .detail-tab.on {
+      background: var(--white);
+      color: var(--purple);
+      border-color: var(--border);
+      border-bottom-color: var(--white);
+    }
+
+    .split-detail:has(#detail-earnings:target) #detail { display: none; }
+    #detail-earnings { display: none; }
+    .split-detail:has(#detail-earnings:target) #detail-earnings { display: block; }
+
+    .split-detail:has(#detail-earnings:target) .tab-profile { background: var(--bg); color: var(--muted); border-color: transparent; }
+    .split-detail:has(#detail-earnings:target) .tab-earnings { background: var(--white); color: var(--purple); border-color: var(--border); border-bottom-color: var(--white); }
+    #detail .tab-earnings { background: var(--bg); color: var(--muted); border-color: transparent; }
+    #detail .tab-profile { background: var(--white); color: var(--purple); border-color: var(--border); border-bottom-color: var(--white); }
+
+    .salon-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .salon-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .salon-header p { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+    .logo-placeholder {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--purple-light), #fff);
+      border: 1px solid #EDE9FE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .profile-top {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .branch-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .branch-table th, .branch-table td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .branch-table th {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .sub-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .sub-actions .btn { font-size: 0.78rem; padding: 7px 14px; }
+
+    .earnings-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .earnings-summary { grid-template-columns: 1fr; }
+    }
+
+    .earnings-card {
+      padding: 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .earnings-card.purple { background: linear-gradient(135deg, rgba(243,238,255,0.8), #fff); border-color: #EDE9FE; }
+    .earnings-card.pink { background: linear-gradient(135deg, rgba(255,240,250,0.8), #fff); border-color: #FBCFE8; }
+    .earnings-card.total { background: var(--bg); }
+
+    .earnings-card label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .earnings-card .amount {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .earnings-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    .range-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .range-tab {
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--white);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .range-tab.on {
+      background: var(--purple-light);
+      color: var(--purple);
+      border-color: rgba(123, 0, 255, 0.2);
+    }
+
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      margin-bottom: 20px;
+    }
+
+    .mini-table th {
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .mini-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .pricing-impact {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #FDE68A;
+      background: #FFFBEB;
+      font-size: 0.8rem;
+      color: #92400E;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .pricing-impact strong { color: #B45309; }
+
+    .modal-field input[type="text"],
+    .modal-field input[type="number"],
+    .modal-field input[type="date"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .modal-field .radio-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .modal-field .radio-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .modal-field .radio-row input { accent-color: var(--purple); }
+
+    .modal-box.wide { max-width: 520px; }
+
+    .btn-warning {
+      background: var(--white);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      color: var(--amber);
+    }
+
+    .btn-success {
+      background: var(--white);
+      border: 1px solid rgba(5, 150, 105, 0.3);
+      color: var(--green);
+    }
+  </style>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    </symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+      <path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+    </symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+    </symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/>
+      <path d="M10 15H6a4 4 0 0 0-4 4v2"/>
+      <path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/>
+      <path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/>
+      <path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+    </symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+      <path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/>
+      <path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+      <path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="6 3 20 12 6 21 6 3"/>
+    </symbol>
+    <symbol id="i-octagon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22c-4.97 0-9-4.03-9-9V9c0-4.97 4.03-9 9-9s9 4.03 9 9v4c0 4.97-4.03 9-9 9Z"/>
+      <path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+    </symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
+    </symbol>
+    <symbol id="i-percent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" x2="5" y1="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>
+    </symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
+      <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-arrow-left-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/>
+    </symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="ORG-01 All Salons">
+  <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+    </div>
+    <ul class="nav">
+      <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+      <li><a href="all-salons.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="notifications.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-bell"/></svg>
+        Notifications
+        <span class="badge">3</span>
+      </a>
+      <a href="login.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-log-out"/></svg>
+        Sign out
+      </a>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-card">
+        <div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+    <div class="app-content" data-figma-layer="Content All Salons">
+      <div class="page-head">
+        <div>
+          <h1>All Salons</h1>
+          <p>Central registry of all onboarded salon organizations. <span class="screen-tag">ORG-01 / ORG-02</span></p>
+        </div>
+        <div class="page-actions">
+          <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-filter"/></svg> Filters</button>
+          <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-download"/></svg> Export</button>
+        </div>
+      </div>
+
+      <!-- ORG-01 filters -->
+      <div class="filters-card">
+        <div class="status-tabs">
+          <button type="button" class="status-tab">All</button>
+          <button type="button" class="status-tab on">Active</button>
+          <button type="button" class="status-tab">Suspended</button>
+          <button type="button" class="status-tab">Terminated</button>
+        </div>
+        <div class="filter-row">
+          <div class="field">
+            <label for="city">City</label>
+            <select id="city">
+              <option>All cities</option>
+              <option>Mumbai</option>
+              <option>Bangalore</option>
+              <option selected>Chennai</option>
+              <option>Hyderabad</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="plan">Plan</label>
+            <select id="plan">
+              <option>All plans</option>
+              <option>Starter 1M</option>
+              <option selected>Growth 6M</option>
+              <option>Professional 12M</option>
+              <option>Enterprise 24M</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="payment">Payment status</label>
+            <select id="payment">
+              <option>All</option>
+              <option selected>Paid</option>
+              <option>Overdue</option>
+              <option>Failed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="expiry">Renewal window</label>
+            <select id="expiry">
+              <option>Any time</option>
+              <option>Next 7 days</option>
+              <option selected>Next 30 days</option>
+              <option>Next 90 days</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-row" style="margin-top:12px;">
+          <div class="field">
+            <label for="branches">Min. branches</label>
+            <select id="branches">
+              <option>Any</option>
+              <option>1+</option>
+              <option selected>2+</option>
+              <option>5+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="split-layout" data-figma-layer="Split MasterDetail">
+        <!-- ORG-01 All Salons List -->
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Salon Organizations</h2>
+            <span class="meta">142 active · 186 total</span>
+          </div>
+          <div class="panel-scroll" data-figma-layer="Salon list Scroll" data-figma-overflow="vertical">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Salon</th>
+                  <th>City</th>
+                  <th>Status</th>
+                  <th>Plan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="salon-cell"><a href="#detail" class="row-link"><strong>Serenity Spa &amp; Salon <span class="branch-count">(8)</span></strong><span>ORG-001 · Anita Desai</span></a></td>
+                  <td>Mumbai</td>
+                  <td><span class="status-badge active">Active</span></td>
+                  <td>Enterprise 24M</td>
+                </tr>
+                <tr>
+                  <td class="salon-cell"><a href="#detail" class="row-link"><strong>Blush Beauty Lounge <span class="branch-count">(4)</span></strong><span>ORG-002 · Kavitha Reddy</span></a></td>
+                  <td>Bangalore</td>
+                  <td><span class="status-badge active">Active</span></td>
+                  <td>Professional 12M</td>
+                </tr>
+                <tr class="selected">
+                  <td class="salon-cell"><a href="#detail" class="row-link"><strong>Classic Cuts <span class="branch-count">(2)</span></strong><span>ORG-003 · Vikram Iyer</span></a></td>
+                  <td>Chennai</td>
+                  <td><span class="status-badge suspended">Suspended</span></td>
+                  <td>Growth 6M</td>
+                </tr>
+                <tr>
+                  <td class="salon-cell"><a href="#detail" class="row-link"><strong>Radiance Hair Studio <span class="branch-count">(3)</span></strong><span>ORG-004 · Sneha Rao</span></a></td>
+                  <td>Hyderabad</td>
+                  <td><span class="status-badge active">Active</span></td>
+                  <td>Growth 6M</td>
+                </tr>
+                <tr>
+                  <td class="salon-cell"><a href="#detail" class="row-link"><strong>Glow Studio <span class="branch-count">(1)</span></strong><span>ORG-005 · Priya Menon</span></a></td>
+                  <td>Delhi</td>
+                  <td><span class="status-badge active">Active</span></td>
+                  <td>Starter 1M</td>
+                </tr>
+                <tr>
+                  <td class="salon-cell"><a href="#detail" class="row-link"><strong>Urban Edge Salon <span class="branch-count">(2)</span></strong><span>ORG-006 · Rahul Singh</span></a></td>
+                  <td>Pune</td>
+                  <td><span class="status-badge terminated">Terminated</span></td>
+                  <td>Growth 6M</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="split-detail">
+        <!-- ORG-02 Salon Detail — Profile tab -->
+        <div class="panel" id="detail" data-figma-frame="ORG-02 Salon Detail">
+          <div class="panel-head">
+            <h2>Classic Cuts</h2>
+            <span class="status-badge suspended">Suspended</span>
+          </div>
+          <div class="detail-tabs">
+            <a href="#detail" class="detail-tab tab-profile on">Profile</a>
+            <a href="#detail-earnings" class="detail-tab tab-earnings">Earnings</a>
+          </div>
+          <div class="panel-scroll review-body" data-figma-layer="Profile Scroll" data-figma-overflow="vertical">
+            <div class="profile-top">
+              <div class="logo-placeholder">CC</div>
+              <div class="salon-header">
+                <div>
+                  <h3>Classic Cuts</h3>
+                  <p>ORG-003 · Chennai · Onboarded 12 Jan 2026</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="review-grid" style="margin-top:20px;">
+              <div class="detail-block">
+                <h3>Business Profile</h3>
+                <dl>
+                  <div class="detail-row"><dt>Legal name</dt><dd>Classic Cuts Pvt. Ltd.</dd></div>
+                  <div class="detail-row"><dt>Contact</dt><dd>+91 91234 56789</dd></div>
+                  <div class="detail-row"><dt>GST / Tax ID</dt><dd>33AABCC1234F1Z5</dd></div>
+                  <div class="detail-row"><dt>Registered address</dt><dd>T. Nagar, Chennai 600017</dd></div>
+                </dl>
+              </div>
+              <div class="detail-block">
+                <h3>Owner Details</h3>
+                <dl>
+                  <div class="detail-row"><dt>Owner</dt><dd>Vikram Iyer</dd></div>
+                  <div class="detail-row"><dt>Email</dt><dd>vikram@classiccuts.in</dd></div>
+                  <div class="detail-row"><dt>Phone</dt><dd>+91 98765 43210</dd></div>
+                  <div class="detail-row"><dt>Account status</dt><dd><span class="status-badge suspended">Suspended</span></dd></div>
+                </dl>
+              </div>
+            </div>
+
+            <div class="detail-block" style="margin-top:24px;">
+              <h3>Current Subscription</h3>
+              <dl>
+                <div class="detail-row"><dt>Plan</dt><dd>Growth 6M</dd></div>
+                <div class="detail-row"><dt>Start date</dt><dd>12 Jan 2026</dd></div>
+                <div class="detail-row"><dt>Renewal date</dt><dd>01 Aug 2026</dd></div>
+                <div class="detail-row"><dt>Billing cycle</dt><dd>6 months</dd></div>
+                <div class="detail-row"><dt>Payment method</dt><dd>UPI · Auto-pay</dd></div>
+                <div class="detail-row"><dt>Payment status</dt><dd><span class="status-badge paid">Paid</span></dd></div>
+              </dl>
+              <div class="sub-actions">
+                <a href="#modal-change-plan" class="btn btn-outline"><svg class="svg-icon"><use href="#i-arrow-left-right"/></svg> Change Plan</a>
+                <a href="#modal-discount" class="btn btn-outline"><svg class="svg-icon"><use href="#i-tag"/></svg> Apply Discount</a>
+              </div>
+            </div>
+
+            <div class="commission-box">
+              <label>Commission Rate</label>
+              <p>Platform range 1%–25%. Changes apply to the next transaction (not retroactive).</p>
+              <div class="commission-control">
+                <input type="range" min="1" max="25" value="6" disabled />
+                <span class="commission-val">6%</span>
+              </div>
+              <div style="margin-top:12px;">
+                <a href="#modal-commission" class="btn btn-outline"><svg class="svg-icon"><use href="#i-pencil"/></svg> Edit Commission</a>
+              </div>
+            </div>
+
+            <div class="detail-block" style="margin-top:24px;">
+              <h3>Branches</h3>
+              <table class="branch-table">
+                <thead>
+                  <tr><th>Branch</th><th>City</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Classic Cuts — T. Nagar</td><td>Chennai</td><td><span class="status-badge active">Active</span></td></tr>
+                  <tr><td>Classic Cuts — Adyar</td><td>Chennai</td><td><span class="status-badge active">Active</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="action-row">
+              <a href="#modal-resume" class="btn btn-success"><svg class="svg-icon"><use href="#i-play"/></svg> Resume</a>
+              <a href="#modal-suspend" class="btn btn-warning"><svg class="svg-icon"><use href="#i-pause"/></svg> Suspend</a>
+              <a href="#modal-terminate" class="btn btn-danger"><svg class="svg-icon"><use href="#i-octagon"/></svg> Terminate</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ORG-02 Salon Detail — Earnings tab -->
+        <div class="panel" id="detail-earnings">
+          <div class="panel-head">
+            <h2>Classic Cuts — Earnings</h2>
+            <span class="status-badge suspended">Suspended</span>
+          </div>
+          <div class="detail-tabs">
+            <a href="#detail" class="detail-tab tab-profile">Profile</a>
+            <a href="#detail-earnings" class="detail-tab tab-earnings on">Earnings</a>
+          </div>
+          <div class="panel-scroll review-body" data-figma-layer="Earnings Scroll" data-figma-overflow="vertical">
+            <div class="range-tabs">
+              <button type="button" class="range-tab">7D</button>
+              <button type="button" class="range-tab on">30D</button>
+              <button type="button" class="range-tab">90D</button>
+              <button type="button" class="range-tab">Custom</button>
+              <button type="button" class="range-tab">All-time</button>
+              <button type="button" class="btn btn-outline" style="margin-left:auto;font-size:0.75rem;padding:5px 12px;"><svg class="svg-icon"><use href="#i-download"/></svg> Export</button>
+            </div>
+
+            <div class="earnings-summary">
+              <div class="earnings-card purple">
+                <label>Subscription Revenue</label>
+                <div class="amount">₹54,000</div>
+                <div class="sub">Last payment 12 Jan 2026 · MRR ₹9,000</div>
+              </div>
+              <div class="earnings-card pink">
+                <label>Commission Revenue</label>
+                <div class="amount">₹12,800</div>
+                <div class="sub">214 txns · avg ₹60/txn · 6% rate</div>
+              </div>
+              <div class="earnings-card total">
+                <label>Total GlowTap Earnings</label>
+                <div class="amount">₹66,800</div>
+                <div class="sub">Subscription + Commission (all-time)</div>
+              </div>
+            </div>
+
+            <div class="detail-block">
+              <h3>Subscription Payments</h3>
+              <table class="mini-table">
+                <thead>
+                  <tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>12 Jan 2026</td><td>Plan purchase — Growth 6M</td><td>₹54,000</td><td><span class="status-badge paid">Paid</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="detail-block">
+              <h3>Commission Line Items</h3>
+              <table class="mini-table">
+                <thead>
+                  <tr><th>Date</th><th>Txn amount</th><th>Rate</th><th>Commission</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>28 Jun 2026</td><td>₹1,200</td><td>6%</td><td>₹72</td></tr>
+                  <tr><td>27 Jun 2026</td><td>₹850</td><td>6%</td><td>₹51</td></tr>
+                  <tr><td>26 Jun 2026</td><td>₹2,400</td><td>6%</td><td>₹144</td></tr>
+                  <tr><td>25 Jun 2026</td><td>₹650</td><td>6%</td><td>₹39</td></tr>
+                  <tr><td>24 Jun 2026</td><td>₹1,800</td><td>6%</td><td>₹108</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- ORG-M01 Suspend Salon Modal -->
+  <div id="modal-suspend" class="modal">
+    <a href="#detail" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Suspend Salon <span class="screen-tag">ORG-M01</span></h2>
+        <a href="#detail" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Suspend <strong>Classic Cuts</strong>. End users cannot book; admin portal will be locked.</p>
+        <div class="modal-field">
+          <label for="suspend-reason">Reason (required)</label>
+          <select id="suspend-reason">
+            <option value="">Select reason code…</option>
+            <option>Payment overdue — subscription lapsed</option>
+            <option>Policy violation — pending investigation</option>
+            <option>Requested by salon owner</option>
+            <option>Fraud or compliance concern</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="pricing-impact">
+          <strong>Pricing impact:</strong> No early termination fee. Subscription billing paused until resumed.
+        </div>
+        <div class="modal-field">
+          <label for="suspend-notes">Additional notes</label>
+          <textarea id="suspend-notes" placeholder="Internal notes for audit trail…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#detail" class="btn btn-ghost">Cancel</a>
+        <a href="#detail" class="btn btn-warning"><svg class="svg-icon"><use href="#i-pause"/></svg> Confirm Suspend</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG-M02 Resume Salon Modal -->
+  <div id="modal-resume" class="modal">
+    <a href="#detail" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Resume Salon <span class="screen-tag">ORG-M02</span></h2>
+        <a href="#detail" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Restore <strong>Classic Cuts</strong> to active status. Booking and admin portal access will be re-enabled.</p>
+        <div class="modal-summary">
+          <div><span>Salon</span><strong>Classic Cuts</strong></div>
+          <div><span>Current status</span><strong>Suspended</strong></div>
+          <div><span>After resume</span><strong>Active — full access restored</strong></div>
+        </div>
+        <div class="modal-field">
+          <label for="resume-notes">Note (optional)</label>
+          <textarea id="resume-notes" placeholder="Reason for resuming…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#detail" class="btn btn-ghost">Cancel</a>
+        <a href="#detail" class="btn btn-success"><svg class="svg-icon"><use href="#i-play"/></svg> Confirm Resume</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG-M03 Terminate Salon Modal -->
+  <div id="modal-terminate" class="modal">
+    <a href="#detail" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Terminate Salon <span class="screen-tag">ORG-M03</span></h2>
+        <a href="#detail" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Permanently close <strong>Classic Cuts</strong>. Data retained per retention policy; no reactivation without re-onboarding.</p>
+        <div class="modal-field">
+          <label for="terminate-reason">Reason (required)</label>
+          <select id="terminate-reason">
+            <option value="">Select reason code…</option>
+            <option>Voluntary closure — owner request</option>
+            <option>Repeated policy violations</option>
+            <option>Non-payment — grace period expired</option>
+            <option>Business dissolution</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="pricing-impact">
+          <strong>Pricing impact:</strong> Early termination fee of <strong>₹5,000</strong> applies. Remaining plan discount forfeited.
+        </div>
+        <div class="modal-field">
+          <label for="terminate-notes">Additional notes</label>
+          <textarea id="terminate-notes" placeholder="Internal notes for audit trail…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#detail" class="btn btn-ghost">Cancel</a>
+        <a href="#detail" class="btn btn-danger"><svg class="svg-icon"><use href="#i-octagon"/></svg> Confirm Termination</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG-M04 Edit Commission Modal -->
+  <div id="modal-commission" class="modal">
+    <a href="#detail" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box wide">
+      <div class="modal-head">
+        <h2>Edit Commission <span class="screen-tag">ORG-M04</span></h2>
+        <a href="#detail" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Update commission rate for <strong>Classic Cuts</strong>. New rate applies to the next transaction only.</p>
+        <div class="modal-summary">
+          <div><span>Current rate</span><strong>6%</strong></div>
+          <div><span>Platform range</span><strong>1% – 25%</strong></div>
+        </div>
+        <div class="modal-field">
+          <label for="new-commission">New commission %</label>
+          <input type="number" id="new-commission" min="1" max="25" value="8" />
+        </div>
+        <div class="modal-field">
+          <label for="effective-date">Effective date (optional)</label>
+          <input type="date" id="effective-date" value="2026-07-01" />
+        </div>
+        <div class="modal-field">
+          <label for="commission-reason">Reason for change</label>
+          <textarea id="commission-reason" placeholder="Logged in audit trail…"></textarea>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#detail" class="btn btn-ghost">Cancel</a>
+        <a href="#detail" class="btn btn-primary"><svg class="svg-icon"><use href="#i-percent"/></svg> Confirm Change (6% → 8%)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG-M05 Change Plan Modal -->
+  <div id="modal-change-plan" class="modal">
+    <a href="#detail" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box wide">
+      <div class="modal-head">
+        <h2>Change Subscription Plan <span class="screen-tag">ORG-M05</span></h2>
+        <a href="#detail" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Manually change plan for <strong>Classic Cuts</strong> (upgrade or downgrade).</p>
+        <div class="modal-summary">
+          <div><span>Current plan</span><strong>Growth 6M</strong></div>
+          <div><span>Renewal date</span><strong>01 Aug 2026</strong></div>
+          <div><span>Branch limit</span><strong>3 branches</strong></div>
+        </div>
+        <div class="modal-field">
+          <label for="new-plan">New plan</label>
+          <select id="new-plan">
+            <option>Starter 1M (1 branch)</option>
+            <option selected>Professional 12M (10 branches)</option>
+            <option>Enterprise 24M (unlimited)</option>
+          </select>
+        </div>
+        <div class="modal-field">
+          <label for="plan-effective">Effective date</label>
+          <input type="date" id="plan-effective" value="2026-07-01" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#detail" class="btn btn-ghost">Cancel</a>
+        <a href="#detail" class="btn btn-primary"><svg class="svg-icon"><use href="#i-arrow-left-right"/></svg> Confirm Plan Change</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG-M06 Apply Discount Modal -->
+  <div id="modal-discount" class="modal">
+    <a href="#detail" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box wide">
+      <div class="modal-head">
+        <h2>Apply Discount <span class="screen-tag">ORG-M06</span></h2>
+        <a href="#detail" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <p>Apply a manual discount component to <strong>Classic Cuts</strong> subscription billing.</p>
+        <div class="modal-field">
+          <label>Discount type</label>
+          <div class="radio-row">
+            <label><input type="radio" name="disc-type" checked /> RC — Recurring charge discount</label>
+            <label><input type="radio" name="disc-type" /> NRC — Non-recurring (one-time credit)</label>
+          </div>
+        </div>
+        <div class="modal-field">
+          <label>Amount type</label>
+          <div class="radio-row">
+            <label><input type="radio" name="amt-type" checked /> Percentage</label>
+            <label><input type="radio" name="amt-type" /> Fixed amount (₹)</label>
+          </div>
+        </div>
+        <div class="modal-field">
+          <label for="disc-amount">Discount value</label>
+          <input type="text" id="disc-amount" value="15%" />
+        </div>
+        <div class="modal-field">
+          <label for="disc-desc">Description</label>
+          <input type="text" id="disc-desc" value="Goodwill gesture — dispute resolution" />
+        </div>
+        <div class="modal-field">
+          <label for="disc-effective">Effective date</label>
+          <input type="date" id="disc-effective" value="2026-07-01" />
+        </div>
+        <div class="modal-field">
+          <label for="disc-expiry">Expiry (optional)</label>
+          <input type="date" id="disc-expiry" value="2026-12-31" />
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#detail" class="btn btn-ghost">Cancel</a>
+        <a href="#detail" class="btn btn-primary"><svg class="svg-icon"><use href="#i-tag"/></svg> Apply Discount</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — Notifications</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root{--purple:#7B00FF;--purple-light:#F3EEFF;--text:#1E2A32;--muted:#6B7A88;--border:#E3DFEA;--bg:#F4F2F7;--sidebar-bg:#F4F2F7;--white:#fff;--gradient-brand:linear-gradient(90deg,#7B00FF 0%,#9B2FD9 50%,#FF03C8 100%);--shadow-card:0 4px 20px rgba(123,0,255,.04);--shadow-purple:0 8px 24px rgba(123,0,255,.28);}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    .app-screen{display:flex;min-height:100vh}
+    .sidebar{width:280px;background:var(--sidebar-bg,var(--bg));border-right:1px solid var(--border);box-shadow:4px 0 24px rgba(123,0,255,.04);display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+    .sidebar-logo{width:280px;height:100px;overflow:hidden}.sidebar-logo img{display:block;width:280px;height:100px}
+    .nav{flex:1;overflow:auto;padding:12px 10px;list-style:none}
+    .nav a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:.875rem;font-weight:600;color:#4A5568;text-decoration:none}
+    .nav a:hover{background:var(--purple-light);color:var(--purple)}
+    .badge{margin-left:auto;font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(123,0,255,.12);color:var(--purple)}
+    .svg-icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .nav-footer{padding:8px 10px 12px;border-top:1px solid var(--border)}
+    .nav-footer-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;color:#4A5568;text-decoration:none;font-size:.82rem;font-weight:600}
+    .nav-footer-link.active{background:var(--gradient-brand);color:#fff;box-shadow:var(--shadow-purple)}
+    .nav-footer-link:hover{background:var(--purple-light);color:var(--purple)}
+    .sidebar-user{padding:0 10px 10px}.sidebar-user-card{border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;gap:10px;background:var(--bg)}
+    .avatar{width:34px;height:34px;border-radius:50%;background:var(--gradient-brand);color:#fff;display:flex;align-items:center;justify-content:center}
+    .app-main-scroll{flex:1;overflow:auto}.app-content{padding:28px}
+    .page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+    .page-head h1{font-size:1.5rem}.page-head p{color:var(--muted);font-size:.9rem;margin-top:4px}
+    .btn{padding:9px 16px;border-radius:999px;font-size:.82rem;font-weight:600;border:none;font-family:inherit;display:inline-flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer}
+    .btn-outline{background:#fff;border:1px solid rgba(123,0,255,.25);color:var(--purple)}.btn-primary{background:var(--gradient-brand);color:#fff;box-shadow:var(--shadow-purple)}
+    .filters-card,.card{background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-card)}
+    .filters-card{padding:16px 20px;margin-bottom:18px}.filter-row{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:12px;align-items:end}
+    .field label{display:block;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px}
+    .field input,.field select{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:.85rem;background:var(--bg)}
+    .card-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .card-head h2{font-size:.95rem}.card-head .meta{font-size:.76rem;color:var(--muted)}
+    .table-wrap{overflow:auto}.data-table{width:100%;min-width:1000px;border-collapse:separate;border-spacing:0;font-size:.84rem}
+    .data-table thead{background:var(--bg)}.data-table th{text-align:left;padding:11px 12px;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);border-bottom:1px solid var(--border);font-weight:700}
+    .data-table td{padding:11px 12px;border-bottom:1px solid var(--bg)}.data-table tbody tr:hover{background:rgba(243,238,255,.35)}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border:1px solid transparent}
+    .pill.critical{background:#FEF2F2;color:#B91C1C;border-color:#FECACA}.pill.info{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE}.pill.success{background:#ECFDF5;color:#047857;border-color:#A7F3D0}
+    .expand-btn{font-size:.76rem;color:var(--purple);text-decoration:none;font-weight:600}
+    .modal{position:fixed;inset:0;z-index:220;display:none;align-items:center;justify-content:center;padding:16px}
+    .modal:target{display:flex}.modal-backdrop{position:absolute;inset:0;background:rgba(30,42,50,.54)}
+    .modal-box{position:relative;z-index:1;width:90vw;max-width:90vw;max-height:90vh;background:#fff;border-radius:18px;border:1px solid var(--border);box-shadow:0 24px 64px rgba(123,0,255,.15);display:flex;flex-direction:column;overflow:hidden}
+    .modal-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .modal-close{width:32px;height:32px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--muted);display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.1rem}
+    .modal-body{flex:1;overflow:auto;padding:20px 24px;background:var(--bg)}
+    .modal-foot{padding:14px 24px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;background:#fff}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.detail-box{border:1px solid var(--border);border-radius:12px;background:#fff;padding:12px}
+    .detail-box h3{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px}
+    .row{display:flex;justify-content:space-between;gap:10px;font-size:.83rem;padding:6px 0;border-bottom:1px solid var(--bg)}.row:last-child{border-bottom:none}
+    .timeline{list-style:none}.timeline li{padding:10px 0 10px 16px;border-left:2px solid var(--border);margin-left:6px;position:relative}.timeline li::before{content:'';position:absolute;left:-5px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--purple)}
+    @media (max-width:1100px){.filter-row{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr}}
+    @media (max-width:768px){.sidebar{display:none}.filter-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></symbol>
+    <symbol id="i-store" viewBox="0 0 24 24"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/></symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24"><line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+    <symbol id="i-building" viewBox="0 0 24 24"><path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/></symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24"><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/><path d="M10 15H6a4 4 0 0 0-4 4v2"/><path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/><path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/><path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="NTF-01 Notifications Center">
+    <aside class="sidebar">
+      <div class="sidebar-logo"><img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" /></div>
+      <ul class="nav">
+        <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+        <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+        <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+        <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+        <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+        <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+        <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+        <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+        <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+        <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+        <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+        <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+        <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+      </ul>
+      <div class="nav-footer">
+        <a href="notifications.html" class="nav-footer-link active"><svg class="svg-icon"><use href="#i-bell"/></svg>Notifications <span class="badge">3</span></a>
+        <a href="login.html" class="nav-footer-link"><svg class="svg-icon"><use href="#i-log-out"/></svg>Sign out</a>
+      </div>
+      <div class="sidebar-user"><div class="sidebar-user-card"><div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div><div><div style="font-size:.8rem;font-weight:600;">Super Admin</div><div style="font-size:.7rem;color:var(--muted);">admin@glowtap.com</div></div></div></div>
+    </aside>
+
+    <div class="app-main-scroll">
+      <div class="app-content">
+        <div class="page-head">
+          <div>
+            <h1>Notification Templates Center</h1>
+            <p>Email/SMS templates for onboarding, renewals, suspension, ticket updates, and platform alerts.</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-outline" type="button">Export</button>
+            <button class="btn btn-primary" type="button">+ New Template</button>
+          </div>
+        </div>
+
+        <div class="filters-card">
+          <div class="filter-row">
+            <div class="field"><label>Search</label><input type="search" placeholder="Template name, event..." /></div>
+            <div class="field"><label>Channel</label><select><option selected>All channels</option><option>Email</option><option>SMS</option><option>Email + SMS</option></select></div>
+            <div class="field"><label>Category</label><select><option selected>All categories</option><option>Onboarding</option><option>Renewal</option><option>Suspension</option><option>Ticketing</option></select></div>
+            <div class="field"><label>Status</label><select><option selected>All statuses</option><option>Active</option><option>Draft</option></select></div>
+            <button class="btn btn-outline" type="button">Apply</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h2>Templates</h2>
+            <span class="meta">18 templates • 14 active • 4 drafts</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>Name</th><th>Event</th><th>Channel</th><th>Last Updated</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Salon Approved — Welcome</strong><br><span style="font-size:.75rem;color:var(--muted)">NTF-EML-001</span></td><td>Onboarding</td><td>Email</td><td>02 Jul 2026, 11:40</td><td><span class="pill success">Active</span></td><td><a class="expand-btn" href="#modal-notif-detail">View</a></td></tr>
+                <tr><td><strong>Renewal Reminder D-30</strong><br><span style="font-size:.75rem;color:var(--muted)">NTF-MIX-007</span></td><td>Renewal</td><td>Email + SMS</td><td>01 Jul 2026, 18:22</td><td><span class="pill success">Active</span></td><td><a class="expand-btn" href="#modal-notif-detail">View</a></td></tr>
+                <tr><td><strong>Suspension Notice</strong><br><span style="font-size:.75rem;color:var(--muted)">NTF-EML-012</span></td><td>Suspension</td><td>Email</td><td>30 Jun 2026, 16:10</td><td><span class="pill critical">Active</span></td><td><a class="expand-btn" href="#modal-notif-detail">View</a></td></tr>
+                <tr><td><strong>Ticket Status Update</strong><br><span style="font-size:.75rem;color:var(--muted)">NTF-EML-018</span></td><td>Ticketing</td><td>Email</td><td>29 Jun 2026, 09:45</td><td><span class="pill info">Draft</span></td><td><a class="expand-btn" href="#modal-notif-detail">View</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-notif-detail" class="modal">
+    <a href="#" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <div>
+          <h2>Template Detail — Salon Approved (Welcome)</h2>
+          <p style="font-size:.82rem;color:var(--muted);margin-top:4px;">NTF-EML-001 · Onboarding · Email · Last updated 02 Jul 2026</p>
+        </div>
+        <a href="#" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-box">
+            <h3>Configuration</h3>
+            <div class="row"><span>Status</span><span>Active</span></div>
+            <div class="row"><span>Trigger</span><span>Salon approval success</span></div>
+            <div class="row"><span>Channel</span><span>Email</span></div>
+            <div class="row"><span>Audience</span><span>Salon Owner + Salon Admin</span></div>
+            <div class="row"><span>Fallback</span><span>None</span></div>
+          </div>
+          <div class="detail-box">
+            <h3>Variables</h3>
+            <div class="row"><span>{{owner_name}}</span><span>Owner full name</span></div>
+            <div class="row"><span>{{salon_name}}</span><span>Salon business name</span></div>
+            <div class="row"><span>{{email}}</span><span>Login email</span></div>
+            <div class="row"><span>{{temp_password}}</span><span>Temporary password</span></div>
+            <div class="row"><span>{{support_link}}</span><span>Help center URL</span></div>
+          </div>
+        </div>
+        <div class="detail-box" style="margin-top:14px;">
+          <h3>Subject</h3>
+          <p style="font-size:.86rem;">Your GlowTap Salon Has Been Approved</p>
+        </div>
+        <div class="detail-box" style="margin-top:14px;">
+          <h3>Body Preview</h3>
+          <p style="font-size:.85rem;line-height:1.6;white-space:pre-line;">Hi {{owner_name}},
+
+Congratulations! Your salon {{salon_name}} is now approved.
+
+Login credentials:
+Email: {{email}}
+Temp Password: {{temp_password}}
+
+You can reset the password after first login.
+
+Regards,
+GlowTap Team</p>
+        </div>
+        <div class="detail-box" style="margin-top:14px;">
+          <h3>Version History</h3>
+          <ul class="timeline">
+            <li><strong>02 Jul 2026 11:40</strong><br><span style="font-size:.78rem;color:var(--muted)">Updated subject and added support link variable</span></li>
+            <li><strong>18 Jun 2026 15:12</strong><br><span style="font-size:.78rem;color:var(--muted)">Initial template created</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#" class="btn btn-outline">Close</a>
+        <button type="button" class="btn btn-outline">Duplicate</button>
+        <button type="button" class="btn btn-primary">Edit Template</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

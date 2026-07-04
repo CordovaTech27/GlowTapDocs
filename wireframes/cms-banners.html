@@ -1,0 +1,2114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — CMS &amp; Banners</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-light: #F3EEFF;
+      --pink: #FF03C8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: #E3DFEA;
+      --bg: #F4F2F7;
+--sidebar-bg: #F4F2F7;
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 45% at 88% 12%, rgba(123, 0, 255, 0.07) 0%, transparent 58%),
+        radial-gradient(ellipse 45% 40% at 8% 88%, rgba(155, 47, 217, 0.05) 0%, transparent 55%);
+      z-index: 0;
+    }
+
+    .app-screen {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar-bg, var(--bg));
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: var(--sidebar-bg, var(--bg));
+      overflow: hidden;
+    }
+
+    .sidebar-logo img {
+      display: block;
+      width: 280px;
+      height: 100px;
+    }
+
+    .nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+    .nav a.active { background: var(--gradient-brand); color: var(--white); box-shadow: var(--shadow-purple); }
+
+    .nav .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .nav-footer {
+      padding: 8px 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-footer-link:hover { background: var(--purple-light); color: var(--purple); }
+
+    .nav-footer-link .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-user { padding: 14px; border-top: 1px solid var(--border); }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-main-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .app-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-head h1 { font-size: 1.5rem; font-weight: 700; }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn .svg-icon { width: 16px; height: 16px; }
+
+    .btn-outline {
+      background: var(--white);
+      border: 1px solid rgba(123, 0, 255, 0.25);
+      color: var(--purple);
+    }
+
+    .btn-primary {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .btn-danger {
+      background: var(--white);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+      color: var(--red);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .btn-warning {
+      background: var(--white);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      color: var(--amber);
+    }
+
+    .btn.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
+    }
+
+    /* Filters — BRN-01 */
+    .filters-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .status-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .status-tab {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: none;
+      background: var(--bg);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-tab.on {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    @media (max-width: 1100px) {
+      .filter-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .filter-row { grid-template-columns: 1fr; }
+      .split-layout { grid-template-columns: 1fr !important; }
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .field input:focus, .field select:focus {
+      outline: none;
+      border-color: rgba(123, 0, 255, 0.4);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1);
+    }
+
+    /* Master-detail — SAL-01 + SAL-02 */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-head h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .panel-head .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .panel-scroll {
+      max-height: 720px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .lead-list { list-style: none; }
+
+    .lead-item {
+      display: block;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--bg);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      border-left: 4px solid transparent;
+    }
+
+    .lead-item:hover { background: rgba(243, 238, 255, 0.35); }
+
+    .lead-item.selected {
+      background: rgba(243, 238, 255, 0.55);
+      border-left-color: var(--purple);
+    }
+
+    .lead-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .lead-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .lead-sub { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .lead-meta { font-size: 0.72rem; color: var(--muted); margin-top: 6px; }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      border: 1px solid;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .status-badge.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.pending::before { background: #F59E0B; }
+    .status-badge.awaiting { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.awaiting::before { background: #3B82F6; }
+    .status-badge.approved { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.approved::before { background: #10B981; }
+    .status-badge.rejected { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.rejected::before { background: #EF4444; }
+    .status-badge.paid { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.paid::before { background: #10B981; }
+
+    .status-badge.upgrade { background: #F3EEFF; color: #6D28D9; border-color: #DDD6FE; }
+    .status-badge.upgrade::before { background: #7B00FF; }
+
+    .limit-banner svg { flex-shrink: 0; margin-top: 2px; color: var(--amber); }
+
+    .limit-box {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .limit-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #FDE68A;
+      background: rgba(255, 251, 235, 0.9);
+      font-size: 0.85rem;
+      color: #92400E;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    .limit-box h4 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .limit-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .limit-row span:first-child { color: var(--muted); }
+    .limit-row strong { font-weight: 700; }
+    .limit-row strong.at-limit { color: var(--amber); }
+
+    .limit-track {
+      height: 8px;
+      background: var(--white);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .limit-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .limit-fill.full { background: linear-gradient(90deg, var(--amber) 0%, #F59E0B 100%); }
+
+    .hours-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .hours-grid span:nth-child(odd) { color: var(--muted); }
+    .hours-grid span:nth-child(even) { font-weight: 600; text-align: right; }
+
+    .review-body { padding: 20px; }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .review-grid { grid-template-columns: 1fr; }
+    }
+
+    .detail-block h3 {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--bg);
+      font-size: 0.85rem;
+    }
+
+    .detail-row:last-child { border-bottom: none; }
+    .detail-row dt { color: var(--muted); flex-shrink: 0; }
+    .detail-row dd { font-weight: 600; text-align: right; }
+
+    .kyc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .kyc-grid { grid-template-columns: 1fr; }
+    }
+
+    .kyc-doc {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .kyc-doc .doc-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #EDE9FE;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .kyc-doc .doc-icon .svg-icon { width: 18px; height: 18px; }
+
+    .kyc-doc strong { display: block; font-size: 0.82rem; margin-bottom: 4px; }
+    .kyc-doc span { font-size: 0.72rem; color: var(--muted); }
+    .kyc-doc a {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .commission-box {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1px solid #EDE9FE;
+      background: linear-gradient(135deg, rgba(243, 238, 255, 0.7) 0%, rgba(255, 255, 255, 0.9) 100%);
+    }
+
+    .commission-box label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .commission-box p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .commission-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .commission-control input[type="range"] {
+      flex: 1;
+      accent-color: var(--purple);
+    }
+
+    .commission-val {
+      min-width: 52px;
+      text-align: center;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .screen-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-light);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* Modals — SAL-M01, M02, M03 */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal:target { display: flex; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 42, 50, 0.5);
+    }
+
+    .modal-box {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 480px;
+      background: var(--white);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      padding: 20px 24px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .modal-head h2 { font-size: 1.1rem; font-weight: 700; }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.1rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover { background: var(--purple-light); color: var(--purple); }
+
+    .modal-body { padding: 0 24px 20px; }
+
+    .modal-body p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .modal-summary {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+      font-size: 0.85rem;
+    }
+
+    .modal-summary div {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    .modal-summary span { color: var(--muted); }
+    .modal-summary strong { font-weight: 700; }
+
+    .modal-field { margin-bottom: 14px; }
+
+    .modal-field label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .modal-field select, .modal-field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+
+    .modal-field textarea { min-height: 88px; resize: vertical; }
+
+    .checklist { list-style: none; margin-bottom: 16px; }
+
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--bg);
+    }
+
+    .checklist input { accent-color: var(--purple); width: 16px; height: 16px; }
+
+    .modal-foot {
+      padding: 16px 24px 24px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal.modal-xl {
+      padding: 16px;
+      align-items: center;
+    }
+
+    .modal.modal-xl .modal-box {
+      max-width: 90vw;
+      width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal.modal-xl .modal-head {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .modal.modal-xl .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      min-height: 0;
+    }
+
+    .modal.modal-xl .modal-foot {
+      flex-shrink: 0;
+      border-top: 1px solid var(--border);
+      padding: 14px 24px 20px;
+    }
+
+    .modal.modal-xl .editor-layout {
+      margin-bottom: 0;
+    }
+
+    .modal.modal-xl .content-card:last-child {
+      margin-bottom: 0;
+    }
+
+    html.figma-export,
+    html.figma-export body {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+    }
+
+    html.figma-export .app-screen {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .sidebar {
+      width: 280px;
+      height: 1024px;
+      min-height: 1024px;
+      position: relative;
+      top: auto;
+    }
+
+    html.figma-export .app-main-scroll {
+      width: 1160px;
+      height: 1024px;
+      min-height: 1024px;
+      flex: none;
+      overflow-y: auto;
+    }
+
+    html.figma-export .app-content {
+      width: 1160px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .panel-scroll {
+      height: 720px;
+      max-height: 720px;
+    }
+
+    /* TXN-01 table */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .data-table thead {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .data-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--bg);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr { transition: background 0.15s; }
+    .data-table tbody tr:hover { background: rgba(243, 238, 255, 0.35); }
+    .data-table tbody tr.selected { background: rgba(243, 238, 255, 0.55); }
+    .data-table tbody tr.selected td:first-child { box-shadow: inset 4px 0 0 var(--purple); }
+
+    .data-table .txn-cell strong { display: block; font-weight: 700; font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--purple); }
+    .data-table .txn-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .salon-cell strong { display: block; font-weight: 600; }
+    .data-table .salon-cell span { font-size: 0.72rem; color: var(--muted); }
+    .data-table .amount-val { font-weight: 700; }
+    .data-table a.row-link { display: block; color: inherit; text-decoration: none; }
+    .data-table .mono { font-family: ui-monospace, monospace; font-size: 0.78rem; color: var(--purple); font-weight: 600; }
+
+    .status-badge.success { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.success::before { background: #10B981; }
+    .status-badge.failed { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+    .status-badge.failed::before { background: #EF4444; }
+    .status-badge.refunded { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.refunded::before { background: #3B82F6; }
+    .status-badge.disputed { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-badge.disputed::before { background: #F59E0B; }
+
+    .amount-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .amount-breakdown { grid-template-columns: 1fr; }
+    }
+
+    .amount-card {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .amount-card.highlight {
+      background: linear-gradient(135deg, rgba(243,238,255,0.8), #fff);
+      border-color: #EDE9FE;
+    }
+
+    .amount-card label {
+      display: block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .amount-card .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .amount-card .sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+    .gateway-ref {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    .info-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #BFDBFE;
+      background: #EFF6FF;
+      font-size: 0.8rem;
+      color: #1E40AF;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .info-banner.warn {
+      border-color: #FDE68A;
+      background: #FFFBEB;
+      color: #92400E;
+    }
+
+    /* CMS module tabs */
+    .module-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .module-nav a {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    .cms-views:not(:has(.cms-page:target)) .module-nav a[href="#cms-pages"],
+    .cms-views:has(#cms-pages:target) .module-nav a[href="#cms-pages"],
+    .cms-views:has(#cms-blog:target) .module-nav a[href="#cms-blog"],
+    .cms-views:has(#cms-media:target) .module-nav a[href="#cms-media"],
+    .cms-views:has(#bnr-list:target) .module-nav a[href="#bnr-list"],
+    body:has(#modal-page-edit:target) .module-nav a[href="#cms-pages"],
+    body:has(#modal-blog-edit:target) .module-nav a[href="#cms-blog"],
+    body:has(#modal-banner-edit:target) .module-nav a[href="#bnr-list"] {
+      background: var(--gradient-brand);
+      color: var(--white);
+      border-color: transparent;
+      box-shadow: var(--shadow-purple);
+    }
+
+    .cms-page { display: none; }
+    .cms-views:not(:has(.cms-page:target)) #cms-pages { display: block; }
+    #cms-pages:target, #cms-blog:target,
+    #cms-media:target, #bnr-list:target { display: block; }
+    .cms-views:has(:target) #cms-pages:not(:target) { display: none; }
+
+    body:has(#modal-page-edit:target) .cms-page { display: none; }
+    body:has(#modal-page-edit:target) #cms-pages { display: block; }
+    body:has(#modal-blog-edit:target) .cms-page { display: none; }
+    body:has(#modal-blog-edit:target) #cms-blog { display: block; }
+    body:has(#modal-banner-edit:target) .cms-page { display: none; }
+    body:has(#modal-banner-edit:target) #bnr-list { display: block; }
+
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .editor-layout { grid-template-columns: 1fr; }
+    }
+
+    .content-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .content-card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .content-card-head h2 { font-size: 0.95rem; font-weight: 700; }
+    .content-card-body { padding: 20px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .form-field.full { grid-column: 1 / -1; }
+
+    .form-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: var(--white);
+    }
+
+    .form-field textarea.content-area {
+      min-height: 220px;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+
+    .publish-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      padding: 14px 20px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .preview-panel {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      position: sticky;
+      top: 20px;
+    }
+
+    .preview-panel-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .preview-frame {
+      padding: 16px;
+      background: #F1F5F9;
+      min-height: 280px;
+    }
+
+    .preview-browser {
+      background: var(--white);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .preview-browser-bar {
+      padding: 8px 12px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .preview-browser-body {
+      padding: 20px;
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+
+    .preview-browser-body h3 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 1100px) {
+      .media-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .media-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .media-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .media-thumb {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #EDE9FE 0%, #FCE7F3 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple);
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+
+    .media-meta {
+      padding: 10px 12px;
+      font-size: 0.75rem;
+    }
+
+    .media-meta strong { display: block; margin-bottom: 2px; }
+    .media-meta span { color: var(--muted); }
+
+    .banner-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .banner-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .banner-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+    .banner-card .meta { font-size: 0.72rem; color: var(--muted); margin-top: 8px; }
+
+    .rule-builder {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: var(--bg);
+    }
+
+    .rule-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.82rem;
+    }
+
+    .rule-row select {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      background: var(--white);
+    }
+
+    .phone-preview {
+      max-width: 280px;
+      margin: 0 auto;
+      border: 8px solid #1E2A32;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--white);
+    }
+
+    .phone-preview-notch {
+      height: 24px;
+      background: #1E2A32;
+    }
+
+    .phone-banner-mock {
+      margin: 12px;
+      padding: 14px;
+      border-radius: 12px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+
+    .phone-banner-mock strong { display: block; font-size: 0.9rem; margin-bottom: 6px; }
+    .phone-banner-mock .cta {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 14px;
+      background: var(--white);
+      color: var(--purple);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .status-badge.published { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.published::before { background: #10B981; }
+    .status-badge.draft { background: #F1F5F9; color: #64748B; border-color: #E2E8F0; }
+    .status-badge.draft::before { background: #94A3B8; }
+    .status-badge.scheduled { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+    .status-badge.scheduled::before { background: #3B82F6; }
+
+    .login-history li span { color: var(--muted); }
+
+    .status-badge.active { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-badge.active::before { background: #10B981; }
+    .status-badge.disabled-user { background: #F1F5F9; color: #64748B; border-color: #E2E8F0; }
+    .status-badge.disabled-user::before { background: #94A3B8; }
+
+    .modal-field input[type="text"],
+    .modal-field input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    </symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+      <path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+    </symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+    </symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/>
+      <path d="M10 15H6a4 4 0 0 0-4 4v2"/>
+      <path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/>
+      <path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/>
+      <path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+    </symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+      <path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/>
+      <path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+      <path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>
+    </symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>
+    </symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
+    </symbol>
+    <symbol id="i-message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </symbol>
+    <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>
+    </symbol>
+    <symbol id="i-external-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+    </symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="CMS-01 CMS and Banners">
+  <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+    </div>
+    <ul class="nav">
+      <li><a href="dashboard.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+    </ul>
+    <div class="nav-footer">
+      <a href="notifications.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-bell"/></svg>
+        Notifications
+        <span class="badge">3</span>
+      </a>
+      <a href="login.html" class="nav-footer-link">
+        <svg class="svg-icon"><use href="#i-log-out"/></svg>
+        Sign out
+      </a>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-user-card">
+        <div class="avatar"><svg class="svg-icon"><use href="#i-user"/></svg></div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+    <div class="app-content" data-figma-layer="Content CMS Banners">
+      <div class="page-head">
+        <div>
+          <h1>CMS &amp; Banner Management</h1>
+          <p>Website content and in-app promotional banners for salon admins. <span class="screen-tag">CMS-01 – BNR-02</span></p>
+        </div>
+        <div class="page-actions">
+          <a href="#modal-page-edit" class="btn btn-primary">+ New Page</a>
+          <a href="#modal-banner-edit" class="btn btn-outline">+ New Banner</a>
+        </div>
+      </div>
+
+      <div class="cms-views">
+        <nav class="module-nav" aria-label="CMS and Banners screens">
+          <a href="#cms-pages">Pages</a>
+          <a href="#cms-blog">Blog</a>
+          <a href="#cms-media">Media</a>
+          <a href="#bnr-list">Banners</a>
+        </nav>
+
+        <!-- CMS-01 Pages List -->
+        <div id="cms-pages" class="cms-page" data-figma-frame="CMS-01 CMS Pages List">
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Published</button>
+              <button type="button" class="status-tab">Draft</button>
+              <button type="button" class="status-tab">Scheduled</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="page-search">Search</label>
+                <input type="search" id="page-search" placeholder="Page title or slug…" />
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-head">
+              <h2>Website Pages</h2>
+              <span class="meta" style="font-size:0.78rem;color:var(--muted);">7 pages</span>
+            </div>
+            <div class="panel-scroll" style="max-height:none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Page</th>
+                    <th>Slug</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="salon-cell"><strong>About Us</strong><span>Public marketing page</span></td>
+                    <td class="mono">/about</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>1 Jun 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Pricing</strong><span>Plan comparison</span></td>
+                    <td class="mono">/pricing</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>10 Jun 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Features</strong><span>Product capabilities</span></td>
+                    <td class="mono">/features</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>28 May 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>FAQ</strong><span>Help content</span></td>
+                    <td class="mono">/faq</td>
+                    <td><span class="status-badge draft">Draft</span></td>
+                    <td>15 Jun 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Terms of Service</strong><span>Legal</span></td>
+                    <td class="mono">/terms</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>15 Jan 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Privacy Policy</strong><span>Legal</span></td>
+                    <td class="mono">/privacy</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>15 Jan 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Summer Promo Landing</strong><span>Campaign page</span></td>
+                    <td class="mono">/promo/summer-2026</td>
+                    <td><span class="status-badge scheduled">Scheduled</span></td>
+                    <td>18 Jun 2026</td>
+                    <td><a href="#modal-page-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CMS-03 Blog Posts List -->
+        <div id="cms-blog" class="cms-page" data-figma-frame="CMS-03 Blog Posts List">
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Published</button>
+              <button type="button" class="status-tab">Draft</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="blog-search">Search</label>
+                <input type="search" id="blog-search" placeholder="Title, author, tag…" />
+              </div>
+              <div class="field">
+                <label for="blog-tag">Tag</label>
+                <select id="blog-tag">
+                  <option selected>All tags</option>
+                  <option>Product</option>
+                  <option>Tips</option>
+                  <option>Announcements</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-head">
+              <h2>Blog &amp; News</h2>
+              <a href="#modal-blog-edit" class="btn btn-primary" style="padding:6px 14px;font-size:0.78rem;">+ New Post</a>
+            </div>
+            <div class="panel-scroll" style="max-height:none;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Published</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="salon-cell"><strong>5 Ways to Reduce No-Shows</strong><span>/blog/reduce-no-shows</span></td>
+                    <td>GlowTap Team</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>5 Jun 2026</td>
+                    <td><a href="#modal-blog-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Introducing Multi-Branch Dashboard</strong><span>/blog/multi-branch-dashboard</span></td>
+                    <td>Product Team</td>
+                    <td><span class="status-badge published">Published</span></td>
+                    <td>28 May 2026</td>
+                    <td><a href="#modal-blog-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>Salon Marketing in 2026</strong><span>/blog/salon-marketing-2026</span></td>
+                    <td>Guest Author</td>
+                    <td><span class="status-badge draft">Draft</span></td>
+                    <td>—</td>
+                    <td><a href="#modal-blog-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                  <tr>
+                    <td class="salon-cell"><strong>GST Updates for Salon Owners</strong><span>/blog/gst-updates-2026</span></td>
+                    <td>Compliance</td>
+                    <td><span class="status-badge scheduled">Scheduled</span></td>
+                    <td>1 Jul 2026</td>
+                    <td><a href="#modal-blog-edit" class="btn btn-outline" style="padding:6px 12px;font-size:0.75rem;">Edit</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CMS-05 Media Library -->
+        <div id="cms-media" class="cms-page" data-figma-frame="CMS-05 Media Library">
+          <div class="filters-card">
+            <div class="filter-row">
+              <div class="field">
+                <label for="media-search">Search</label>
+                <input type="search" id="media-search" placeholder="Filename, alt text…" />
+              </div>
+              <div class="field">
+                <label for="media-type">Type</label>
+                <select id="media-type">
+                  <option selected>All</option>
+                  <option>Images</option>
+                  <option>Videos</option>
+                </select>
+              </div>
+              <div class="field" style="display:flex;align-items:flex-end;">
+                <button type="button" class="btn btn-primary">Upload Files</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="content-card-head">
+              <h2>Media Library</h2>
+              <span class="meta" style="font-size:0.78rem;color:var(--muted);">24 assets · 18.4 MB</span>
+            </div>
+            <div class="content-card-body">
+              <div class="media-grid">
+                <div class="media-item">
+                  <div class="media-thumb">hero-salon.jpg</div>
+                  <div class="media-meta"><strong>hero-salon.jpg</strong><span>1920×1080 · 420 KB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">pricing-table.png</div>
+                  <div class="media-meta"><strong>pricing-table.png</strong><span>1200×800 · 180 KB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">salon-appointment.jpg</div>
+                  <div class="media-meta"><strong>salon-appointment.jpg</strong><span>1600×900 · 310 KB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">team-photo.jpg</div>
+                  <div class="media-meta"><strong>team-photo.jpg</strong><span>1400×933 · 265 KB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">logo-partner-1.svg</div>
+                  <div class="media-meta"><strong>logo-partner-1.svg</strong><span>Vector · 12 KB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">demo-video.mp4</div>
+                  <div class="media-meta"><strong>demo-video.mp4</strong><span>Video · 4.2 MB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">banner-upgrade.jpg</div>
+                  <div class="media-meta"><strong>banner-upgrade.jpg</strong><span>800×400 · 95 KB</span></div>
+                </div>
+                <div class="media-item">
+                  <div class="media-thumb">blog-gst.png</div>
+                  <div class="media-meta"><strong>blog-gst.png</strong><span>900×600 · 140 KB</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BNR-01 In-App Banners List -->
+        <div id="bnr-list" class="cms-page" data-figma-frame="BNR-01 In-App Banners List">
+          <div class="info-banner" style="margin-bottom:16px;">
+            <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;"><use href="#i-alert-triangle"/></svg>
+            <span>Promotional banners shown to <strong>salon admins</strong> inside the GlowTap salon app/portal. Targeting is logic-driven by plan, expiry, branches, and feature announcements.</span>
+          </div>
+
+          <div class="filters-card">
+            <div class="status-tabs">
+              <button type="button" class="status-tab on">All</button>
+              <button type="button" class="status-tab">Active</button>
+              <button type="button" class="status-tab">Scheduled</button>
+              <button type="button" class="status-tab">Expired</button>
+            </div>
+            <div class="filter-row">
+              <div class="field">
+                <label for="bnr-search">Search</label>
+                <input type="search" id="bnr-search" placeholder="Banner title…" />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:12px;display:flex;justify-content:flex-end;">
+            <a href="#modal-banner-edit" class="btn btn-primary">+ New Banner</a>
+          </div>
+
+          <div class="banner-card">
+            <div>
+              <h3>Upgrade to 12M — Save 20% <span class="status-badge active" style="margin-left:8px;">Active</span></h3>
+              <p>Target: Plan = 1M, tenure &gt; 3 months</p>
+              <p class="meta">Priority 1 · 1 Jun – 31 Aug 2026 · CTA: Upgrade Plan</p>
+            </div>
+            <a href="#modal-banner-edit" class="btn btn-outline">Configure</a>
+          </div>
+
+          <div class="banner-card">
+            <div>
+              <h3>Renew 12M — Get 1 Month Free <span class="status-badge active" style="margin-left:8px;">Active</span></h3>
+              <p>Target: Plan = 12M, expiry within 30 days</p>
+              <p class="meta">Priority 2 · 1 Jun – 31 Jul 2026 · CTA: Renew Now</p>
+            </div>
+            <a href="#modal-banner-edit" class="btn btn-outline">Configure</a>
+          </div>
+
+          <div class="banner-card">
+            <div>
+              <h3>Switch to 24M — 2 Months Free <span class="status-badge active" style="margin-left:8px;">Active</span></h3>
+              <p>Target: Plan = 12M, expiry within 30 days, offer 24M renewal</p>
+              <p class="meta">Priority 2 · 1 Jun – 31 Jul 2026 · CTA: View 24M Plan</p>
+            </div>
+            <a href="#modal-banner-edit" class="btn btn-outline">Configure</a>
+          </div>
+
+          <div class="banner-card">
+            <div>
+              <h3>Add More Locations <span class="status-badge scheduled" style="margin-left:8px;">Scheduled</span></h3>
+              <p>Target: Branch count = plan max</p>
+              <p class="meta">Priority 3 · 1 Jul – 30 Sep 2026 · CTA: Upgrade Plan</p>
+            </div>
+            <a href="#modal-banner-edit" class="btn btn-outline">Configure</a>
+          </div>
+
+          <div class="banner-card">
+            <div>
+              <h3>New: WhatsApp Reminders <span class="status-badge draft" style="margin-left:8px;">Draft</span></h3>
+              <p>Target: New feature announcement · all active salons</p>
+              <p class="meta">Priority 4 · Not scheduled · CTA: Learn More</p>
+            </div>
+            <a href="#modal-banner-edit" class="btn btn-outline">Configure</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- CMS-02 Page Editor Modal -->
+  <div id="modal-page-edit" class="modal modal-xl" data-figma-frame="CMS-02 Page Editor">
+    <a href="#cms-pages" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Edit Page <span class="screen-tag">CMS-02</span></h2>
+        <a href="#cms-pages" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <div class="info-banner" style="margin-bottom:16px;">
+          <svg class="svg-icon" style="width:16px;height:16px;flex-shrink:0;"><use href="#i-alert-triangle"/></svg>
+          <span>Editing <strong>Pricing</strong> · <span class="status-badge published" style="display:inline-flex;vertical-align:middle;">Published</span> · Last saved 10 Jun 2026 14:22 IST</span>
+        </div>
+        <div class="editor-layout">
+          <div>
+            <div class="content-card">
+              <div class="content-card-head"><h2>Page Content</h2></div>
+              <div class="content-card-body">
+                <div class="form-grid">
+                  <div class="form-field">
+                    <label for="page-title">Page title</label>
+                    <input type="text" id="page-title" value="Pricing" />
+                  </div>
+                  <div class="form-field">
+                    <label for="page-slug">URL slug</label>
+                    <input type="text" id="page-slug" value="/pricing" />
+                  </div>
+                  <div class="form-field full">
+                    <label for="page-body">Body content</label>
+                    <textarea id="page-body" class="content-area">Choose the plan that fits your salon. All plans include unlimited appointments, staff management, and customer notifications.
+
+**Starter** — 1 branch, essential tools
+**Pro** — up to 5 branches, advanced reports
+**Enterprise** — unlimited branches, priority support</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-card">
+              <div class="content-card-head"><h2>SEO Metadata</h2></div>
+              <div class="content-card-body">
+                <div class="form-grid">
+                  <div class="form-field full">
+                    <label for="seo-title">Meta title</label>
+                    <input type="text" id="seo-title" value="GlowTap Pricing — Plans for Every Salon" />
+                  </div>
+                  <div class="form-field full">
+                    <label for="seo-desc">Meta description</label>
+                    <textarea id="seo-desc" rows="3" style="min-height:72px;">Compare GlowTap subscription plans. Flexible monthly and annual billing for single-branch and multi-location salons.</textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="publish-bar">
+                <select style="padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:0.82rem;">
+                  <option selected>Publish now</option>
+                  <option>Save as draft</option>
+                  <option>Schedule publish</option>
+                </select>
+                <input type="datetime-local" value="2026-07-01T09:00" style="padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:0.82rem;" />
+                <button type="button" class="btn btn-outline">Preview</button>
+                <button type="button" class="btn btn-outline">Save Draft</button>
+                <button type="button" class="btn btn-primary">Publish</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="preview-panel" data-figma-layer="Page Preview">
+            <div class="preview-panel-head">Live Preview</div>
+            <div class="preview-frame">
+              <div class="preview-browser">
+                <div class="preview-browser-bar">glowtap.com/pricing</div>
+                <div class="preview-browser-body">
+                  <h3>Pricing</h3>
+                  <p>Choose the plan that fits your salon. All plans include unlimited appointments, staff management, and customer notifications.</p>
+                  <p style="margin-top:12px;font-size:0.8rem;color:var(--muted);">Starter · Pro · Enterprise</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#cms-pages" class="btn btn-ghost">Cancel</a>
+        <a href="#cms-pages" class="btn btn-outline">Save Draft</a>
+        <a href="#cms-pages" class="btn btn-primary">Publish</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CMS-04 Blog Post Editor Modal -->
+  <div id="modal-blog-edit" class="modal modal-xl" data-figma-frame="CMS-04 Blog Post Editor">
+    <a href="#cms-blog" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Edit Blog Post <span class="screen-tag">CMS-04</span></h2>
+        <a href="#cms-blog" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <div class="editor-layout">
+          <div>
+            <div class="content-card">
+              <div class="content-card-head"><h2>Blog Post</h2></div>
+              <div class="content-card-body">
+                <div class="form-grid">
+                  <div class="form-field full">
+                    <label for="blog-title">Post title</label>
+                    <input type="text" id="blog-title" value="5 Ways to Reduce No-Shows" />
+                  </div>
+                  <div class="form-field">
+                    <label for="blog-slug">URL slug</label>
+                    <input type="text" id="blog-slug" value="/blog/reduce-no-shows" />
+                  </div>
+                  <div class="form-field">
+                    <label for="blog-author">Author</label>
+                    <input type="text" id="blog-author" value="GlowTap Team" />
+                  </div>
+                  <div class="form-field">
+                    <label for="blog-featured">Featured image</label>
+                    <select id="blog-featured">
+                      <option selected>salon-appointment.jpg</option>
+                      <option>team-photo.jpg</option>
+                      <option>Upload new…</option>
+                    </select>
+                  </div>
+                  <div class="form-field full">
+                    <label for="blog-excerpt">Excerpt</label>
+                    <textarea id="blog-excerpt" rows="2" style="min-height:56px;">Practical reminders and booking policies that help salons cut missed appointments.</textarea>
+                  </div>
+                  <div class="form-field full">
+                    <label for="blog-content">Content</label>
+                    <textarea id="blog-content" class="content-area">No-shows cost salons revenue and staff time. Here are five proven tactics:
+
+1. Automated SMS reminders 24h and 2h before appointment
+2. Clear cancellation policy on booking confirmation
+3. Deposit for high-value services
+4. Waitlist to fill last-minute gaps
+5. Track repeat offenders and require prepayment</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-card">
+              <div class="content-card-head"><h2>SEO &amp; Publish</h2></div>
+              <div class="content-card-body">
+                <div class="form-grid">
+                  <div class="form-field full">
+                    <label for="blog-seo-title">Meta title</label>
+                    <input type="text" id="blog-seo-title" value="5 Ways to Reduce No-Shows | GlowTap Blog" />
+                  </div>
+                  <div class="form-field full">
+                    <label for="blog-seo-desc">Meta description</label>
+                    <textarea id="blog-seo-desc" rows="2" style="min-height:56px;">Reduce missed appointments with reminders, deposits, and smart booking policies.</textarea>
+                  </div>
+                  <div class="form-field">
+                    <label for="blog-tags">Tags</label>
+                    <input type="text" id="blog-tags" value="Tips, Operations" />
+                  </div>
+                </div>
+              </div>
+              <div class="publish-bar">
+                <select style="padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:0.82rem;">
+                  <option selected>Publish now</option>
+                  <option>Save as draft</option>
+                  <option>Schedule publish</option>
+                </select>
+                <input type="datetime-local" value="2026-06-05T10:00" style="padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:0.82rem;" />
+                <button type="button" class="btn btn-outline">Preview</button>
+                <button type="button" class="btn btn-outline">Save Draft</button>
+                <button type="button" class="btn btn-primary">Publish</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="preview-panel">
+            <div class="preview-panel-head">Post Preview</div>
+            <div class="preview-frame">
+              <div class="preview-browser">
+                <div class="preview-browser-bar">glowtap.com/blog/reduce-no-shows</div>
+                <div class="preview-browser-body">
+                  <p style="font-size:0.72rem;color:var(--muted);margin-bottom:8px;">5 Jun 2026 · GlowTap Team</p>
+                  <h3>5 Ways to Reduce No-Shows</h3>
+                  <p>Practical reminders and booking policies that help salons cut missed appointments.</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#cms-blog" class="btn btn-ghost">Cancel</a>
+        <a href="#cms-blog" class="btn btn-outline">Save Draft</a>
+        <a href="#cms-blog" class="btn btn-primary">Publish</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- BNR-02 Banner Create / Edit Modal -->
+  <div id="modal-banner-edit" class="modal modal-xl" data-figma-frame="BNR-02 Banner Create Edit">
+    <a href="#bnr-list" class="modal-backdrop" aria-label="Close"></a>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>Configure Banner <span class="screen-tag">BNR-02</span></h2>
+        <a href="#bnr-list" class="modal-close" aria-label="Close">×</a>
+      </div>
+      <div class="modal-body">
+        <div class="editor-layout">
+          <div>
+            <div class="content-card">
+              <div class="content-card-head"><h2>Banner Details</h2></div>
+              <div class="content-card-body">
+                <div class="form-grid">
+                  <div class="form-field full">
+                    <label for="bnr-title">Banner title</label>
+                    <input type="text" id="bnr-title" value="Upgrade to 12M — Save 20%" />
+                  </div>
+                  <div class="form-field">
+                    <label for="bnr-image">Banner image</label>
+                    <select id="bnr-image">
+                      <option selected>banner-upgrade.jpg</option>
+                      <option>Upload new…</option>
+                    </select>
+                  </div>
+                  <div class="form-field">
+                    <label for="bnr-priority">Display priority</label>
+                    <input type="number" id="bnr-priority" value="1" min="1" max="99" />
+                  </div>
+                  <div class="form-field">
+                    <label for="bnr-cta-text">CTA text</label>
+                    <input type="text" id="bnr-cta-text" value="Upgrade Plan" />
+                  </div>
+                  <div class="form-field">
+                    <label for="bnr-cta-link">CTA link</label>
+                    <input type="text" id="bnr-cta-link" value="/subscriptions/upgrade?plan=12M" />
+                  </div>
+                  <div class="form-field">
+                    <label for="bnr-start">Active from</label>
+                    <input type="date" id="bnr-start" value="2026-06-01" />
+                  </div>
+                  <div class="form-field">
+                    <label for="bnr-end">Active until</label>
+                    <input type="date" id="bnr-end" value="2026-08-31" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="content-card">
+              <div class="content-card-head"><h2>Targeting Rules</h2></div>
+              <div class="content-card-body">
+                <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">Show this banner when <strong>all</strong> conditions match (logic-driven audience).</p>
+                <div class="rule-builder">
+                  <div class="rule-row">
+                    <select><option selected>Current plan</option><option>Subscription expiry</option><option>Branch count</option><option>Tenure</option></select>
+                    <span style="color:var(--muted);font-weight:600;">=</span>
+                    <select><option selected>1M (Monthly)</option><option>12M</option><option>24M</option></select>
+                  </div>
+                  <div class="rule-row">
+                    <select><option selected>Tenure</option><option>Current plan</option><option>Branch count</option></select>
+                    <span style="color:var(--muted);font-weight:600;">&gt;</span>
+                    <select><option selected>3 months</option><option>6 months</option><option>12 months</option></select>
+                  </div>
+                  <button type="button" class="btn btn-outline" style="margin-top:8px;font-size:0.78rem;">+ Add condition</button>
+                </div>
+              </div>
+              <div class="publish-bar">
+                <select style="padding:8px 12px;border:1px solid var(--border);border-radius:10px;font-size:0.82rem;">
+                  <option selected>Active</option>
+                  <option>Scheduled</option>
+                  <option>Draft</option>
+                  <option>Expired</option>
+                </select>
+                <button type="button" class="btn btn-outline">Save Draft</button>
+                <button type="button" class="btn btn-primary">Save &amp; Activate</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="preview-panel" data-figma-layer="Banner Phone Preview">
+            <div class="preview-panel-head">In-App Preview</div>
+            <div class="preview-frame" style="padding:24px 16px;">
+              <div class="phone-preview">
+                <div class="phone-preview-notch"></div>
+                <div style="padding:12px;font-size:0.72rem;color:var(--muted);">Salon Dashboard</div>
+                <div class="phone-banner-mock">
+                  <strong>Upgrade to 12M — Save 20%</strong>
+                  You've been on the monthly plan for 4 months. Switch to annual billing and save 20%.
+                  <span class="cta">Upgrade Plan</span>
+                </div>
+                <div style="padding:12px;height:120px;background:var(--bg);"></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <a href="#bnr-list" class="btn btn-ghost">Cancel</a>
+        <a href="#bnr-list" class="btn btn-outline">Save Draft</a>
+        <a href="#bnr-list" class="btn btn-primary">Save &amp; Activate</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
