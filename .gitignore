@@ -10,7 +10,7 @@ node_modules/
 
 # OS files
 .DS_Store
-Thumbs.db
+Thumbs.dbgit
 desktop.ini
 
 # Editor / IDE
