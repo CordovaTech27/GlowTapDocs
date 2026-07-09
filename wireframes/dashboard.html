@@ -13,25 +13,45 @@
       --purple-dark: #5B21B6;
       --purple-light: #F3EEFF;
       --lavender: #DDD6FE;
+      --violet-soft: #EDE9FE;
+      --violet-mid: #C4B5FD;
+      --magenta-soft: #FCE7F3;
       --pink: #FF03C8;
       --pink-soft: #FDF2F8;
       --text: #1E2A32;
       --muted: #6B7A88;
-      --border: #E2E8F0;
-      --bg: #F8F9FC;
+      --border: rgba(123, 0, 255, 0.08);
       --white: #FFFFFF;
       --green: #059669;
       --amber: #D97706;
       --red: #DC2626;
+      /* 65% white / 35% brand tint surface system */
+      --mix-white: 65%;
+      --surface-purple: color-mix(in srgb, #FFFFFF var(--mix-white), #F3EEFF calc(100% - var(--mix-white)));
+      --surface-pink: color-mix(in srgb, #FFFFFF var(--mix-white), #FDF2F8 calc(100% - var(--mix-white)));
+      --surface-violet: color-mix(in srgb, #FFFFFF var(--mix-white), #EDE9FE calc(100% - var(--mix-white)));
+      --surface-lavender: color-mix(in srgb, #FFFFFF var(--mix-white), #DDD6FE calc(100% - var(--mix-white)));
+      --surface-magenta: color-mix(in srgb, #FFFFFF var(--mix-white), #FCE7F3 calc(100% - var(--mix-white)));
+      --surface-neutral: color-mix(in srgb, #FFFFFF var(--mix-white), #F8F9FC calc(100% - var(--mix-white)));
+      --bg: var(--surface-purple);
       --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #9B2FD9 50%, #FF03C8 100%);
-      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.04);
-      --shadow-card-hover: 0 8px 32px rgba(123, 0, 255, 0.1);
+      --gradient-brand-soft: linear-gradient(135deg, var(--surface-purple) 0%, var(--surface-pink) 100%);
+      --gradient-hero: linear-gradient(125deg, color-mix(in srgb, #FFFFFF 72%, #F3EEFF 28%) 0%, color-mix(in srgb, #FFFFFF 68%, #FDF2F8 32%) 100%);
+      --gradient-surface-purple: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      --gradient-surface-pink: linear-gradient(145deg, #FFFFFF 0%, var(--surface-pink) 100%);
+      --gradient-surface-violet: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      --gradient-surface-lavender: linear-gradient(145deg, #FFFFFF 0%, var(--surface-lavender) 100%);
+      --gradient-surface-magenta: linear-gradient(145deg, #FFFFFF 0%, var(--surface-magenta) 100%);
+      --gradient-page: linear-gradient(165deg, color-mix(in srgb, #FFFFFF 70%, #F8F9FC 30%) 0%, var(--surface-purple) 45%, var(--surface-pink) 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.06);
+      --shadow-card-hover: 0 8px 28px rgba(123, 0, 255, 0.1);
       --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+      --shadow-glow: 0 0 32px rgba(123, 0, 255, 0.06);
     }
 
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
-      background: var(--bg);
+      background: var(--gradient-page);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -45,8 +65,9 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(ellipse 60% 50% at 90% 10%, rgba(123, 0, 255, 0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 40% at 5% 90%, rgba(255, 3, 200, 0.05) 0%, transparent 55%);
+        radial-gradient(ellipse 50% 42% at 88% 6%, rgba(123, 0, 255, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 40% at 6% 88%, rgba(255, 3, 200, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse 38% 32% at 42% 42%, rgba(155, 47, 217, 0.04) 0%, transparent 60%);
       z-index: 0;
     }
 
@@ -65,7 +86,7 @@
 
     .sidebar {
       width: 280px;
-      background: var(--white);
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--surface-purple) 100%);
       border-right: 1px solid var(--border);
       box-shadow: 4px 0 24px rgba(123, 0, 255, 0.04);
       display: flex;
@@ -83,7 +104,7 @@
       flex: none;
       padding: 0;
       border: none;
-      background: var(--white);
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--surface-purple) 100%);
       overflow: hidden;
     }
 
@@ -177,7 +198,7 @@
       gap: 10px;
       padding: 10px 12px;
       border-radius: 12px;
-      background: var(--bg);
+      background: var(--surface-purple);
       border: 1px solid var(--border);
     }
 
@@ -185,8 +206,8 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      background: #EDE9FE;
-      color: var(--purple);
+      background: var(--gradient-brand);
+      color: var(--white);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -248,15 +269,62 @@
     .btn .svg-icon { width: 16px; height: 16px; }
 
     .btn-outline {
-      background: var(--white);
-      border: 1px solid rgba(123, 0, 255, 0.25);
-      color: var(--purple);
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(123, 0, 255, 0.3);
+      color: var(--purple-dark);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface-purple);
+      border-color: rgba(123, 0, 255, 0.25);
     }
 
     .btn-primary {
       background: var(--gradient-brand);
       color: var(--white);
       box-shadow: var(--shadow-purple);
+    }
+
+    /* Dashboard hero header — login-screen energy in a light admin shell */
+    .dashboard-hero {
+      position: relative;
+      margin: -28px -28px 28px;
+      padding: 28px 28px 24px;
+      border-radius: 0 0 24px 24px;
+      background: var(--gradient-hero);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .dashboard-hero::before,
+    .dashboard-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .dashboard-hero::before {
+      top: -40%;
+      right: -5%;
+      width: 280px;
+      height: 280px;
+      background: rgba(123, 0, 255, 0.08);
+    }
+
+    .dashboard-hero::after {
+      bottom: -50%;
+      left: 8%;
+      width: 220px;
+      height: 220px;
+      background: rgba(255, 3, 200, 0.06);
+    }
+
+    .dashboard-hero .page-head {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 0;
     }
 
     .page-head {
@@ -269,42 +337,83 @@
     }
 
     .page-head h1 {
-      font-size: 1.5rem;
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 1.65rem;
       font-weight: 700;
-      color: var(--text);
+      letter-spacing: -0.02em;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
 
     .section-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      margin-bottom: 14px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
       position: relative;
+      display: block;
+      margin-bottom: 18px;
+      padding: 0 0 12px;
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      text-transform: none;
+      color: var(--text);
+      background: none;
+      border: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 0;
+      box-shadow: none;
     }
 
-    .section-title::after {
+    .section-title::before {
       content: '';
       position: absolute;
-      bottom: -1px;
       left: 0;
-      width: 48px;
+      bottom: -1px;
+      width: 52px;
       height: 2px;
+      border-radius: 2px;
       background: var(--gradient-brand);
-      border-radius: 1px;
     }
 
+    .section-title::after { display: none; }
+
     .card {
-      background: var(--white);
+      background: var(--gradient-surface-purple);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 20px;
       box-shadow: var(--shadow-card);
+    }
+
+    .card-analytics {
+      background: linear-gradient(160deg, #FFFFFF 0%, var(--surface-purple) 55%, var(--surface-pink) 100%);
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-analytics .card-head {
+      margin: 0 0 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    .card-analytics .card-head h3 {
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+    }
+
+    .card-chart {
+      background: linear-gradient(165deg, #FFFFFF 0%, var(--surface-violet) 50%, var(--surface-pink) 100%);
     }
 
     .grid { display: grid; gap: 16px; }
@@ -330,45 +439,51 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 16px;
+      padding: 0;
     }
 
     .card-head h3 {
-      font-size: 0.95rem;
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 0.92rem;
       font-weight: 700;
+      letter-spacing: -0.01em;
       color: var(--text);
     }
 
     .tabs {
       display: flex;
       gap: 4px;
-      background: var(--bg);
+      background: var(--surface-purple);
       padding: 3px;
-      border-radius: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
     }
 
     .tabs button {
       padding: 5px 12px;
       border: none;
       background: transparent;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 0.75rem;
       font-weight: 600;
-      color: var(--muted);
+      color: var(--purple-dark);
       cursor: pointer;
       font-family: inherit;
+      opacity: 0.72;
     }
 
     .tabs button.on {
-      background: var(--white);
-      color: var(--purple);
-      box-shadow: 0 1px 3px rgba(123, 0, 255, 0.08);
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(123, 0, 255, 0.25);
+      opacity: 1;
     }
 
     /* Operation alerts */
     .op-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
       padding: 20px;
       text-decoration: none;
       color: inherit;
@@ -378,6 +493,22 @@
       box-shadow: var(--shadow-card);
       transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
     }
+
+    .op-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-brand);
+      opacity: 0.85;
+    }
+
+    .op-card.purple { background: var(--gradient-surface-purple); border: 1px solid var(--border); }
+    .op-card.pink { background: var(--gradient-surface-pink); border: 1px solid var(--border); }
+    .op-card.violet { background: var(--gradient-surface-violet); border: 1px solid var(--border); }
+    .op-card.magenta { background: var(--gradient-surface-magenta); border: 1px solid var(--border); }
 
     .op-card:hover {
       border-color: rgba(123, 0, 255, 0.25);
@@ -396,10 +527,10 @@
 
     .op-icon .svg-icon { width: 22px; height: 22px; }
 
-    .op-icon.purple { background: #F3EEFF; color: var(--purple); }
-    .op-icon.pink { background: #FDF2F8; color: #DB2777; }
-    .op-icon.blue { background: #EFF6FF; color: #2563EB; }
-    .op-icon.amber { background: #FFFBEB; color: var(--amber); }
+    .op-icon.purple { background: var(--surface-violet); color: var(--purple); box-shadow: none; }
+    .op-icon.pink { background: var(--surface-pink); color: #DB2777; box-shadow: none; }
+    .op-icon.violet { background: var(--surface-lavender); color: var(--purple-dark); box-shadow: none; }
+    .op-icon.magenta { background: var(--surface-magenta); color: #BE185D; box-shadow: none; }
 
     .op-card .count {
       font-size: 1.75rem;
@@ -418,36 +549,82 @@
     .kpi {
       position: relative;
       overflow: hidden;
+      border-radius: 18px;
     }
 
-    .kpi-accent-purple { background: linear-gradient(135deg, rgba(243, 238, 255, 0.9) 0%, var(--white) 100%); border-color: #EDE9FE; }
-    .kpi-accent-pink { background: linear-gradient(135deg, rgba(253, 242, 248, 0.9) 0%, var(--white) 100%); border-color: #FCE7F3; }
-    .kpi-accent-blue { background: linear-gradient(135deg, rgba(239, 246, 255, 0.9) 0%, var(--white) 100%); border-color: #DBEAFE; }
-    .kpi-accent-green { background: linear-gradient(135deg, rgba(236, 253, 245, 0.9) 0%, var(--white) 100%); border-color: #D1FAE5; }
+    .kpi::after {
+      content: '';
+      position: absolute;
+      top: -24px;
+      right: -24px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
 
-    .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; }
-    .kpi .label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+    .kpi-accent-purple {
+      background: var(--gradient-surface-purple);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-purple::after { background: radial-gradient(circle, rgba(123, 0, 255, 0.07) 0%, transparent 70%); }
+
+    .kpi-accent-pink {
+      background: var(--gradient-surface-pink);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-pink::after { background: radial-gradient(circle, rgba(255, 3, 200, 0.06) 0%, transparent 70%); }
+
+    .kpi-accent-violet {
+      background: var(--gradient-surface-violet);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-violet::after { background: radial-gradient(circle, rgba(155, 47, 217, 0.07) 0%, transparent 70%); }
+
+    .kpi-accent-lavender {
+      background: var(--gradient-surface-lavender);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-lavender::after { background: radial-gradient(circle, rgba(196, 181, 253, 0.1) 0%, transparent 70%); }
+
+    .kpi-accent-magenta {
+      background: var(--gradient-surface-magenta);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-magenta::after { background: radial-gradient(circle, rgba(255, 3, 200, 0.06) 0%, transparent 70%); }
+
+    .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+    .kpi .label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
     .kpi .value { font-size: 1.5rem; font-weight: 700; margin-top: 8px; color: var(--text); letter-spacing: -0.02em; }
-    .kpi .value.purple { color: var(--purple); }
+    .kpi .value.brand {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
     .kpi .change { font-size: 0.75rem; margin-top: 6px; font-weight: 600; }
     .kpi .change.up { color: var(--green); }
 
     .kpi-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .kpi-icon .svg-icon { width: 20px; height: 20px; }
-
-    .kpi-icon.purple { background: #EDE9FE; color: #7C3AED; }
-    .kpi-icon.pink { background: #FCE7F3; color: #DB2777; }
-    .kpi-icon.blue { background: #DBEAFE; color: #2563EB; }
-    .kpi-icon.green { background: #D1FAE5; color: var(--green); }
+    .kpi-icon.purple { background: var(--gradient-brand); color: var(--white); box-shadow: 0 4px 16px rgba(123, 0, 255, 0.28); }
+    .kpi-icon.pink { background: linear-gradient(135deg, #FF03C8 0%, #DB2777 100%); color: var(--white); box-shadow: 0 4px 16px rgba(255, 3, 200, 0.22); }
+    .kpi-icon.violet { background: linear-gradient(135deg, #9B2FD9 0%, #7B00FF 100%); color: var(--white); box-shadow: 0 4px 16px rgba(155, 47, 217, 0.25); }
+    .kpi-icon.lavender { background: linear-gradient(135deg, #C4B5FD 0%, #9B2FD9 100%); color: var(--white); box-shadow: 0 4px 16px rgba(196, 181, 253, 0.35); }
+    .kpi-icon.magenta { background: linear-gradient(135deg, #FF03C8 0%, #9B2FD9 100%); color: var(--white); box-shadow: 0 4px 16px rgba(255, 3, 200, 0.2); }
 
     /* Progress bars (purple) */
     .plan-row {
@@ -461,10 +638,12 @@
     .plan-row span:first-child { width: 72px; color: var(--muted); font-weight: 500; }
     .plan-row span:last-child { width: 36px; text-align: right; font-weight: 600; }
 
+    .kpi-icon .svg-icon { width: 20px; height: 20px; }
+
     .bar-track {
       flex: 1;
       height: 8px;
-      background: var(--bg);
+      background: var(--surface-neutral);
       border-radius: 999px;
       overflow: hidden;
     }
@@ -475,46 +654,31 @@
       border-radius: 999px;
     }
 
-    .chart-area { margin-top: 4px; }
-
-    .chart-frame {
-      display: flex;
-      gap: 10px;
-      align-items: stretch;
+    .chart-area {
+      margin-top: 4px;
+      padding: 16px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      border: 1px solid var(--border);
     }
 
-    .chart-yaxis {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 196px;
-      min-width: 48px;
-      padding-bottom: 0;
-      font-size: 0.7rem;
-      color: var(--muted);
-      text-align: right;
-      line-height: 1;
-    }
-
-    .chart-plot { flex: 1; min-width: 0; }
-
-    .chart-svg {
+    .chart-wrap {
+      position: relative;
       width: 100%;
-      height: 196px;
-      display: block;
+      height: 260px;
     }
 
-    .chart-months {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      margin-top: 8px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-align: center;
+    .legend { display: flex; flex-wrap: wrap; gap: 16px 24px; margin-top: 14px; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+    .legend i {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
     }
-
-    .legend { display: flex; gap: 20px; margin-top: 14px; font-size: 0.8rem; color: var(--muted); font-weight: 500; }
-    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .legend .dot-sub { background: linear-gradient(135deg, #7B00FF, #9B2FD9); }
+    .legend .dot-comm { background: linear-gradient(135deg, #9B2FD9, #FF03C8); }
 
     /* Tables / lists */
     .list-item {
@@ -522,7 +686,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 0;
-      border-bottom: 1px solid var(--bg);
+      border-bottom: 1px solid var(--border);
       font-size: 0.85rem;
     }
 
@@ -532,7 +696,7 @@
       width: 22px;
       height: 22px;
       border-radius: 6px;
-      background: var(--bg);
+      background: var(--surface-neutral);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -543,7 +707,11 @@
       flex-shrink: 0;
     }
 
-    .list-item .rank.top { background: #F3EEFF; color: var(--purple); }
+    .list-item .rank.top {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(123, 0, 255, 0.2);
+    }
 
     .list-left { display: flex; align-items: center; flex: 1; min-width: 0; }
     .list-name { font-weight: 600; color: var(--text); }
@@ -558,14 +726,25 @@
     }
 
     .stat-box {
-      background: var(--bg);
-      border-radius: 10px;
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       padding: 14px;
     }
 
-    .stat-box .s-label { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
+    .stat-box.stat-brand {
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      border-color: var(--border);
+    }
+
+    .stat-box .s-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
     .stat-box .s-val { font-size: 1.25rem; font-weight: 700; margin-top: 4px; }
-    .stat-box .s-val.purple { color: var(--purple); }
+    .stat-box .s-val.brand {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
     /* Alert chips */
     .alert-item {
@@ -578,7 +757,10 @@
     }
 
     .alert-item.warn { border-color: #FDE68A; background: rgba(255, 251, 235, 0.8); }
-    .alert-item.info { border-color: #BFDBFE; background: rgba(239, 246, 255, 0.8); }
+    .alert-item.info {
+      border-color: var(--border);
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--surface-violet) 100%);
+    }
     .alert-item.danger { border-color: #FECACA; background: rgba(254, 242, 242, 0.8); }
 
     .alert-item a {
@@ -604,17 +786,33 @@
       gap: 10px;
       padding: 14px 16px;
       border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--bg);
+      border-radius: 14px;
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
       font-size: 0.85rem;
       font-weight: 600;
       color: var(--text);
       text-decoration: none;
-      transition: border-color 0.15s, background 0.15s;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
     }
 
-    .quick-btn:hover { border-color: rgba(123, 0, 255, 0.25); background: rgba(243, 238, 255, 0.5); }
-    .quick-btn .qi { display: flex; align-items: center; color: var(--purple); flex-shrink: 0; }
+    .quick-btn:hover {
+      border-color: rgba(123, 0, 255, 0.2);
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      box-shadow: var(--shadow-card);
+      transform: translateY(-1px);
+    }
+    .quick-btn .qi {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(123, 0, 255, 0.22);
+    }
     .quick-btn .svg-icon { width: 18px; height: 18px; }
 
     .ticket-row {
@@ -622,8 +820,9 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 12px;
-      background: var(--bg);
-      border-radius: 10px;
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
       margin-bottom: 8px;
       font-size: 0.8rem;
     }
@@ -640,12 +839,6 @@
     .pill.high { background: #FEE2E2; color: #B91C1C; }
     .pill.medium { background: #FFEDD5; color: #C2410C; }
 
-    .tabs button.on {
-      background: var(--white);
-      color: var(--purple);
-      box-shadow: 0 1px 3px rgba(123, 0, 255, 0.08);
-    }
-
     .page-actions { display: flex; gap: 10px; flex-shrink: 0; }
 
     .renewal-row {
@@ -653,7 +846,7 @@
       justify-content: space-between;
       padding: 8px 0;
       font-size: 0.8rem;
-      border-bottom: 1px solid var(--bg);
+      border-bottom: 1px solid var(--border);
     }
 
     /* Figma import — fixed 1440×1024 + explicit scroll wrapper (see FIGMA-IMPORT.md) */
@@ -691,6 +884,11 @@
     html.figma-export .app-content {
       width: 1160px;
       min-height: 1024px;
+    }
+
+    html.figma-export .dashboard-hero {
+      margin: 0 0 28px;
+      border-radius: 0;
     }
   </style>
 </head>
@@ -837,14 +1035,15 @@
 
   <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
     <div class="app-content" data-figma-layer="Content Dashboard">
-      <div class="page-head">
-        <div>
-          <h1>Platform Dashboard</h1>
-          <p>At-a-glance view of platform health and pending actions.</p>
-        </div>
-        <div class="page-actions">
-          <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-file-text"/></svg> Export Report</button>
-          <button type="button" class="btn btn-primary"><svg class="svg-icon"><use href="#i-ticket-plus"/></svg> Create Ticket</button>
+      <div class="dashboard-hero">
+        <div class="page-head">
+          <div>
+            <h1>Platform Dashboard</h1>
+            <p>At-a-glance view of platform health and pending actions.</p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-primary"><svg class="svg-icon"><use href="#i-file-text"/></svg> Export Report</button>
+          </div>
         </div>
       </div>
 
@@ -852,23 +1051,23 @@
       <section class="mb">
         <div class="section-title">Operation Alerts</div>
         <div class="grid g4">
-          <a href="salon-approvals.html" class="op-card">
+          <a href="salon-approvals.html" class="op-card purple">
             <div class="op-icon purple"><svg class="svg-icon"><use href="#i-store"/></svg></div>
             <div class="count">12</div>
             <div class="label">Salon Approvals</div>
           </a>
-          <a href="branch-approvals.html" class="op-card">
+          <a href="branch-approvals.html" class="op-card pink">
             <div class="op-icon pink"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
             <div class="count">5</div>
             <div class="label">Branch Approvals</div>
           </a>
-          <a href="#" class="op-card">
-            <div class="op-icon blue"><svg class="svg-icon"><use href="#i-ticket"/></svg></div>
+          <a href="support.html" class="op-card violet">
+            <div class="op-icon violet"><svg class="svg-icon"><use href="#i-ticket"/></svg></div>
             <div class="count">18</div>
             <div class="label">Open Tickets</div>
           </a>
-          <a href="#" class="op-card">
-            <div class="op-icon amber"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></div>
+          <a href="reports.html" class="op-card magenta">
+            <div class="op-icon magenta"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></div>
             <div class="count">7</div>
             <div class="label">Defaulters</div>
           </a>
@@ -891,22 +1090,22 @@
               <div class="kpi-icon pink"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
             </div>
           </div>
-          <div class="card kpi kpi-accent-green">
+          <div class="card kpi kpi-accent-violet">
             <div class="kpi-top">
-              <div><div class="label">MRR</div><div class="value purple">₹18.5L</div><div class="change up">+8.4% vs last month</div></div>
-              <div class="kpi-icon green"><svg class="svg-icon"><use href="#i-indian-rupee"/></svg></div>
+              <div><div class="label">MRR</div><div class="value brand">₹18.5L</div><div class="change up">+8.4% vs last month</div></div>
+              <div class="kpi-icon violet"><svg class="svg-icon"><use href="#i-indian-rupee"/></svg></div>
             </div>
           </div>
-          <div class="card kpi kpi-accent-blue">
+          <div class="card kpi kpi-accent-lavender">
             <div class="kpi-top">
               <div><div class="label">Active End Users</div><div class="value">38,420</div><div class="change up">+1,240 this week</div></div>
-              <div class="kpi-icon blue"><svg class="svg-icon"><use href="#i-users"/></svg></div>
+              <div class="kpi-icon lavender"><svg class="svg-icon"><use href="#i-users"/></svg></div>
             </div>
           </div>
-          <div class="card kpi">
+          <div class="card kpi kpi-accent-magenta">
             <div class="kpi-top">
               <div><div class="label">Today's Volume</div><div class="value">₹28.5L</div><div class="change up">142 transactions</div></div>
-              <div class="kpi-icon purple"><svg class="svg-icon"><use href="#i-credit-card"/></svg></div>
+              <div class="kpi-icon magenta"><svg class="svg-icon"><use href="#i-credit-card"/></svg></div>
             </div>
           </div>
         </div>
@@ -916,18 +1115,18 @@
       <section class="mb">
         <div class="section-title">Subscription Summary</div>
         <div class="grid g23">
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head">
               <h3>Revenue &amp; Renewals</h3>
             </div>
             <div class="stat-grid">
-              <div class="stat-box">
+              <div class="stat-box stat-brand">
                 <div class="s-label">MRR</div>
-                <div class="s-val purple">₹18,47,500</div>
+                <div class="s-val brand">₹18,47,500</div>
               </div>
-              <div class="stat-box">
+              <div class="stat-box stat-brand">
                 <div class="s-label">ARR</div>
-                <div class="s-val purple">₹2.22 Cr</div>
+                <div class="s-val brand">₹2.22 Cr</div>
               </div>
               <div class="stat-box">
                 <div class="s-label">Renewals (30 days)</div>
@@ -944,7 +1143,7 @@
               <div class="renewal-row"><span>Glow Studio — Starter 1M</span><span>Jul 18</span></div>
             </div>
           </div>
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Plan Distribution</h3></div>
             <div class="plan-row"><span>Starter 1M</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span>54</span></div>
             <div class="plan-row"><span>Growth 6M</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span>94</span></div>
@@ -957,7 +1156,7 @@
       <!-- Revenue & Commission -->
       <section class="mb">
         <div class="section-title">Revenue &amp; Commission Analytics</div>
-        <div class="card">
+        <div class="card card-analytics card-chart">
           <div class="card-head">
             <h3>Subscription vs Commission Revenue</h3>
             <div class="tabs">
@@ -966,51 +1165,19 @@
             </div>
           </div>
           <div class="chart-area">
-            <div class="chart-frame">
-              <div class="chart-yaxis">
-                <span>₹1200K</span>
-                <span>₹900K</span>
-                <span>₹600K</span>
-                <span>₹300K</span>
-                <span>₹0</span>
-              </div>
-              <div class="chart-plot">
-                <svg class="chart-svg" viewBox="0 0 600 180" preserveAspectRatio="none" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="subGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="#7B00FF" stop-opacity="0.2"/>
-                      <stop offset="100%" stop-color="#7B00FF" stop-opacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <line x1="0" y1="170" x2="600" y2="170" stroke="#E2E8F0" stroke-width="1"/>
-                  <line x1="0" y1="130" x2="600" y2="130" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4"/>
-                  <line x1="0" y1="90" x2="600" y2="90" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4"/>
-                  <line x1="0" y1="50" x2="600" y2="50" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4"/>
-                  <line x1="0" y1="10" x2="600" y2="10" stroke="#E2E8F0" stroke-width="1" stroke-dasharray="4"/>
-                  <path d="M0,69 L120,60 L240,53 L360,44 L480,28 L600,17 L600,170 L0,170 Z" fill="url(#subGrad)"/>
-                  <path d="M0,69 L120,60 L240,53 L360,44 L480,28 L600,17" fill="none" stroke="#7B00FF" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-                  <path d="M0,152 L120,150 L240,148 L360,146 L480,143 L600,140" fill="none" stroke="#FF03C8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-                </svg>
-                <div class="chart-months">
-                  <span>Jan</span>
-                  <span>Feb</span>
-                  <span>Mar</span>
-                  <span>Apr</span>
-                  <span>May</span>
-                  <span>Jun</span>
-                </div>
-              </div>
+            <div class="chart-wrap">
+              <canvas id="revenueChart" aria-label="Subscription vs Commission Revenue chart" role="img"></canvas>
             </div>
           </div>
           <div class="legend">
-            <span><i style="background:#7B00FF"></i> Subscription Revenue</span>
-            <span><i style="background:#FF03C8"></i> Commission Revenue</span>
+            <span><i class="dot-sub"></i> Subscription Revenue</span>
+            <span><i class="dot-comm"></i> Commission Revenue</span>
           </div>
           <div class="stat-grid" style="margin-top:18px;">
             <div class="stat-box"><div class="s-label">Commission (MTD)</div><div class="s-val">₹4.2L</div></div>
             <div class="stat-box"><div class="s-label">Commission (YTD)</div><div class="s-val">₹48.6L</div></div>
             <div class="stat-box"><div class="s-label">Avg commission rate</div><div class="s-val">7.2%</div></div>
-            <div class="stat-box"><div class="s-label">Combined platform revenue</div><div class="s-val purple">₹22.7L MTD</div></div>
+            <div class="stat-box stat-brand"><div class="s-label">Combined platform revenue</div><div class="s-val brand">₹22.7L MTD</div></div>
           </div>
         </div>
       </section>
@@ -1019,11 +1186,11 @@
       <section class="mb">
         <div class="section-title">Platform Analytics — User Growth &amp; Retention</div>
         <div class="grid g23">
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Engagement</h3></div>
             <div class="stat-grid">
               <div class="stat-box"><div class="s-label">DAU</div><div class="s-val">2,840</div></div>
-              <div class="stat-box"><div class="s-label">MAU</div><div class="s-val purple">38,420</div></div>
+              <div class="stat-box stat-brand"><div class="s-label">MAU</div><div class="s-val brand">38,420</div></div>
               <div class="stat-box"><div class="s-label">Churn rate</div><div class="s-val" style="color:var(--red);">2.1%</div></div>
               <div class="stat-box"><div class="s-label">Repeat bookings</div><div class="s-val">64%</div></div>
             </div>
@@ -1043,7 +1210,7 @@
       <section class="mb">
         <div class="section-title">Performance &amp; Insights</div>
         <div class="grid g3">
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Top Salons</h3></div>
             <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Luxe Curls Studio</div><div class="list-sub">Mumbai · 3 branches</div></div></div><span class="list-val">₹8.4L</span></div>
             <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">The Groom Room</div><div class="list-sub">Bangalore · 2 branches</div></div></div><span class="list-val">₹6.2L</span></div>
@@ -1051,7 +1218,7 @@
             <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Urban Edge Salon</div><div class="list-sub">Pune · 1 branch</div></div></div><span class="list-val">₹4.1L</span></div>
             <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Bliss &amp; Bloom</div><div class="list-sub">Hyderabad · 2 branches</div></div></div><span class="list-val">₹3.8L</span></div>
           </div>
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Geographical — Top Cities</h3></div>
             <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Mumbai</div><div class="list-sub">68 salons · ₹42L GMV</div></div></div><span class="list-val">+14%</span></div>
             <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Bangalore</div><div class="list-sub">54 salons · ₹38L GMV</div></div></div><span class="list-val">+11%</span></div>
@@ -1059,7 +1226,7 @@
             <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Pune</div><div class="list-sub">31 salons · ₹18L GMV</div></div></div><span class="list-val">+6%</span></div>
             <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Hyderabad</div><div class="list-sub">28 salons · ₹16L GMV</div></div></div><span class="list-val">+8%</span></div>
           </div>
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Most Booked Services</h3></div>
             <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Haircut &amp; Styling</div><div class="list-sub">12,480 bookings</div></div></div><span class="list-val">32%</span></div>
             <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Hair Colour</div><div class="list-sub">6,240 bookings</div></div></div><span class="list-val">18%</span></div>
@@ -1074,16 +1241,16 @@
       <section class="mb">
         <div class="section-title">Actions &amp; Support</div>
         <div class="grid g2">
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Quick Actions</h3></div>
             <div class="quick-grid">
               <a href="salon-approvals.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-clipboard-check"/></svg></span> Approve Salon</a>
               <a href="reports.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></span> Defaulter Report</a>
-              <a href="#" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> View Transactions</a>
-              <a href="#" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-ticket-plus"/></svg></span> Create Ticket</a>
+              <a href="transactions.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> View Transactions</a>
+              <a href="support.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Open Support</a>
             </div>
           </div>
-          <div class="card">
+          <div class="card card-analytics">
             <div class="card-head"><h3>Recent Tickets</h3></div>
             <div class="ticket-row">
               <div><strong>Payment gateway timeout</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1042 · Luxe Curls Studio</span></div>
@@ -1105,5 +1272,122 @@
   </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script>
+    (function () {
+      var canvas = document.getElementById('revenueChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      var ctx = canvas.getContext('2d');
+      var chartW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
+      var purple = '#7B00FF';
+      var violet = '#9B2FD9';
+      var lavender = '#C4B5FD';
+      var pink = '#FF03C8';
+      var muted = '#6B7A88';
+      var grid = 'rgba(196, 181, 253, 0.28)';
+
+      var subFill = ctx.createLinearGradient(0, 0, 0, 260);
+      subFill.addColorStop(0, 'rgba(123, 0, 255, 0.16)');
+      subFill.addColorStop(0.45, 'rgba(155, 47, 217, 0.08)');
+      subFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      var subStroke = ctx.createLinearGradient(0, 0, chartW, 0);
+      subStroke.addColorStop(0, purple);
+      subStroke.addColorStop(0.55, violet);
+      subStroke.addColorStop(1, lavender);
+
+      var commFill = ctx.createLinearGradient(0, 0, 0, 260);
+      commFill.addColorStop(0, 'rgba(255, 3, 200, 0.1)');
+      commFill.addColorStop(0.5, 'rgba(155, 47, 217, 0.05)');
+      commFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      var commStroke = ctx.createLinearGradient(0, 0, chartW, 0);
+      commStroke.addColorStop(0, violet);
+      commStroke.addColorStop(1, pink);
+
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Subscription Revenue',
+              data: [758, 825, 878, 945, 1065, 1148],
+              borderColor: subStroke,
+              backgroundColor: subFill,
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.35,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: purple
+            },
+            {
+              label: 'Commission Revenue',
+              data: [135, 150, 165, 180, 203, 225],
+              borderColor: commStroke,
+              backgroundColor: commFill,
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.35,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: pink
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(91, 33, 182, 0.94)',
+              titleFont: { family: 'DM Sans', weight: '600' },
+              bodyFont: { family: 'DM Sans' },
+              padding: 12,
+              cornerRadius: 10,
+              borderColor: 'rgba(255, 3, 200, 0.35)',
+              borderWidth: 1,
+              callbacks: {
+                label: function (item) {
+                  return item.dataset.label + ': ₹' + item.formattedValue + 'K';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: muted,
+                font: { family: 'DM Sans', size: 12, weight: '600' }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              max: 1200,
+              grid: {
+                color: grid,
+                lineWidth: 1,
+                tickLength: 0,
+                borderDash: [4, 4]
+              },
+              border: { display: false },
+              ticks: {
+                color: muted,
+                font: { family: 'DM Sans', size: 11, weight: '500' },
+                callback: function (value) { return '₹' + value + 'K'; },
+                stepSize: 300
+              }
+            }
+          }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

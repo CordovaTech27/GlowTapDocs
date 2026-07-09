@@ -1,12 +1,12 @@
 # GlowTap End Customer App
 ## Functional Specification Document
 
-**Version:** 1.2  
-**Date:** June 30, 2026  
+**Version:** 1.3  
+**Date:** July 4, 2026  
 **Audience:** Business stakeholders, product owners, design and delivery teams  
 **Purpose:** Define what the GlowTap consumer app does, who uses it, and how end customers discover salons, book services, pay, manage appointments, and interact with the platform.
 
-**Related:** Super-Admin-Functional-Spec.md v1.1 · Admin-Functional-Spec.md v1.1
+**Related:** Super-Admin-Functional-Spec.md v1.2 · Admin-Functional-Spec.md v1.2
 
 **Platform:** React Native mobile app (iOS & Android) — primary consumer channel. Responsive web companion may follow in a later release.
 
@@ -268,6 +268,7 @@ Opened when user selects a salon from discovery or search.
 - Operating hours (today highlighted)
 - Contact phone (tap to call — optional)
 - Overall rating and review summary
+- **Recent reviews:** star rating, text snippet, reviewer first name (or anonymous label), date — uploaded **image** shown when provided (tap to view full size)
 - List of **active services** (Admin §4.10) with name, duration, price, thumbnail
 - Specialists count or "X specialists available" (optional summary)
 - Policies snippet: cancellation window, online vs pay-at-salon accepted
@@ -457,12 +458,21 @@ Available when status is **Booked** or **Confirmed**:
 
 Available after status **Completed**:
 
-- Star rating (1–5) for overall experience
+- Star rating (1–5) for overall experience — **required**
 - Optional category ratings: service quality, specialist, cleanliness, value
-- Text review (moderated optional — Super Admin policy)
+- Optional text review (moderated per Super Admin policy)
+- **Image upload (optional)** — user can upload an image with their review (e.g., result photo, salon ambiance). **Submitting a review does not require an image**; star rating is still required.
 - One feedback submission per completed booking; editable within 7 days (configurable)
 
-Reviews contribute to salon/specialist aggregate ratings on discovery screens.
+**Image upload:**
+- Add from camera or photo library after rating/text entry
+- Preview before submit; user can remove and replace before posting
+- Supported formats and max file size per platform config (e.g., JPEG/PNG/WebP, max 5 MB)
+- Image submitted with the same review record; shown on salon review list when published
+- If review is edited within the edit window, user may add, replace, or remove uploaded images
+- If review is removed by moderation, associated images are removed from public display
+
+Reviews contribute to salon/specialist aggregate ratings on discovery screens. Uploaded images display on the review they belong to.
 
 #### 4.6.7 Invoice Download
 
@@ -615,8 +625,11 @@ Refund timing subject to payment gateway; commission reversal per Super Admin ru
 
 ### 5.6 Reviews
 
-- Only completed bookings eligible
-- Salons cannot edit consumer reviews; Super Admin may moderate/remove policy violations
+- Only **Completed** bookings eligible for feedback
+- Star rating **required** to submit a review; text, category ratings, and image are **optional**
+- User **may** upload an image with the review — image is not mandatory
+- Salons cannot edit consumer reviews or uploaded images; Super Admin may moderate/remove policy violations (text and/or image)
+- Review images subject to same moderation policy as text (inappropriate content taken down with review or image-only removal per policy)
 
 ### 5.7 Account & Abuse
 
@@ -636,7 +649,7 @@ Refund timing subject to payment gateway; commission reversal per Super Admin ru
 | B2C payment | Pay online | View transactions | Commission + reports |
 | Support tickets | Raise (booking/general) | Raise to platform | Manage all |
 | Promotional banners | Consumer audience | Salon admin audience | Configure |
-| Reviews | Submit | View (read-only) | Moderate (future) |
+| Reviews | Submit (optional image) | View (read-only) | Moderate (future) |
 
 ---
 
@@ -667,6 +680,7 @@ Refund timing subject to payment gateway; commission reversal per Super Admin ru
 | **Slot** | Bookable time window from availability engine (Admin §4.11) |
 | **B2C Transaction** | End-user payment to salon for a booking |
 | **Pre-invoice** | Order review screen showing line items before payment |
+| **Review image** | Optional image uploaded by end user with booking feedback (not required to post the review) |
 | **Pay at salon** | Offline payment option at time of visit — no online charge at booking |
 
 ---
@@ -675,6 +689,7 @@ Refund timing subject to payment gateway; commission reversal per Super Admin ru
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.3 | July 4, 2026 | GlowTap Product Team | Optional image upload on booking reviews |
 | 1.2 | June 30, 2026 | GlowTap Product Team | Google sign-in/sign-up skips email OTP; phone OTP still required |
 | 1.1 | June 30, 2026 | GlowTap Product Team | Removed guest/unauthenticated access; auth required for all app features |
 | 1.0 | June 30, 2026 | GlowTap Product Team | Initial End Customer app functional specification |
