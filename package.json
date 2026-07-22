@@ -5,6 +5,14 @@
   "main": "index.js",
   "scripts": {
     "pdf": "node generate-pdfs.js",
+    "db:test": "node SchemaMaking/superAdmin/scripts/test-connection.js",
+    "db:status": "node SchemaMaking/superAdmin/scripts/check-db-state.js",
+    "db:migrate": "node SchemaMaking/superAdmin/scripts/apply-migration.js",
+    "db:data-api:status": "node SchemaMaking/superAdmin/scripts/check-data-api-state.js",
+    "db:data-api:test": "node SchemaMaking/superAdmin/scripts/test-data-api.js",
+    "db:studio": "drizzle-kit studio --config SchemaMaking/superAdmin/drizzle.config.cjs",
+    "db:solution-pdf": "node SchemaMaking/superAdmin/scripts/generate-solution-pdf.js",
+    "solutions:pdf": "node generate-solutions-pdf.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,5 +21,10 @@
   "type": "commonjs",
   "dependencies": {
     "md-to-pdf": "^5.2.5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.30.6",
+    "drizzle-orm": "^0.40.1",
+    "pg": "^8.22.0"
   }
 }

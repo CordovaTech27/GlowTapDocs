@@ -1,0 +1,1315 @@
+{
+  "generatedAt": "2026-07-15T17:48:03.059Z",
+  "summary": {
+    "tables": 20,
+    "indexes": 85,
+    "primary_keys": 20,
+    "foreign_keys": 54,
+    "unique_constraints": 11,
+    "total_db_size": "1752 kB"
+  },
+  "missingPrimaryKeys": [],
+  "tables": [
+    {
+      "table_name": "branches",
+      "live_rows": "11",
+      "dead_rows": "43",
+      "total_size": "240 kB",
+      "heap_size": "80 kB",
+      "index_size": "128 kB",
+      "index_pct": "53.3",
+      "index_count": 8,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.975Z",
+      "last_autoanalyze": "2026-07-13T17:10:37.725Z"
+    },
+    {
+      "table_name": "organizations",
+      "live_rows": "5",
+      "dead_rows": "11",
+      "total_size": "160 kB",
+      "heap_size": "16 kB",
+      "index_size": "112 kB",
+      "index_pct": "70.0",
+      "index_count": 7,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.982Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "org_bill_structure",
+      "live_rows": "5",
+      "dead_rows": "6",
+      "total_size": "144 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "128 kB",
+      "index_pct": "88.9",
+      "index_count": 8,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.981Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "invoices",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "120 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "104 kB",
+      "index_pct": "86.7",
+      "index_count": 7,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.981Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "112 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "96 kB",
+      "index_pct": "85.7",
+      "index_count": 6,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.982Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "live_rows": "4",
+      "dead_rows": "7",
+      "total_size": "96 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "80 kB",
+      "index_pct": "83.3",
+      "index_count": 5,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.967Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "payments",
+      "live_rows": "1",
+      "dead_rows": "1",
+      "total_size": "96 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "80 kB",
+      "index_pct": "83.3",
+      "index_count": 5,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.983Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "credit_notes",
+      "live_rows": "2",
+      "dead_rows": "1",
+      "total_size": "88 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "72 kB",
+      "index_pct": "81.8",
+      "index_count": 5,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.977Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "org_status_actions",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "80 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "64 kB",
+      "index_pct": "80.0",
+      "index_count": 4,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.981Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "state_tax_configs",
+      "live_rows": "15",
+      "dead_rows": "0",
+      "total_size": "80 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "64 kB",
+      "index_pct": "80.0",
+      "index_count": 4,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.986Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "invoice_line_items",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "72 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "64 kB",
+      "index_pct": "88.9",
+      "index_count": 4,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.978Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "reason_codes",
+      "live_rows": "14",
+      "dead_rows": "0",
+      "total_size": "64 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "48 kB",
+      "index_pct": "75.0",
+      "index_count": 3,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.984Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "refunds",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "64 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "48 kB",
+      "index_pct": "75.0",
+      "index_count": 3,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.984Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "credit_note_line_items",
+      "live_rows": "2",
+      "dead_rows": "0",
+      "total_size": "56 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "48 kB",
+      "index_pct": "85.7",
+      "index_count": 3,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.976Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "invoice_payments",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "56 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "48 kB",
+      "index_pct": "85.7",
+      "index_count": 3,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.980Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "invoice_tax_lines",
+      "live_rows": "2",
+      "dead_rows": "2",
+      "total_size": "56 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "48 kB",
+      "index_pct": "85.7",
+      "index_count": 3,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.981Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "billing_cycles",
+      "live_rows": "4",
+      "dead_rows": "0",
+      "total_size": "48 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "32 kB",
+      "index_pct": "66.7",
+      "index_count": 2,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.966Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "super_admin_users",
+      "live_rows": "1",
+      "dead_rows": "0",
+      "total_size": "48 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "32 kB",
+      "index_pct": "66.7",
+      "index_count": 2,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.990Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "states",
+      "live_rows": "36",
+      "dead_rows": "0",
+      "total_size": "40 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "32 kB",
+      "index_pct": "80.0",
+      "index_count": 2,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.987Z",
+      "last_autoanalyze": null
+    },
+    {
+      "table_name": "subscription_plans",
+      "live_rows": "4",
+      "dead_rows": "4",
+      "total_size": "32 kB",
+      "heap_size": "8192 bytes",
+      "index_size": "16 kB",
+      "index_pct": "50.0",
+      "index_count": 1,
+      "has_pk": true,
+      "last_analyze": "2026-07-15T17:46:44.988Z",
+      "last_autoanalyze": null
+    }
+  ],
+  "indexes": [
+    {
+      "table_name": "billing_cycles",
+      "index_name": "billing_cycles_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "35",
+      "definition": "public.billing_cycles (id)"
+    },
+    {
+      "table_name": "billing_cycles",
+      "index_name": "billing_cycles_code_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.billing_cycles (code)"
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "index_name": "billing_discount_configs_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "1",
+      "definition": "public.billing_discount_configs (id)"
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "index_name": "idx_billing_discount_configs_active",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.billing_discount_configs (is_active, priority) WHERE (is_active = true)"
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "index_name": "idx_billing_discount_configs_cycle",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.billing_discount_configs (billing_cycle_id)"
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "index_name": "idx_billing_discount_configs_plan",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.billing_discount_configs (subscription_plan_id)"
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "index_name": "uq_billing_discount_plan_cycle",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.billing_discount_configs (subscription_plan_id, billing_cycle_id) NULLS NOT DISTINCT"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "branches_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "11",
+      "definition": "public.branches (id)"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "branches_organization_id_slug_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.branches (organization_id, slug)"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "idx_branches_city",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.branches (((address ->> 'city'::text)))"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "idx_branches_kyc_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.branches (kyc_status)"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "idx_branches_org",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "6",
+      "definition": "public.branches (organization_id)"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "idx_branches_state_id",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.branches (state_id)"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "idx_branches_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.branches (status)"
+    },
+    {
+      "table_name": "branches",
+      "index_name": "idx_one_primary_branch_per_org",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.branches (organization_id) WHERE (is_primary = true)"
+    },
+    {
+      "table_name": "credit_note_line_items",
+      "index_name": "credit_note_line_items_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "2",
+      "definition": "public.credit_note_line_items (id)"
+    },
+    {
+      "table_name": "credit_note_line_items",
+      "index_name": "idx_credit_note_line_items_cn",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "1",
+      "definition": "public.credit_note_line_items (credit_note_id, sort_order)"
+    },
+    {
+      "table_name": "credit_note_line_items",
+      "index_name": "idx_credit_note_line_items_invoice_line",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.credit_note_line_items (invoice_line_item_id) WHERE (invoice_line_item_id IS NOT NULL)"
+    },
+    {
+      "table_name": "credit_notes",
+      "index_name": "credit_notes_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "14",
+      "definition": "public.credit_notes (id)"
+    },
+    {
+      "table_name": "credit_notes",
+      "index_name": "credit_notes_credit_note_number_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.credit_notes (credit_note_number)"
+    },
+    {
+      "table_name": "credit_notes",
+      "index_name": "idx_credit_notes_applied_invoice",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "8192 bytes",
+      "scans": "0",
+      "definition": "public.credit_notes (applied_to_invoice_id) WHERE (applied_to_invoice_id IS NOT NULL)"
+    },
+    {
+      "table_name": "credit_notes",
+      "index_name": "idx_credit_notes_invoice",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "1",
+      "definition": "public.credit_notes (invoice_id)"
+    },
+    {
+      "table_name": "credit_notes",
+      "index_name": "idx_credit_notes_settlement",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.credit_notes (settlement_method, status)"
+    },
+    {
+      "table_name": "invoice_line_items",
+      "index_name": "invoice_line_items_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "5",
+      "definition": "public.invoice_line_items (id)"
+    },
+    {
+      "table_name": "invoice_line_items",
+      "index_name": "idx_invoice_line_items_cycle",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoice_line_items (billing_cycle_id) WHERE (billing_cycle_id IS NOT NULL)"
+    },
+    {
+      "table_name": "invoice_line_items",
+      "index_name": "idx_invoice_line_items_invoice",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "5",
+      "definition": "public.invoice_line_items (invoice_id, sort_order)"
+    },
+    {
+      "table_name": "invoice_line_items",
+      "index_name": "idx_invoice_line_items_plan",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoice_line_items (subscription_plan_id) WHERE (subscription_plan_id IS NOT NULL)"
+    },
+    {
+      "table_name": "invoice_payments",
+      "index_name": "invoice_payments_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "11",
+      "definition": "public.invoice_payments (id)"
+    },
+    {
+      "table_name": "invoice_payments",
+      "index_name": "idx_invoice_payments_payment",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "3",
+      "definition": "public.invoice_payments (payment_id)"
+    },
+    {
+      "table_name": "invoice_payments",
+      "index_name": "invoice_payments_invoice_id_payment_id_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "6",
+      "definition": "public.invoice_payments (invoice_id, payment_id)"
+    },
+    {
+      "table_name": "invoice_tax_lines",
+      "index_name": "invoice_tax_lines_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "10",
+      "definition": "public.invoice_tax_lines (id)"
+    },
+    {
+      "table_name": "invoice_tax_lines",
+      "index_name": "idx_invoice_tax_lines_line",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoice_tax_lines (invoice_line_item_id)"
+    },
+    {
+      "table_name": "invoice_tax_lines",
+      "index_name": "idx_invoice_tax_lines_tax_config",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoice_tax_lines (state_tax_config_id)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "invoices_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "13",
+      "definition": "public.invoices (id)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "idx_invoices_bill",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoices (org_bill_structure_id)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "idx_invoices_issue_date",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoices (issue_date DESC)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "idx_invoices_org",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoices (organization_id, issue_date DESC)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "idx_invoices_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoices (status, due_date)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "idx_invoices_subscription_change",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "8192 bytes",
+      "scans": "0",
+      "definition": "public.invoices (org_subscription_change_id) WHERE (org_subscription_change_id IS NOT NULL)"
+    },
+    {
+      "table_name": "invoices",
+      "index_name": "invoices_invoice_number_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.invoices (invoice_number)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "org_bill_structure_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (id)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_one_active_bill_structure_per_org",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (organization_id) WHERE ((status)::text = 'ACTIVE'::text)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_org_bill_structure_cycle",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (billing_cycle_id)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_org_bill_structure_org_id",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (organization_id)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_org_bill_structure_plan",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (subscription_plan_id)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_org_bill_structure_renewal_date",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (renewal_date)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_org_bill_structure_state_id",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (state_id)"
+    },
+    {
+      "table_name": "org_bill_structure",
+      "index_name": "idx_org_bill_structure_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_bill_structure (status)"
+    },
+    {
+      "table_name": "org_status_actions",
+      "index_name": "org_status_actions_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "16",
+      "definition": "public.org_status_actions (id)"
+    },
+    {
+      "table_name": "org_status_actions",
+      "index_name": "idx_org_status_actions_action",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_status_actions (action, performed_at DESC)"
+    },
+    {
+      "table_name": "org_status_actions",
+      "index_name": "idx_org_status_actions_org",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "4",
+      "definition": "public.org_status_actions (organization_id, performed_at DESC)"
+    },
+    {
+      "table_name": "org_status_actions",
+      "index_name": "idx_org_status_actions_reason",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_status_actions (reason_code_id) WHERE (reason_code_id IS NOT NULL)"
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "index_name": "org_subscription_changes_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "4",
+      "definition": "public.org_subscription_changes (id)"
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "index_name": "idx_org_subscription_changes_bill",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_subscription_changes (org_bill_structure_id, performed_at DESC)"
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "index_name": "idx_org_subscription_changes_from_plan",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_subscription_changes (from_subscription_plan_id)"
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "index_name": "idx_org_subscription_changes_org",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "2",
+      "definition": "public.org_subscription_changes (organization_id, performed_at DESC)"
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "index_name": "idx_org_subscription_changes_to_plan",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_subscription_changes (to_subscription_plan_id)"
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "index_name": "idx_org_subscription_changes_type",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.org_subscription_changes (change_type, performed_at DESC)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "organizations_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "17",
+      "definition": "public.organizations (id)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "idx_organizations_kyc_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.organizations (kyc_status)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "idx_organizations_state_id",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.organizations (state_id)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "idx_organizations_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.organizations (status)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "idx_organizations_status_changed_at",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.organizations (status_changed_at DESC NULLS LAST) WHERE (status_changed_at IS NOT NULL)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "idx_organizations_status_reason",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.organizations (status_reason_id) WHERE (status_reason_id IS NOT NULL)"
+    },
+    {
+      "table_name": "organizations",
+      "index_name": "organizations_slug_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.organizations (slug)"
+    },
+    {
+      "table_name": "payments",
+      "index_name": "payments_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "9",
+      "definition": "public.payments (id)"
+    },
+    {
+      "table_name": "payments",
+      "index_name": "idx_payments_gateway_payment",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.payments (gateway_payment_id) WHERE (gateway_payment_id IS NOT NULL)"
+    },
+    {
+      "table_name": "payments",
+      "index_name": "idx_payments_org",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.payments (organization_id, initiated_at DESC)"
+    },
+    {
+      "table_name": "payments",
+      "index_name": "idx_payments_status",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.payments (status)"
+    },
+    {
+      "table_name": "payments",
+      "index_name": "payments_payment_number_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.payments (payment_number)"
+    },
+    {
+      "table_name": "reason_codes",
+      "index_name": "reason_codes_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "6",
+      "definition": "public.reason_codes (id)"
+    },
+    {
+      "table_name": "reason_codes",
+      "index_name": "idx_reason_codes_category_active",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.reason_codes (category, is_active, sort_order) WHERE (is_active = true)"
+    },
+    {
+      "table_name": "reason_codes",
+      "index_name": "reason_codes_category_code_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "2",
+      "definition": "public.reason_codes (category, code)"
+    },
+    {
+      "table_name": "refunds",
+      "index_name": "refunds_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "7",
+      "definition": "public.refunds (id)"
+    },
+    {
+      "table_name": "refunds",
+      "index_name": "idx_refunds_credit_note",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.refunds (credit_note_id) WHERE (credit_note_id IS NOT NULL)"
+    },
+    {
+      "table_name": "refunds",
+      "index_name": "idx_refunds_payment",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "1",
+      "definition": "public.refunds (payment_id)"
+    },
+    {
+      "table_name": "state_tax_configs",
+      "index_name": "state_tax_configs_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.state_tax_configs (id)"
+    },
+    {
+      "table_name": "state_tax_configs",
+      "index_name": "idx_state_tax_configs_active",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.state_tax_configs (state_id, is_active) WHERE (is_active = true)"
+    },
+    {
+      "table_name": "state_tax_configs",
+      "index_name": "idx_state_tax_configs_state_id",
+      "is_pk": false,
+      "is_unique": false,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.state_tax_configs (state_id)"
+    },
+    {
+      "table_name": "state_tax_configs",
+      "index_name": "state_tax_configs_state_id_tax_code_effective_from_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "3",
+      "definition": "public.state_tax_configs (state_id, tax_code, effective_from)"
+    },
+    {
+      "table_name": "states",
+      "index_name": "states_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "100",
+      "definition": "public.states (id)"
+    },
+    {
+      "table_name": "states",
+      "index_name": "states_code_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "1",
+      "definition": "public.states (code)"
+    },
+    {
+      "table_name": "subscription_plans",
+      "index_name": "subscription_plans_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "51",
+      "definition": "public.subscription_plans (id)"
+    },
+    {
+      "table_name": "super_admin_users",
+      "index_name": "super_admin_users_pkey",
+      "is_pk": true,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "102",
+      "definition": "public.super_admin_users (id)"
+    },
+    {
+      "table_name": "super_admin_users",
+      "index_name": "super_admin_users_email_key",
+      "is_pk": false,
+      "is_unique": true,
+      "index_size": "16 kB",
+      "scans": "0",
+      "definition": "public.super_admin_users (email)"
+    }
+  ],
+  "fkCoverage": [
+    {
+      "table_name": "billing_discount_configs",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "column_name": "updated_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "branches",
+      "column_name": "approved_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "branches",
+      "column_name": "kyc_verified_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "credit_notes",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "org_bill_structure",
+      "column_name": "configured_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "org_status_actions",
+      "column_name": "performed_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "from_billing_cycle_id",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "performed_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "to_billing_cycle_id",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "organizations",
+      "column_name": "approved_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "organizations",
+      "column_name": "kyc_verified_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "organizations",
+      "column_name": "status_changed_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "payments",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "reason_codes",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "reason_codes",
+      "column_name": "updated_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "state_tax_configs",
+      "column_name": "created_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "state_tax_configs",
+      "column_name": "updated_by",
+      "has_leading_index": false
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "column_name": "billing_cycle_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "billing_discount_configs",
+      "column_name": "subscription_plan_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "branches",
+      "column_name": "organization_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "branches",
+      "column_name": "state_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "credit_note_line_items",
+      "column_name": "credit_note_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "credit_note_line_items",
+      "column_name": "invoice_line_item_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "credit_notes",
+      "column_name": "applied_to_invoice_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "credit_notes",
+      "column_name": "invoice_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_line_items",
+      "column_name": "billing_cycle_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_line_items",
+      "column_name": "invoice_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_line_items",
+      "column_name": "subscription_plan_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_payments",
+      "column_name": "invoice_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_payments",
+      "column_name": "payment_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_tax_lines",
+      "column_name": "invoice_line_item_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoice_tax_lines",
+      "column_name": "state_tax_config_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "org_bill_structure_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "org_subscription_change_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "invoices",
+      "column_name": "organization_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_bill_structure",
+      "column_name": "billing_cycle_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_bill_structure",
+      "column_name": "organization_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_bill_structure",
+      "column_name": "state_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_bill_structure",
+      "column_name": "subscription_plan_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_status_actions",
+      "column_name": "organization_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_status_actions",
+      "column_name": "reason_code_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "from_subscription_plan_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "org_bill_structure_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "organization_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "org_subscription_changes",
+      "column_name": "to_subscription_plan_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "organizations",
+      "column_name": "state_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "organizations",
+      "column_name": "status_reason_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "payments",
+      "column_name": "organization_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "credit_note_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "refunds",
+      "column_name": "payment_id",
+      "has_leading_index": true
+    },
+    {
+      "table_name": "state_tax_configs",
+      "column_name": "state_id",
+      "has_leading_index": true
+    }
+  ],
+  "fkCovered": 34,
+  "fkUncovered": 20
+}

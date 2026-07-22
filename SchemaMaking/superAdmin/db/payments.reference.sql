@@ -1,0 +1,21 @@
+CREATE TABLE payments (
+  id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  organization_id    UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  payment_number     VARCHAR(50) NOT NULL UNIQUE,
+  amount             DECIMAL(12, 2) NOT NULL,
+  currency           VARCHAR(3) NOT NULL DEFAULT 'INR',
+  status             VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  payment_method     VARCHAR(30) NOT NULL,
+  gateway            VARCHAR(30) NOT NULL DEFAULT 'MANUAL',
+  gateway_order_id   VARCHAR(100),
+  gateway_payment_id VARCHAR(100),
+  gateway_ref        VARCHAR(255),
+  failure_code       VARCHAR(50),
+  failure_message    TEXT,
+  initiated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  paid_at            TIMESTAMPTZ,
+  notes              TEXT,
+  created_by         UUID REFERENCES super_admin_users(id),
+  created_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);

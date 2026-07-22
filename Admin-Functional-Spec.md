@@ -1,12 +1,12 @@
 # GlowTap Salon Admin Portal
 ## Functional Specification Document
 
-**Version:** 1.2  
-**Date:** July 4, 2026  
+**Version:** 1.3  
+**Date:** July 13, 2026  
 **Audience:** Business stakeholders, product owners, salon operations teams  
 **Purpose:** Define what the Salon Admin portal does, who uses it, and how salon owners and delegated staff manage branches, staff, services, appointments, and subscriptions on GlowTap.
 
-**Related:** Super-Admin-Functional-Spec.md v1.2
+**Related:** Super-Admin-Functional-Spec.md v1.3
 
 ---
 
@@ -49,7 +49,6 @@ When creating or editing a Sub Admin, Main Admin toggles access per module:
 | Appointments | View, confirm, reschedule, cancel; initiate refunds; booking history |
 | Transactions | View branch B2C payment history |
 | Reports | Branch-level reports for assigned branches |
-| CMS & Banners | Create and pay for customer-app advertisement campaigns (Main Admin or delegated) |
 
 Main Admin always retains full access regardless of toggles.
 
@@ -69,11 +68,10 @@ Dashboard (org-wide; branch selector)
 ├── Appointments & Bookings     (per branch context; org-wide booking history)
 ├── Transactions                (org or branch context)
 ├── Reports                     (org-level + branch-level)
-├── CMS & Banners               (customer-app advertisement campaigns — org-level)
 └── Support & Ticketing         (raise/view tickets to Super Admin)
 ```
 
-**Branch context:** Most operational modules require an active branch selection (from dashboard or branch switcher). Org-level modules (Organization Profile, Sub Admins, org-wide Reports, subscription upgrade, **CMS & Banners**) do not require branch context.
+**Branch context:** Most operational modules require an active branch selection (from dashboard or branch switcher). Org-level modules (Organization Profile, Sub Admins, org-wide Reports, subscription upgrade) do not require branch context.
 
 ---
 
@@ -99,7 +97,7 @@ Dashboard (org-wide; branch selector)
 - **Branch selector:** Choose one branch to enter branch context for operational modules; selection persists until changed
 - **Org KPIs:** Total appointments (today / week), total revenue (today / week / month), active employees across branches, upcoming renewals
 - **Alerts:** Pending branch approval requests, subscription expiry window, failed renewal payment, open support tickets, staff on leave today
-- **Quick actions:** Switch branch, view appointments, add employee, create service, create banner campaign, raise support ticket
+- **Quick actions:** Switch branch, view appointments, add employee, create service, raise support ticket
 - **Promotional banners:** Platform-managed in-app banners (plan upgrade offers, renewal reminders, branch limit warnings — configured by Super Admin)
 
 **Sub Admin view:**
@@ -533,85 +531,6 @@ Salon admins can raise issues to the GlowTap operations team (Super Admin §4.12
 
 ---
 
----
-
-### 4.17 CMS & Banners (Customer App Advertising)
-
-Main Admin (and optionally delegated Sub Admin with **CMS & Banners** permission) creates **paid advertisement campaigns** displayed as promotional banners in the **GlowTap end-customer mobile app**.
-
-This is separate from **platform promotional banners** shown inside the Salon Admin portal (configured by Super Admin — §4.9.2).
-
-#### 4.17.1 Campaign List
-
-- All campaigns for the organization: draft, pending payment, scheduled, live, expired, cancelled
-- Columns: campaign name, banner preview thumbnail, date range, branches targeted (org-wide or selected branches), amount paid, status
-- Filters: status, date range, branch
-
-#### 4.17.2 Create / Edit Banner Campaign
-
-**Banner content:**
-- Campaign name (internal)
-- Banner title and subtitle / body copy
-- Banner image (upload; dimensions per Super Admin **Configure Admin CMS** spec)
-- CTA label and deep link (e.g., book now → branch/service landing in consumer app)
-- Target: all org branches or selected branches
-
-**Schedule — date selection:**
-- Admin selects **start date** and **end date** (inclusive) for when the banner may appear in the customer app
-- Calendar shows **slot availability per day** (see §4.17.3)
-- Unavailable (fully booked) dates are disabled — Admin cannot select them
-- System calculates **total campaign cost** before checkout
-
-**Pricing display (read-only, from Super Admin config):**
-- Per-day banner price × number of days in range
-- Any applicable taxes per platform settings
-
-#### 4.17.3 Slot Availability (Auto-Calculated)
-
-GlowTap maintains a **global daily banner capacity** for the customer app (configured by Super Admin — max concurrent live banners per calendar day).
-
-For each date in the selected range:
-- **Available slots** = `max_banners_per_day − already_booked_slots_on_that_date` (across all salons)
-- If slots = 0 (e.g., 4 slots allowed and 4 already paid on 28 July), that date is **blocked** in the date picker
-- Partial availability shown when fewer slots remain than requested (Admin may shorten range or pick alternate dates)
-
-Live rotation: when multiple banners are active on the same day, consumer app shows up to **max banners per day** per Super Admin rules (priority: campaign start order or configured rotation — platform default).
-
-#### 4.17.4 Payment & Activation
-
-1. Admin completes banner configuration and date selection
-2. Review screen shows content preview, date range, slot confirmation, and **total upfront amount**
-3. Admin pays **upfront in full** via configured payment method (same gateway as subscription or dedicated ad billing — platform config)
-4. On **successful payment:**
-   - Campaign status → **Scheduled** (if start date in future) or **Live** (if start date is today)
-   - Slots reserved for each day in the range
-   - Invoice/receipt available under Organization Profile → Invoices (type: Advertisement)
-5. On **payment failure:** campaign remains Draft; slots not reserved
-
-**No pay-as-you-go or post-paid** — advertisement campaigns require upfront payment before slots are locked.
-
-#### 4.17.5 Campaign Management Actions
-
-| Action | Description |
-|--------|-------------|
-| **Edit draft** | Modify content and dates before payment |
-| **Cancel draft** | Discard unpaid campaign |
-| **View live preview** | See banner as it appears in consumer app mock |
-| **Cancel scheduled** | Before start date; refund policy per Super Admin (full/partial/none) |
-| **Extend dates** | Add days if slots available; additional upfront payment for extra days |
-
-#### 4.17.6 Notifications
-
-| Event | Recipient | Channel |
-|-------|-----------|---------|
-| Campaign payment success | Main Admin | Email + in-app |
-| Campaign goes live | Main Admin | Email + in-app |
-| Campaign expiring in 3 days | Main Admin | Email + in-app |
-| Campaign expired | Main Admin | Email + in-app |
-| Payment failed | Main Admin | Email + in-app |
-
----
-
 ### 4.16 Notifications & In-App Banners
 
 | Event | Recipient | Channel |
@@ -627,8 +546,6 @@ Live rotation: when multiple banners are active on the same day, consumer app sh
 | Appointment cancelled (by admin) | End user | Email/SMS/push (consumer app) |
 
 **Platform in-app banners** (Super Admin configured): plan upgrade prompts, renewal offers, branch limit warnings — shown on Salon Admin dashboard per targeting rules.
-
-**Customer-app advertisement banners** (Salon Admin configured): paid campaigns managed in **CMS & Banners** (§4.17); visible to end users in the consumer app only when live and within paid date range.
 
 ---
 
@@ -662,21 +579,13 @@ Live rotation: when multiple banners are active on the same day, consumer app sh
 - Booking history and status audit retained for compliance; export available to Main Admin
 - Sub Admin booking actions require **Appointments** module permission on assigned branches only
 
-### 5.5 Advertisement Banner Campaigns
-
-- Campaign dates must fall entirely on **available slot days** (Super Admin Configure Admin CMS §4.10.2)
-- Upfront payment required before slots are reserved; unpaid drafts do not consume capacity
-- Maximum concurrent customer-app banners per day enforced platform-wide, not per salon
-- Refund on cancellation before go-live follows Super Admin **Advertisement Refund Policy**
-- Live campaigns cannot exceed paid date range; extension requires additional payment and slot check
-
-### 5.6 Sub Admin Scope
+### 5.5 Sub Admin Scope
 
 - Sub Admin access is intersection of **assigned branches** AND **enabled modules**
 - Main Admin cannot grant access to branches outside the org
 - Super Admin disable on Sub Admin overrides Main Admin enable
 
-### 5.7 Account Suspension
+### 5.6 Account Suspension
 
 - When Super Admin suspends the org, Admin portal access is restricted; end-user booking to affected branches stops
 - Data retained; no deletion of employees, services, or history
@@ -697,8 +606,6 @@ Live rotation: when multiple banners are active on the same day, consumer app sh
 | **B2C Transaction** | End-user payment to salon for services/bookings |
 | **Slot** | Bookable time window derived from branch hours, service duration, and specialist availability |
 | **Booking** | End-user appointment created via consumer app; managed in Admin Appointments module |
-| **Banner Campaign** | Paid advertisement slot(s) in the end-customer app for a configured date range |
-| **Banner Slot** | One unit of daily customer-app banner capacity consumed on a calendar date |
 
 ---
 
@@ -706,6 +613,7 @@ Live rotation: when multiple banners are active on the same day, consumer app sh
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.3 | July 13, 2026 | GlowTap Product Team | Removed customer-app banner advertising (CMS & Banners revenue model) — deferred from current release |
 | 1.2 | July 4, 2026 | GlowTap Product Team | CMS & Banners (customer-app advertising), expanded booking flow & history, upfront ad payment |
 | 1.1 | June 28, 2026 | GlowTap Product Team | Forgot password added to v1.0 auth scope |
 | 1.0 | June 28, 2026 | GlowTap Product Team | Initial Admin portal functional specification |

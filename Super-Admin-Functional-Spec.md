@@ -1,8 +1,8 @@
 # GlowTap Super Admin Portal
 ## Functional Specification Document
 
-**Version:** 1.2  
-**Date:** July 4, 2026  
+**Version:** 1.3  
+**Date:** July 13, 2026  
 **Audience:** Business stakeholders, product owners, operations teams  
 **Purpose:** Define what the Super Admin platform does, who uses it, and how day-to-day operations are managed across the GlowTap ecosystem.
 
@@ -40,7 +40,6 @@ Dashboard
 ├── Reports                  (defaulters, revenue, growth)
 ├── User Access Control      (Salon Admins, Sub Admins, End Users)
 ├── CMS & Banners            (website content, salon-admin promotional banners)
-├── Configure Admin CMS      (customer-app ad platform: pricing, slots, policies)
 ├── Platform Analytics       (KPIs, trends, usage)
 ├── Support & Ticketing      (platform and salon-raised tickets)
 ├── Master Configuration     (reason codes, notifications, tax settings)
@@ -137,10 +136,9 @@ A dedicated earnings panel showing GlowTap revenue from this salon to date, spli
 |---------------|-------------|-----------------|
 | **Subscription Revenue** | Salon → GlowTap subscription payments (plan purchase, renewals, upgrades) | Total paid, outstanding, last payment date, MRR contribution |
 | **Commission Revenue** | GlowTap share on end-user → salon transactions | Total commission earned, transaction count, avg commission per txn, current rate % |
-| **Advertisement Revenue** | Salon → GlowTap upfront payments for customer-app banner campaigns | Total ad revenue, active campaigns, slots sold, revenue by period |
 
 **Earnings Breakdown (till date):**
-- **Total GlowTap Earnings** = Subscription Revenue + Commission Revenue + **Advertisement Revenue**
+- **Total GlowTap Earnings** = Subscription Revenue + Commission Revenue
 - **Subscription:** itemized list of invoices/payments (date, type, amount)
 - **Commission:** itemized list per transaction (date, end-user txn amount, commission %, commission amount)
 - Date range filter (7D, 30D, 90D, custom, all-time)
@@ -214,29 +212,25 @@ Records all **end-user payments made to salons** (appointment bookings, service 
 
 #### 4.6.0 GlowTap Earning Model (Overview)
 
-GlowTap generates revenue through **three streams**:
+GlowTap generates revenue through **two streams**:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                         GlowTap Revenue Model                             │
-├─────────────────────┬──────────────────────┬─────────────────────────────┤
-│ 1. Subscription     │ 2. Commission        │ 3. Advertisement (Banner)    │
-│    Revenue          │    Revenue           │    Revenue                   │
-│ (Salon → GlowTap)   │ (End User → Salon    │ (Salon → GlowTap)            │
-│                     │  → GlowTap)          │                              │
-├─────────────────────┼──────────────────────┼─────────────────────────────┤
-│ Plan purchase       │ % of each B2C txn    │ Upfront per-day banner       │
-│ Renewals            │ Set at salon approval│ pricing × booked days        │
-│ Upgrades            │ Editable per salon   │ Slot capacity enforced       │
-│ RC / NRC discounts  │ Tracked in Txns +    │ Configured in Configure      │
-│                     │ Salon earnings view  │ Admin CMS                    │
-└─────────────────────┴──────────────────────┴─────────────────────────────┘
+├─────────────────────────────┬────────────────────────────────────────────┤
+│ 1. Subscription Revenue     │ 2. Commission Revenue                       │
+│ (Salon → GlowTap)           │ (End User → Salon → GlowTap)                │
+├─────────────────────────────┼────────────────────────────────────────────┤
+│ Plan purchase               │ % of each B2C txn                           │
+│ Renewals                    │ Set at salon approval                       │
+│ Upgrades                    │ Editable per salon                          │
+│ RC / NRC discounts          │ Tracked in Txns + Salon earnings view       │
+└─────────────────────────────┴────────────────────────────────────────────┘
 ```
 
 - **Subscription:** Fixed/recurring fees based on plan tier and contract length
 - **Commission:** Variable fee per end-user payment; percentage configured per salon
-- **Advertisement:** Salons purchase banner slots in the **end-customer app** via the Salon Admin **CMS & Banners** module; **upfront payment** required; pricing and daily capacity set in **Configure Admin CMS**
-- All three streams visible in **All Salons → Detail → Earnings**, **Subscription Management**, **Configure Admin CMS**, **Platform Analytics**, and **Reports**
+- Both streams visible in **All Salons → Detail → Earnings**, **Subscription Management**, **Platform Analytics**, and **Reports**
 
 #### 4.6.1 Plan Overview
 
@@ -317,8 +311,7 @@ Master settings for commission model (in Master Configuration):
 
 | Report | Description |
 |--------|-------------|
-| **Revenue Summary** | MRR, ARR, subscription revenue, **commission revenue**, **advertisement revenue**, combined platform revenue |
-| **Advertisement Revenue Report** | Banner campaigns, slots sold, revenue by salon/city/period, utilization vs capacity |
+| **Revenue Summary** | MRR, ARR, subscription revenue, commission revenue, combined platform revenue |
 | **Commission Report** | Commission earned by salon, by city, by period; avg rate, top earners |
 | **Salon Growth** | New onboardings, approvals pending, rejection rate |
 | **Branch Activity** | Branch additions, approvals pending, utilization by plan |
@@ -403,75 +396,14 @@ Promotional banners shown to **salon admins** inside the GlowTap Salon Admin por
 | Plan = 12M, expiry within 30 days, offer 24M | "Switch to 24M renewal and get 2 months free" |
 | Branch count = plan max | "Add more locations — upgrade your plan" |
 
-> **Customer-app advertisement banners** (paid by salons) are configured by Salon Admin in their **CMS & Banners** module. Platform rules, pricing, and slot capacity are set in **Configure Admin CMS** (§4.10).
-
 ---
 
-### 4.10 Configure Admin CMS (Customer App Advertising)
-
-Central configuration for the **Salon Admin → CMS & Banners** advertisement product — a third GlowTap revenue stream.
-
-#### 4.10.1 Platform Settings
-
-| Setting | Description |
-|---------|-------------|
-| **Per-day banner price** | Fixed price charged for each calendar day a campaign runs (currency per platform region) |
-| **Max banners per day (customer app)** | Maximum number of advertisement banners that can be **live simultaneously** in the end-customer app on any given calendar day (e.g., 4) |
-| **Max campaign duration** | Optional cap on consecutive days per single campaign (e.g., 30 days) |
-| **Banner image spec** | Required dimensions, max file size, allowed formats |
-| **Minimum lead time** | Earliest start date offset from booking date (e.g., 2 days) |
-| **Advertisement refund policy** | Full / partial / no refund when salon cancels a paid scheduled campaign |
-| **Tax applicability** | Whether GST/VAT applies to ad purchases |
-| **Module enabled** | Global on/off for customer-app advertising feature |
-
-Changes are audit-logged; price changes apply to **new campaigns only** (existing paid campaigns honor booked rate).
-
-#### 4.10.2 Banner Slot Engine (Auto-Calculated)
-
-The platform maintains a **daily slot ledger** for the end-customer app:
-
-```
-For each calendar date D:
-  capacity(D)     = max_banners_per_day (from settings)
-  booked(D)       = count of paid campaign-days reserved on D
-  available(D)    = capacity(D) − booked(D)
-```
-
-**Rules:**
-- When Salon Admin selects a date range, each day in the range consumes **one slot** on that date upon successful upfront payment
-- If `available(D) = 0` (e.g., 28 July fully booked when max = 4), that date is **unselectable** in the Salon Admin date picker
-- Slots are **platform-wide** (shared across all salons), not per-salon quotas
-- Partial-day booking is not supported — one slot = one full calendar day of banner visibility
-
-**Super Admin visibility:**
-- Calendar heatmap: capacity vs booked vs available by date
-- List of campaigns consuming slots (salon, date range, status)
-- Manual slot release only via campaign cancellation/refund workflow (with audit)
-
-#### 4.10.3 Campaign Oversight (Read + Moderation)
-
-Super Admin can view all salon advertisement campaigns:
-
-- Filter by salon, status (Draft, Scheduled, Live, Expired, Cancelled), date range, city
-- Preview banner content before/during live period
-- **Reject / take down** live banner for policy violation (refund per policy; slot released)
-- View payment and invoice reference per campaign
-- Export campaign list (CSV)
-
-#### 4.10.4 Advertisement Revenue Tracking
-
-- Dashboard KPIs: total ad revenue (MTD/YTD), active campaigns, slot utilization %, avg revenue per slot-day
-- Revenue rolls into **All Salons → Earnings → Advertisement Revenue** per paying salon
-- Included in platform **Revenue Summary** and **Advertisement Revenue Report** (§4.7.2)
-
----
-
-### 4.11 Platform Analytics
+### 4.10 Platform Analytics
 
 Visual dashboards for strategic insight:
 
 - **Salon Metrics:** Active salons, new sign-ups, churn rate, avg branches per salon
-- **Revenue Metrics:** MRR, ARR, ARPU, **subscription revenue**, **commission revenue**, **advertisement revenue**, combined LTV
+- **Revenue Metrics:** MRR, ARR, ARPU, subscription revenue, commission revenue, combined LTV
 - **Usage Metrics:** Appointments booked, active end users, transaction GMV
 - **Geographic Heatmap:** Salon density and revenue by region
 - **Funnel Analytics:** Lead → approval → active → renewal conversion
@@ -482,7 +414,7 @@ Filters: date range, plan tier, region, salon segment.
 
 ---
 
-### 4.12 Support & Ticketing
+### 4.11 Support & Ticketing
 
 Central helpdesk for platform-level and salon-raised issues.
 
@@ -525,7 +457,7 @@ Created → In Progress → On Hold → Awaiting User Confirmation → Resolved
 
 ---
 
-### 4.13 Master Configuration
+### 4.12 Master Configuration
 
 Centralized settings managed by Super Admin:
 
@@ -537,11 +469,9 @@ Centralized settings managed by Super Admin:
 - **Feature Entitlements Matrix:** Which features each plan includes
 - **Payment Gateway Settings:** Active gateways, retry rules
 
-> **Customer-app advertisement settings** (per-day price, max banners, refund policy) are managed in **Configure Admin CMS** (§4.10), not Master Configuration.
-
 ---
 
-### 4.14 Audit Log
+### 4.13 Audit Log
 
 Immutable log of all Super Admin actions:
 
@@ -579,18 +509,7 @@ Retention: configurable (recommended minimum 2 years).
 - Discounts require description for salon visibility on invoice/portal
 - All discounts logged with approver identity
 
-### 5.6 Advertisement Banner & Slot Rules
-
-- **Upfront payment only:** Salon Admin campaigns are activated only after successful payment; drafts do not reserve slots
-- **Slot consumption:** Each paid campaign day reserves one slot on the global daily ledger (§4.10.2)
-- **Capacity enforcement:** When `booked(date) = max_banners_per_day`, no salon can select that date for a new campaign
-- **Pricing:** `total = per_day_price × number_of_days_in_range` (+ tax if configured)
-- **Price changes:** Apply to new bookings only; paid campaigns retain original rate
-- **Content moderation:** Super Admin may take down live banners for policy violations; refund per **Advertisement Refund Policy**
-- **Revenue recognition:** Advertisement revenue recorded on payment success; appears in salon earnings and platform reports
-- **Feature flag:** When **Configure Admin CMS → Module enabled** is off, Salon Admin CMS & Banners is hidden and no new slots sold
-
-### 5.7 Commission Rules
+### 5.6 Commission Rules
 
 - Commission percentage is set at **salon approval** and stored on the organization record
 - Super Admin can **edit commission %** anytime from All Salons detail view
@@ -612,8 +531,6 @@ Retention: configurable (recommended minimum 2 years).
 | Defaulter outreach | Salon admin | Email/SMS (manual trigger) |
 | Account suspended/resumed | Salon admin | Email + in-app |
 | Ticket status update | Ticket raiser | Email + in-app |
-| Banner campaign payment received | Super Admin ops (optional digest) | Email |
-| Banner campaign taken down (moderation) | Salon Main Admin | Email + in-app |
 | Sub-admin disabled | Salon admin | Email |
 
 ---
@@ -648,8 +565,6 @@ The following capabilities are recommended to strengthen the platform:
 | **RC** | Recurring Charge — ongoing subscription fee |
 | **NRC** | Non-Recurring Charge — one-time fee or credit |
 | **Commission** | GlowTap's percentage share on each end-user payment to a salon |
-| **Advertisement Revenue** | Upfront fees paid by salons for customer-app banner campaign slots |
-| **Banner Slot** | One unit of daily customer-app banner capacity on a calendar date |
 | **GMV** | Gross Merchandise Value — total end-user transaction volume |
 | **MRR** | Monthly Recurring Revenue |
 | **Defaulter** | Salon with overdue subscription payment beyond grace period |
@@ -660,6 +575,7 @@ The following capabilities are recommended to strengthen the platform:
 
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
+| 1.3 | July 13, 2026 | GlowTap Product Team | Removed customer-app banner advertising revenue model (Configure Admin CMS) — deferred from current release |
 | 1.2 | July 4, 2026 | GlowTap Product Team | Configure Admin CMS, advertisement revenue model, banner slot engine |
 | 1.1 | June 15, 2026 | GlowTap Product Team | Commission earning model, salon earnings detail view |
 | 1.0 | May 31, 2026 | GlowTap Product Team | Initial release |
