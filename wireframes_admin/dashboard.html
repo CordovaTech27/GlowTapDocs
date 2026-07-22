@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Super Admin — Dashboard</title>
+  <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF;
+      --purple-mid: #9B2FD9;
+      --purple-dark: #5B21B6;
+      --purple-light: #F3EEFF;
+      --lavender: #DDD6FE;
+      --violet-soft: #EDE9FE;
+      --violet-mid: #C4B5FD;
+      --magenta-soft: #FCE7F3;
+      --pink: #FF03C8;
+      --pink-soft: #FDF2F8;
+      --text: #1E2A32;
+      --muted: #6B7A88;
+      --border: rgba(123, 0, 255, 0.08);
+      --white: #FFFFFF;
+      --green: #059669;
+      --amber: #D97706;
+      --red: #DC2626;
+      /* 84% white / 16% brand tint surface system */
+      --mix-white: 84%;
+      --surface-purple: color-mix(in srgb, #FFFFFF var(--mix-white), #F3EEFF calc(100% - var(--mix-white)));
+      --surface-pink: color-mix(in srgb, #FFFFFF var(--mix-white), #FDF2F8 calc(100% - var(--mix-white)));
+      --surface-violet: color-mix(in srgb, #FFFFFF var(--mix-white), #EDE9FE calc(100% - var(--mix-white)));
+      --surface-lavender: color-mix(in srgb, #FFFFFF var(--mix-white), #DDD6FE calc(100% - var(--mix-white)));
+      --surface-magenta: color-mix(in srgb, #FFFFFF var(--mix-white), #FCE7F3 calc(100% - var(--mix-white)));
+      --surface-neutral: color-mix(in srgb, #FFFFFF var(--mix-white), #F8F9FC calc(100% - var(--mix-white)));
+      --bg: var(--surface-purple);
+      --gradient-brand: linear-gradient(90deg, #7B00FF 0%, #7B00FF 5%, #9B2FD9 50%, #FF03C8 95%, #FF03C8 100%);
+      --gradient-brand-pill: linear-gradient(135deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --gradient-brand-soft: linear-gradient(135deg, var(--surface-purple) 0%, var(--surface-pink) 100%);
+      --gradient-hero: linear-gradient(125deg, color-mix(in srgb, #FFFFFF 94%, #F3EEFF 6%) 0%, color-mix(in srgb, #FFFFFF 92%, #FDF2F8 8%) 100%);
+      --gradient-surface-purple: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      --gradient-surface-pink: linear-gradient(145deg, #FFFFFF 0%, var(--surface-pink) 100%);
+      --gradient-surface-violet: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      --gradient-surface-lavender: linear-gradient(145deg, #FFFFFF 0%, var(--surface-lavender) 100%);
+      --gradient-surface-magenta: linear-gradient(145deg, #FFFFFF 0%, var(--surface-magenta) 100%);
+      --gradient-page: linear-gradient(165deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 90%, #F8F9FC 10%) 55%, color-mix(in srgb, #FFFFFF 84%, #F3EEFF 16%) 100%);
+      --shadow-card: 0 4px 20px rgba(123, 0, 255, 0.06);
+      --shadow-card-hover: 0 8px 28px rgba(123, 0, 255, 0.1);
+      --shadow-purple: 0 8px 24px rgba(123, 0, 255, 0.28);
+      --shadow-pill: 0 4px 14px rgba(123, 0, 255, 0.2);
+      --shadow-glow: 0 0 32px rgba(123, 0, 255, 0.06);
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--gradient-page);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 50% 42% at 88% 6%, rgba(123, 0, 255, 0.03) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 40% at 6% 88%, rgba(255, 3, 200, 0.025) 0%, transparent 50%),
+        radial-gradient(ellipse 38% 32% at 42% 42%, rgba(155, 47, 217, 0.02) 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    .app-screen {
+      display: flex;
+      flex: 1;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sidebar, .app-main-scroll { position: relative; z-index: 1; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 94%, #F3EEFF 6%) 100%);
+      border-right: 1px solid var(--border);
+      box-shadow: 4px 0 20px rgba(123, 0, 255, 0.025);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      box-sizing: border-box;
+      width: 280px;
+      height: 100px;
+      flex: none;
+      padding: 0;
+      border: none;
+      background: linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 94%, #F3EEFF 6%) 100%);
+      overflow: hidden;
+    }
+
+    .sidebar-logo img {
+      display: block;
+      width: 280px;
+      height: 100px;
+    }
+
+    .nav {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 12px 10px;
+      list-style: none;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+
+    .nav::-webkit-scrollbar { width: 6px; }
+    .nav::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav a:hover { background: var(--purple-light); color: var(--purple); }
+
+    .nav a.active {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .nav a.active .nav-icon,
+    .nav a.active .svg-icon {
+      color: var(--white);
+      stroke: var(--white);
+    }
+
+    .nav a.active .badge {
+      background: rgba(255, 255, 255, 0.32);
+      color: var(--white);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .nav .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .nav-footer {
+      padding: 8px 10px 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .nav-footer-link:hover {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    .nav-footer-link .badge {
+      margin-left: auto;
+      background: var(--pink);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-user {
+      padding: 0;
+      border-top: none;
+    }
+
+    .sidebar-user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--surface-purple);
+      border: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--gradient-brand);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-icon .svg-icon { width: 18px; height: 18px; }
+
+    /* ── Main scroll region (maps to Figma "Main / Scroll" + "Content / Dashboard") ── */
+    .app-main-scroll {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .app-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    .btn {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn .svg-icon { width: 16px; height: 16px; }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid rgba(123, 0, 255, 0.3);
+      color: var(--purple-dark);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface-purple);
+      border-color: rgba(123, 0, 255, 0.25);
+    }
+
+    .btn-primary {
+      background-color: #7B00FF;
+      background-image: var(--gradient-brand-pill);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      color: var(--white);
+      box-shadow: var(--shadow-pill);
+      overflow: hidden;
+    }
+
+    /* Dashboard hero header — login-screen energy in a light admin shell */
+    .dashboard-hero {
+      position: relative;
+      margin: -28px -28px 28px;
+      padding: 28px 28px 24px;
+      border-radius: 0 0 24px 24px;
+      background: var(--gradient-hero);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .dashboard-hero::before,
+    .dashboard-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(40px);
+    }
+
+    .dashboard-hero::before {
+      top: -40%;
+      right: -5%;
+      width: 280px;
+      height: 280px;
+      background: rgba(123, 0, 255, 0.08);
+    }
+
+    .dashboard-hero::after {
+      bottom: -50%;
+      left: 8%;
+      width: 220px;
+      height: 220px;
+      background: rgba(255, 3, 200, 0.06);
+    }
+
+    .dashboard-hero .page-head {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 0;
+    }
+
+    .page-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-head h1 {
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .page-head p { color: var(--muted); font-size: 0.9rem; margin-top: 6px; }
+
+    .section-title {
+      position: relative;
+      display: block;
+      margin-bottom: 18px;
+      padding: 0 0 12px;
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      text-transform: none;
+      color: var(--text);
+      background: none;
+      border: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 52px;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--gradient-brand);
+    }
+
+    .section-title::after { display: none; }
+
+    .card {
+      background: var(--gradient-surface-purple);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-analytics {
+      background: linear-gradient(160deg, #FFFFFF 0%, var(--surface-purple) 55%, var(--surface-pink) 100%);
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-analytics .card-head {
+      margin: 0 0 16px;
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 0;
+    }
+
+    .card-analytics .card-head h3 {
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+    }
+
+    .card-chart {
+      background: linear-gradient(165deg, #FFFFFF 0%, var(--surface-violet) 50%, var(--surface-pink) 100%);
+    }
+
+    .grid { display: grid; gap: 16px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .g5 { grid-template-columns: repeat(5, 1fr); }
+    .g23 { grid-template-columns: 2fr 1fr; }
+    .mb { margin-bottom: 28px; }
+
+    @media (max-width: 1200px) {
+      .g5, .g4, .g3 { grid-template-columns: repeat(2, 1fr); }
+      .g23 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .g5, .g4, .g3, .g2 { grid-template-columns: 1fr; }
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0;
+    }
+
+    .card-head h3 {
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--surface-purple);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .tabs button {
+      padding: 5px 12px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--purple-dark);
+      cursor: pointer;
+      font-family: inherit;
+      opacity: 0.72;
+    }
+
+    .tabs button.on {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(123, 0, 255, 0.25);
+      opacity: 1;
+    }
+
+    /* Operation alerts */
+    .op-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      padding: 20px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+
+    .op-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-brand);
+      opacity: 0.85;
+    }
+
+    .op-card.purple { background: var(--gradient-surface-purple); border: 1px solid var(--border); }
+    .op-card.pink { background: var(--gradient-surface-pink); border: 1px solid var(--border); }
+    .op-card.violet { background: var(--gradient-surface-violet); border: 1px solid var(--border); }
+    .op-card.magenta { background: var(--gradient-surface-magenta); border: 1px solid var(--border); }
+
+    .op-card:hover {
+      border-color: rgba(123, 0, 255, 0.25);
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-1px);
+    }
+
+    .op-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .op-icon .svg-icon { width: 22px; height: 22px; }
+
+    .op-icon.purple { background: var(--surface-violet); color: var(--purple); box-shadow: none; }
+    .op-icon.pink { background: var(--surface-pink); color: #DB2777; box-shadow: none; }
+    .op-icon.violet { background: var(--surface-lavender); color: var(--purple-dark); box-shadow: none; }
+    .op-icon.magenta { background: var(--surface-magenta); color: #BE185D; box-shadow: none; }
+
+    .op-card .count {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .op-card .label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* KPI */
+    .kpi {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+    }
+
+    .kpi::after {
+      content: '';
+      position: absolute;
+      top: -24px;
+      right: -24px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .kpi-accent-purple {
+      background: var(--gradient-surface-purple);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-purple::after { background: radial-gradient(circle, rgba(123, 0, 255, 0.07) 0%, transparent 70%); }
+
+    .kpi-accent-pink {
+      background: var(--gradient-surface-pink);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-pink::after { background: radial-gradient(circle, rgba(255, 3, 200, 0.06) 0%, transparent 70%); }
+
+    .kpi-accent-violet {
+      background: var(--gradient-surface-violet);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-violet::after { background: radial-gradient(circle, rgba(155, 47, 217, 0.07) 0%, transparent 70%); }
+
+    .kpi-accent-lavender {
+      background: var(--gradient-surface-lavender);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-lavender::after { background: radial-gradient(circle, rgba(196, 181, 253, 0.1) 0%, transparent 70%); }
+
+    .kpi-accent-magenta {
+      background: var(--gradient-surface-magenta);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    }
+    .kpi-accent-magenta::after { background: radial-gradient(circle, rgba(255, 3, 200, 0.06) 0%, transparent 70%); }
+
+    .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+    .kpi .label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+    .kpi .value { font-size: 1.5rem; font-weight: 700; margin-top: 8px; color: var(--text); letter-spacing: -0.02em; }
+    .kpi .value.brand {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .kpi .change { font-size: 0.75rem; margin-top: 6px; font-weight: 600; }
+    .kpi .change.up { color: var(--green); }
+
+    .kpi-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon.purple { background: var(--gradient-brand); color: var(--white); box-shadow: 0 4px 16px rgba(123, 0, 255, 0.28); }
+    .kpi-icon.pink { background: linear-gradient(135deg, #FF03C8 0%, #DB2777 100%); color: var(--white); box-shadow: 0 4px 16px rgba(255, 3, 200, 0.22); }
+    .kpi-icon.violet { background: linear-gradient(135deg, #9B2FD9 0%, #7B00FF 100%); color: var(--white); box-shadow: 0 4px 16px rgba(155, 47, 217, 0.25); }
+    .kpi-icon.lavender { background: linear-gradient(135deg, #C4B5FD 0%, #9B2FD9 100%); color: var(--white); box-shadow: 0 4px 16px rgba(196, 181, 253, 0.35); }
+    .kpi-icon.magenta { background: linear-gradient(135deg, #FF03C8 0%, #9B2FD9 100%); color: var(--white); box-shadow: 0 4px 16px rgba(255, 3, 200, 0.2); }
+
+    /* Progress bars (purple) */
+    .plan-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 0.8rem;
+    }
+
+    .plan-row span:first-child { width: 72px; color: var(--muted); font-weight: 500; }
+    .plan-row span:last-child { width: 36px; text-align: right; font-weight: 600; }
+
+    .kpi-icon .svg-icon { width: 20px; height: 20px; }
+
+    .bar-track {
+      flex: 1;
+      height: 8px;
+      background: var(--surface-neutral);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--gradient-brand);
+      border-radius: 999px;
+    }
+
+    .chart-area {
+      margin-top: 4px;
+      padding: 16px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      border: 1px solid var(--border);
+    }
+
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+    }
+
+    .legend { display: flex; flex-wrap: wrap; gap: 16px 24px; margin-top: 14px; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+    .legend i {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .legend .dot-sub { background: linear-gradient(135deg, #7B00FF, #9B2FD9); }
+    .legend .dot-comm { background: linear-gradient(135deg, #9B2FD9, #FF03C8); }
+
+    /* Tables / lists */
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .list-item:last-child { border-bottom: none; }
+
+    .list-item .rank {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--surface-neutral);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .list-item .rank.top {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(123, 0, 255, 0.2);
+    }
+
+    .list-left { display: flex; align-items: center; flex: 1; min-width: 0; }
+    .list-name { font-weight: 600; color: var(--text); }
+    .list-sub { font-size: 0.75rem; color: var(--muted); }
+    .list-val { font-weight: 700; color: var(--text); white-space: nowrap; }
+
+    /* Stat mini grid */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .stat-box.stat-brand {
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      border-color: var(--border);
+    }
+
+    .stat-box .s-label { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+    .stat-box .s-val { font-size: 1.25rem; font-weight: 700; margin-top: 4px; }
+    .stat-box .s-val.brand {
+      background: var(--gradient-brand);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Alert chips */
+    .alert-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      background: var(--white);
+    }
+
+    .alert-item.warn { border-color: #FDE68A; background: rgba(255, 251, 235, 0.8); }
+    .alert-item.info {
+      border-color: var(--border);
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--surface-violet) 100%);
+    }
+    .alert-item.danger { border-color: #FECACA; background: rgba(254, 242, 242, 0.8); }
+
+    .alert-item a {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--purple);
+      text-decoration: none;
+    }
+
+    .alert-item a:hover { color: var(--purple-mid); }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quick-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+
+    .quick-btn:hover {
+      border-color: rgba(123, 0, 255, 0.2);
+      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
+      box-shadow: var(--shadow-card);
+      transform: translateY(-1px);
+    }
+    .quick-btn .qi {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--gradient-brand);
+      color: var(--white);
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(123, 0, 255, 0.22);
+    }
+    .quick-btn .svg-icon { width: 18px; height: 18px; }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--surface-purple) 100%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+    }
+
+    .pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .pill.critical { background: #FEE2E2; color: var(--red); }
+    .pill.high { background: #FEE2E2; color: #B91C1C; }
+    .pill.medium { background: #FFEDD5; color: #C2410C; }
+
+    .page-actions { display: flex; gap: 10px; flex-shrink: 0; }
+
+    .renewal-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Figma import — fixed 1440×1024 + explicit scroll wrapper (see FIGMA-IMPORT.md) */
+    html.figma-export,
+    html.figma-export body {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+      max-height: 1024px;
+      overflow: hidden;
+    }
+
+    html.figma-export .app-screen {
+      width: 1440px;
+      height: 1024px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .sidebar {
+      width: 280px;
+      height: 1024px;
+      min-height: 1024px;
+      position: relative;
+      top: auto;
+    }
+
+    html.figma-export .app-main-scroll {
+      width: 1160px;
+      height: 1024px;
+      min-height: 1024px;
+      flex: none;
+      overflow-y: auto;
+    }
+
+    html.figma-export .app-content {
+      width: 1160px;
+      min-height: 1024px;
+    }
+
+    html.figma-export .dashboard-hero {
+      margin: 0 0 28px;
+      border-radius: 0;
+    }
+
+/* ── Combined sidebar footer + richer surfaces ── */
+    .nav .nav-footer-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #4A5568;
+      text-decoration: none;
+      margin-bottom: 2px;
+    }
+
+    .nav .nav-footer-link:hover {
+      background: var(--purple-light);
+      color: var(--purple);
+    }
+
+    .nav .nav-footer-link.active {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+
+    .nav .nav-footer-link.active .badge {
+      background: rgba(255, 255, 255, 0.32);
+      color: var(--white);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .nav .nav-footer-link.active .svg-icon {
+      stroke: var(--white);
+    }
+
+    .nav-user {
+      list-style: none;
+      margin: 2px 0 8px;
+      padding: 0 4px;
+    }
+
+    .nav-user .sidebar-user-card {
+      background: var(--surface-purple);
+      border-color: var(--border);
+    }
+
+    .content-card:nth-of-type(4n+1),
+    .cms-page .content-card:nth-of-type(4n+1) { background: var(--gradient-surface-purple); }
+    .content-card:nth-of-type(4n+2),
+    .cms-page .content-card:nth-of-type(4n+2) { background: var(--gradient-surface-pink); }
+    .content-card:nth-of-type(4n+3),
+    .cms-page .content-card:nth-of-type(4n+3) { background: var(--gradient-surface-violet); }
+    .content-card:nth-of-type(4n+4),
+    .cms-page .content-card:nth-of-type(4n+4) { background: var(--gradient-surface-lavender); }
+
+    .panel:nth-of-type(4n+1) { background: var(--gradient-surface-purple); }
+    .panel:nth-of-type(4n+2) { background: var(--gradient-surface-pink); }
+    .panel:nth-of-type(4n+3) { background: var(--gradient-surface-violet); }
+    .panel:nth-of-type(4n+4) { background: var(--gradient-surface-magenta); }
+
+    .config-tile:nth-child(3n+1) {
+      background: var(--gradient-surface-purple);
+      border-color: rgba(123, 0, 255, 0.14);
+    }
+    .config-tile:nth-child(3n+2) {
+      background: var(--gradient-surface-pink);
+      border-color: rgba(255, 3, 200, 0.12);
+    }
+    .config-tile:nth-child(3n+3) {
+      background: var(--gradient-surface-violet);
+      border-color: rgba(155, 47, 217, 0.14);
+    }
+
+    .config-tile:nth-child(3n+1) .tile-icon {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(123, 0, 255, 0.22);
+    }
+    .config-tile:nth-child(3n+2) .tile-icon {
+      background: linear-gradient(135deg, #FF03C8 0%, #DB2777 100%);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(255, 3, 200, 0.2);
+    }
+    .config-tile:nth-child(3n+3) .tile-icon {
+      background: linear-gradient(135deg, #9B2FD9 0%, #7B00FF 100%);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(155, 47, 217, 0.22);
+    }
+
+    .config-tile:nth-child(3n+1) .chip { background: var(--surface-violet); color: var(--purple-dark); border-color: var(--border); }
+    .config-tile:nth-child(3n+2) .chip { background: var(--surface-magenta); color: #BE185D; border-color: rgba(255, 3, 200, 0.15); }
+    .config-tile:nth-child(3n+3) .chip { background: var(--surface-lavender); color: var(--purple-dark); border-color: var(--border); }
+
+    .module-nav a:not(.on) {
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .module-nav a.on {
+      background-color: #7B00FF !important;
+      background-image: var(--gradient-brand-pill) !important;
+      background-repeat: no-repeat !important;
+      background-size: 100% 100% !important;
+      color: var(--white) !important;
+      border-color: transparent !important;
+      box-shadow: var(--shadow-pill) !important;
+      overflow: hidden;
+    }
+
+    .banner-card:nth-child(4n+1) { background: var(--gradient-surface-purple); }
+    .banner-card:nth-child(4n+2) { background: var(--gradient-surface-pink); }
+    .banner-card:nth-child(4n+3) { background: var(--gradient-surface-violet); }
+    .banner-card:nth-child(4n+4) { background: var(--gradient-surface-magenta); }
+
+    .metric-card.purple,
+    .kpi-accent-purple { background: var(--gradient-surface-purple) !important; }
+    .metric-card.pink,
+    .kpi-accent-pink { background: var(--gradient-surface-pink) !important; }
+    .metric-card.blue,
+    .kpi-accent-violet { background: var(--gradient-surface-violet) !important; }
+    .metric-card.green,
+    .kpi-accent-lavender { background: var(--gradient-surface-lavender) !important; }
+
+    .stat-box:nth-child(4n+1) { background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%); }
+    .stat-box:nth-child(4n+2) { background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-pink) 100%); }
+    .stat-box:nth-child(4n+3) { background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%); }
+    .stat-box:nth-child(4n+4) { background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-magenta) 100%); }
+
+    .filters-card {
+      background: linear-gradient(135deg, var(--surface-purple) 0%, var(--surface-pink) 100%) !important;
+    }
+
+
+    .nav .nav-footer-link.active {
+      background: var(--gradient-brand);
+      color: var(--white);
+      box-shadow: var(--shadow-purple);
+    }
+    .nav .nav-footer-link.active .badge {
+      background: rgba(255, 255, 255, 0.25);
+      color: var(--white);
+    }
+    /* Dashboard metric / module aliases */
+    .metric-card { border: 1px solid var(--border); border-radius: 18px; box-shadow: var(--shadow-card); }
+    .metric-icon.purple { background: var(--gradient-brand); color: var(--white); box-shadow: 0 4px 16px rgba(123, 0, 255, 0.28); }
+    .metric-icon.pink { background: linear-gradient(135deg, #FF03C8 0%, #DB2777 100%); color: var(--white); box-shadow: 0 4px 16px rgba(255, 3, 200, 0.22); }
+    .metric-icon.blue { background: linear-gradient(135deg, #9B2FD9 0%, #7B00FF 100%); color: var(--white); box-shadow: 0 4px 16px rgba(155, 47, 217, 0.25); }
+    .metric-icon.green { background: linear-gradient(135deg, #C4B5FD 0%, #9B2FD9 100%); color: var(--white); box-shadow: 0 4px 16px rgba(196, 181, 253, 0.35); }
+    .metric-card .val.purple { background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .revenue-box.purple { background: var(--gradient-surface-purple); border-color: rgba(123, 0, 255, 0.14); }
+    .revenue-box.pink { background: var(--gradient-surface-pink); border-color: rgba(255, 3, 200, 0.12); }
+    .modal-box, .modal .modal-box { background: var(--gradient-surface-purple); }
+    .modal-body { background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, var(--surface-neutral) 100%); }
+    .data-table thead { background: var(--surface-neutral); }
+    .screen-tag { color: var(--purple-dark); background: var(--surface-violet); border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+  <!-- Icon sprite (Lucide-style) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-layout-dashboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/>
+      <rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+    </symbol>
+    <symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/>
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M10 12h4"/><path d="M12 12v8"/>
+    </symbol>
+    <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="6" x2="6" y1="3" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/>
+      <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/>
+      <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>
+    </symbol>
+    <symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>
+    </symbol>
+    <symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+      <path d="M16 8h-6"/><path d="M16 12h-6"/><path d="M16 16h-6"/>
+    </symbol>
+    <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+    </symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/>
+      <path d="M10 15H6a4 4 0 0 0-4 4v2"/>
+      <path d="m21.7 16.4-.9-.3"/><path d="m15.2 13.9-.9-.3"/><path d="m16.6 18.7.3-.9"/>
+      <path d="m19.1 12.2.3-.9"/><path d="m19.6 18.7-.4-1"/><path d="m16.8 12.3-.4-1"/>
+      <path d="m14.3 16.6 1-.4"/><path d="m20.7 13.8 1-.4"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/>
+      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+    </symbol>
+    <symbol id="i-line-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+    </symbol>
+    <symbol id="i-life-buoy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>
+      <path d="M4.93 4.93 7.76 7.76"/><path d="M16.24 16.24 19.07 19.07"/>
+      <path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07 7.76 16.24"/><path d="M16.24 7.76 19.07 4.93"/>
+    </symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="i-scroll-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>
+      <path d="M8 21h12a2 2 0 0 0 2-2v-1H8v1z"/>
+    </symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+    </symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+      <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+    </symbol>
+    <symbol id="i-circle-dollar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/>
+    </symbol>
+    <symbol id="i-indian-rupee" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 3h12"/><path d="M6 8h12"/><path d="m6 13 8.5 8"/><path d="M6 13h11"/>
+    </symbol>
+    <symbol id="i-clipboard-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <path d="m9 14 2 2 4-4"/>
+    </symbol>
+    <symbol id="i-ticket-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+      <path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/>
+      <path d="M16 13h-6"/><path d="M13 10v6"/>
+    </symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
+    </symbol>
+  </svg>
+
+  <div class="app-screen" data-figma-frame="DASH-01 Dashboard Home">
+  <aside class="sidebar" data-figma-layer="SHELL-01 Sidebar">
+    <div class="sidebar-logo" data-figma-layer="HorizontalBorder">
+      <img src="assets/HorizontalBorder.svg" alt="GlowTap — Tap. Book. Glow." width="280" height="100" />
+    </div>
+    <ul class="nav">
+      <li><a href="dashboard.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
+      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
+      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
+      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
+      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
+      <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
+      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
+      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
+      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
+      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
+      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
+      <li><a href="notifications.html" class="nav-footer-link"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bell"/></svg></span> Notifications <span class="badge">3</span></a></li>
+      <li><a href="login.html" class="nav-footer-link nav-footer-signout"><span class="nav-icon"><svg class="svg-icon"><use href="#i-log-out"/></svg></span> Sign out</a></li>
+      <li class="nav-user">
+        <div class="sidebar-user-card">
+        <div class="avatar" aria-hidden="true">
+          <svg class="svg-icon"><use href="#i-user"/></svg>
+        </div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+        </div>
+        </div>
+      </li>
+    </ul>
+</aside>
+
+  <div class="app-main-scroll" data-figma-layer="Main Scroll" data-figma-overflow="vertical">
+    <div class="app-content" data-figma-layer="Content Dashboard">
+      <div class="dashboard-hero">
+        <div class="page-head">
+          <div>
+            <h1>Platform Dashboard</h1>
+            <p>At-a-glance view of platform health and pending actions.</p>
+          </div>
+          <div class="page-actions">
+            <button type="button" class="btn btn-primary"><svg class="svg-icon"><use href="#i-file-text"/></svg> Export Report</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Operation Alerts -->
+      <section class="mb">
+        <div class="section-title">Operation Alerts</div>
+        <div class="grid g4">
+          <a href="salon-approvals.html" class="op-card purple">
+            <div class="op-icon purple"><svg class="svg-icon"><use href="#i-store"/></svg></div>
+            <div class="count">12</div>
+            <div class="label">Salon Approvals</div>
+          </a>
+          <a href="branch-approvals.html" class="op-card pink">
+            <div class="op-icon pink"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
+            <div class="count">5</div>
+            <div class="label">Branch Approvals</div>
+          </a>
+          <a href="support.html" class="op-card violet">
+            <div class="op-icon violet"><svg class="svg-icon"><use href="#i-ticket"/></svg></div>
+            <div class="count">18</div>
+            <div class="label">Open Tickets</div>
+          </a>
+          <a href="reports.html" class="op-card magenta">
+            <div class="op-icon magenta"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></div>
+            <div class="count">7</div>
+            <div class="label">Defaulters</div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Key KPIs -->
+      <section class="mb">
+        <div class="section-title">Key Metrics</div>
+        <div class="grid g5">
+          <div class="card kpi kpi-accent-purple">
+            <div class="kpi-top">
+              <div><div class="label">Active Salons</div><div class="value">248</div><div class="change up">+12 this month</div></div>
+              <div class="kpi-icon purple"><svg class="svg-icon"><use href="#i-building"/></svg></div>
+            </div>
+          </div>
+          <div class="card kpi kpi-accent-pink">
+            <div class="kpi-top">
+              <div><div class="label">Total Branches</div><div class="value">412</div><div class="change up">+28 this month</div></div>
+              <div class="kpi-icon pink"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
+            </div>
+          </div>
+          <div class="card kpi kpi-accent-violet">
+            <div class="kpi-top">
+              <div><div class="label">MRR</div><div class="value brand">₹18.5L</div><div class="change up">+8.4% vs last month</div></div>
+              <div class="kpi-icon violet"><svg class="svg-icon"><use href="#i-indian-rupee"/></svg></div>
+            </div>
+          </div>
+          <div class="card kpi kpi-accent-lavender">
+            <div class="kpi-top">
+              <div><div class="label">Active End Users</div><div class="value">38,420</div><div class="change up">+1,240 this week</div></div>
+              <div class="kpi-icon lavender"><svg class="svg-icon"><use href="#i-users"/></svg></div>
+            </div>
+          </div>
+          <div class="card kpi kpi-accent-magenta">
+            <div class="kpi-top">
+              <div><div class="label">Today's Volume</div><div class="value">₹28.5L</div><div class="change up">142 transactions</div></div>
+              <div class="kpi-icon magenta"><svg class="svg-icon"><use href="#i-credit-card"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Subscription Summary -->
+      <section class="mb">
+        <div class="section-title">Subscription Summary</div>
+        <div class="grid g23">
+          <div class="card card-analytics">
+            <div class="card-head">
+              <h3>Revenue &amp; Renewals</h3>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-box stat-brand">
+                <div class="s-label">MRR</div>
+                <div class="s-val brand">₹18,47,500</div>
+              </div>
+              <div class="stat-box stat-brand">
+                <div class="s-label">ARR</div>
+                <div class="s-val brand">₹2.22 Cr</div>
+              </div>
+              <div class="stat-box">
+                <div class="s-label">Renewals (30 days)</div>
+                <div class="s-val">34</div>
+              </div>
+              <div class="stat-box">
+                <div class="s-label">At-risk renewals</div>
+                <div class="s-val" style="color:var(--amber);">5</div>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="renewal-row"><span>Luxe Curls Studio — Growth 6M</span><span style="color:var(--amber);">Jun 30</span></div>
+              <div class="renewal-row"><span>The Groom Room — Pro 12M</span><span>Jul 12</span></div>
+              <div class="renewal-row"><span>Glow Studio — Starter 1M</span><span>Jul 18</span></div>
+            </div>
+          </div>
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Plan Distribution</h3></div>
+            <div class="plan-row"><span>Starter 1M</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span>54</span></div>
+            <div class="plan-row"><span>Growth 6M</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span>94</span></div>
+            <div class="plan-row"><span>Pro 12M</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span>72</span></div>
+            <div class="plan-row"><span>Enterprise 24M</span><div class="bar-track"><div class="bar-fill" style="width:18%"></div></div><span>28</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Revenue & Commission -->
+      <section class="mb">
+        <div class="section-title">Revenue &amp; Commission Analytics</div>
+        <div class="card card-analytics card-chart">
+          <div class="card-head">
+            <h3>Subscription vs Commission Revenue</h3>
+            <div class="tabs">
+              <button type="button" class="on">Monthly</button>
+              <button type="button">Yearly</button>
+            </div>
+          </div>
+          <div class="chart-area">
+            <div class="chart-wrap">
+              <canvas id="revenueChart" aria-label="Subscription vs Commission Revenue chart" role="img"></canvas>
+            </div>
+          </div>
+          <div class="legend">
+            <span><i class="dot-sub"></i> Subscription Revenue</span>
+            <span><i class="dot-comm"></i> Commission Revenue</span>
+          </div>
+          <div class="stat-grid" style="margin-top:18px;">
+            <div class="stat-box"><div class="s-label">Commission (MTD)</div><div class="s-val">₹4.2L</div></div>
+            <div class="stat-box"><div class="s-label">Commission (YTD)</div><div class="s-val">₹48.6L</div></div>
+            <div class="stat-box"><div class="s-label">Avg commission rate</div><div class="s-val">7.2%</div></div>
+            <div class="stat-box stat-brand"><div class="s-label">Combined platform revenue</div><div class="s-val brand">₹22.7L MTD</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Platform Analytics + Alerts -->
+      <section class="mb">
+        <div class="section-title">Platform Analytics — User Growth &amp; Retention</div>
+        <div class="grid g23">
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Engagement</h3></div>
+            <div class="stat-grid">
+              <div class="stat-box"><div class="s-label">DAU</div><div class="s-val">2,840</div></div>
+              <div class="stat-box stat-brand"><div class="s-label">MAU</div><div class="s-val brand">38,420</div></div>
+              <div class="stat-box"><div class="s-label">Churn rate</div><div class="s-val" style="color:var(--red);">2.1%</div></div>
+              <div class="stat-box"><div class="s-label">Repeat bookings</div><div class="s-val">64%</div></div>
+            </div>
+            <div style="margin-top:14px;font-size:0.75rem;color:var(--muted);">DAU/MAU ratio: 7.4% · +0.3pp vs last month</div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3>System Alerts</h3></div>
+            <div class="alert-item warn">7 salons have failed subscription payments <a href="#">View defaulters →</a></div>
+            <div class="alert-item info">12 salon approvals pending review <a href="#">Review now →</a></div>
+            <div class="alert-item danger">3 critical support tickets overdue SLA <a href="#">Open tickets →</a></div>
+            <div class="alert-item info">5 salons nearing expiry (30 days) <a href="#">View renewals →</a></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Top Salons, Cities, Services -->
+      <section class="mb">
+        <div class="section-title">Performance &amp; Insights</div>
+        <div class="grid g3">
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Top Salons</h3></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Luxe Curls Studio</div><div class="list-sub">Mumbai · 3 branches</div></div></div><span class="list-val">₹8.4L</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">The Groom Room</div><div class="list-sub">Bangalore · 2 branches</div></div></div><span class="list-val">₹6.2L</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Glow Studio</div><div class="list-sub">Delhi · 4 branches</div></div></div><span class="list-val">₹5.9L</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Urban Edge Salon</div><div class="list-sub">Pune · 1 branch</div></div></div><span class="list-val">₹4.1L</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Bliss &amp; Bloom</div><div class="list-sub">Hyderabad · 2 branches</div></div></div><span class="list-val">₹3.8L</span></div>
+          </div>
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Geographical — Top Cities</h3></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Mumbai</div><div class="list-sub">68 salons · ₹42L GMV</div></div></div><span class="list-val">+14%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Bangalore</div><div class="list-sub">54 salons · ₹38L GMV</div></div></div><span class="list-val">+11%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Delhi NCR</div><div class="list-sub">47 salons · ₹35L GMV</div></div></div><span class="list-val">+9%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Pune</div><div class="list-sub">31 salons · ₹18L GMV</div></div></div><span class="list-val">+6%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Hyderabad</div><div class="list-sub">28 salons · ₹16L GMV</div></div></div><span class="list-val">+8%</span></div>
+          </div>
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Most Booked Services</h3></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Haircut &amp; Styling</div><div class="list-sub">12,480 bookings</div></div></div><span class="list-val">32%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Hair Colour</div><div class="list-sub">6,240 bookings</div></div></div><span class="list-val">18%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Beard Grooming</div><div class="list-sub">5,890 bookings</div></div></div><span class="list-val">15%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Facial &amp; Cleanup</div><div class="list-sub">4,120 bookings</div></div></div><span class="list-val">11%</span></div>
+            <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Spa &amp; Massage</div><div class="list-sub">3,450 bookings</div></div></div><span class="list-val">9%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions + Recent Tickets -->
+      <section class="mb">
+        <div class="section-title">Actions &amp; Support</div>
+        <div class="grid g2">
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Quick Actions</h3></div>
+            <div class="quick-grid">
+              <a href="salon-approvals.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-clipboard-check"/></svg></span> Approve Salon</a>
+              <a href="reports.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></span> Defaulter Report</a>
+              <a href="transactions.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> View Transactions</a>
+              <a href="support.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Open Support</a>
+            </div>
+          </div>
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Recent Tickets</h3></div>
+            <div class="ticket-row">
+              <div><strong>Payment gateway timeout</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1042 · Luxe Curls Studio</span></div>
+              <span class="pill high">High</span>
+            </div>
+            <div class="ticket-row">
+              <div><strong>Branch limit exceeded</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1039 · Glow Studio</span></div>
+              <span class="pill medium">Medium</span>
+            </div>
+            <div class="ticket-row">
+              <div><strong>Subscription renewal failed</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1035 · The Groom Room</span></div>
+              <span class="pill medium">Medium</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script>
+    (function () {
+      var canvas = document.getElementById('revenueChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      var ctx = canvas.getContext('2d');
+      var chartW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
+      var purple = '#7B00FF';
+      var violet = '#9B2FD9';
+      var lavender = '#C4B5FD';
+      var pink = '#FF03C8';
+      var muted = '#6B7A88';
+      var grid = 'rgba(196, 181, 253, 0.28)';
+
+      var subFill = ctx.createLinearGradient(0, 0, 0, 260);
+      subFill.addColorStop(0, 'rgba(123, 0, 255, 0.16)');
+      subFill.addColorStop(0.45, 'rgba(155, 47, 217, 0.08)');
+      subFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      var subStroke = ctx.createLinearGradient(0, 0, chartW, 0);
+      subStroke.addColorStop(0, purple);
+      subStroke.addColorStop(0.55, violet);
+      subStroke.addColorStop(1, lavender);
+
+      var commFill = ctx.createLinearGradient(0, 0, 0, 260);
+      commFill.addColorStop(0, 'rgba(255, 3, 200, 0.1)');
+      commFill.addColorStop(0.5, 'rgba(155, 47, 217, 0.05)');
+      commFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      var commStroke = ctx.createLinearGradient(0, 0, chartW, 0);
+      commStroke.addColorStop(0, violet);
+      commStroke.addColorStop(1, pink);
+
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {
+              label: 'Subscription Revenue',
+              data: [758, 825, 878, 945, 1065, 1148],
+              borderColor: subStroke,
+              backgroundColor: subFill,
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.35,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: purple
+            },
+            {
+              label: 'Commission Revenue',
+              data: [135, 150, 165, 180, 203, 225],
+              borderColor: commStroke,
+              backgroundColor: commFill,
+              borderWidth: 2.5,
+              fill: true,
+              tension: 0.35,
+              pointRadius: 0,
+              pointHoverRadius: 5,
+              pointHoverBackgroundColor: pink
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(91, 33, 182, 0.94)',
+              titleFont: { family: 'DM Sans', weight: '600' },
+              bodyFont: { family: 'DM Sans' },
+              padding: 12,
+              cornerRadius: 10,
+              borderColor: 'rgba(255, 3, 200, 0.35)',
+              borderWidth: 1,
+              callbacks: {
+                label: function (item) {
+                  return item.dataset.label + ': ₹' + item.formattedValue + 'K';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: {
+                color: muted,
+                font: { family: 'DM Sans', size: 12, weight: '600' }
+              }
+            },
+            y: {
+              beginAtZero: true,
+              max: 1200,
+              grid: {
+                color: grid,
+                lineWidth: 1,
+                tickLength: 0,
+                borderDash: [4, 4]
+              },
+              border: { display: false },
+              ticks: {
+                color: muted,
+                font: { family: 'DM Sans', size: 11, weight: '500' },
+                callback: function (value) { return '₹' + value + 'K'; },
+                stepSize: 300
+              }
+            }
+          }
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
