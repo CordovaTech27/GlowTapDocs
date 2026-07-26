@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Sub Admin — Wireframe Index</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; margin: 0; padding: 40px 24px;
+      background: linear-gradient(165deg,#fff,#F8F5FF); color:#1E2A32; }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    h1 { font-family: Outfit, sans-serif; font-size: 1.8rem; margin: 0 0 8px; }
+    .sub { color:#6B7A88; margin-bottom: 28px; line-height: 1.5; }
+    .card { background:#fff; border:1px solid rgba(123,0,255,.1); border-radius:18px; padding:20px 22px; margin-bottom:16px;
+      box-shadow: 0 4px 20px rgba(123,0,255,.06); }
+    h2 { font-size: 1rem; margin: 0 0 12px; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 6px 0; }
+    a { color:#7B00FF; font-weight: 600; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { font-size: 0.85em; background:#F3EEFF; padding: 1px 6px; border-radius: 6px; }
+  </style>
+  <link rel="stylesheet" href="assets/ui-align.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h1>Sub Admin Wireframes</h1>
+    <p class="sub">Admin Functional Spec §4.1–4.16 / §5.5 + <code>SubAdmin-Requirements.md</code> §7 · Riya Kapoor · <strong>4 assigned salons</strong> (Bandra, Koramangala, Juhu, Indiranagar) · <strong>Transactions ON</strong> for full screen coverage</p>
+
+    <div class="card">
+      <h2>§4.1 Auth</h2>
+      <ul>
+        <li><a href="login.html">Log in</a> (glass layout parity with Admin / Super Admin)</li>
+        <li><a href="login.html?figma=1">Log in (Figma export)</a> · <a href="login-figma.html">login-figma.html</a></li>
+        <li><a href="login-disabled.html">Account disabled</a></li>
+        <li><a href="forgot-password.html">Forgot password</a></li>
+        <li><a href="reset-password.html">Reset password</a></li>
+        <li><a href="change-password.html">Change password</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.2 / Req §7 Dashboard</h2>
+      <ul>
+        <li><a href="dashboard.html">Dashboard</a> — assigned multi-salon KPIs, alerts, cards, quick actions</li>
+        <li><a href="dashboard-locked.html">Dashboard locked</a> — org Suspended (§5.5 / Req §9)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.4–4.5 Branches</h2>
+      <ul>
+        <li><a href="branches.html">Assigned branches list</a></li>
+        <li><a href="branch-profile.html">Branch profile</a> (hours, gallery, GPS, status)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.7 Employees</h2>
+      <ul>
+        <li><a href="employees.html">Employees</a></li>
+        <li><a href="employee-detail.html">Employee detail</a></li>
+        <li><a href="employee-edit.html">Employee add / edit</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.8–4.9 Leave &amp; Attendance</h2>
+      <ul>
+        <li><a href="leave-holidays.html">Leave &amp; Holidays</a></li>
+        <li><a href="attendance.html">Attendance</a> (Mark In / Out)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.10–4.11 Services</h2>
+      <ul>
+        <li><a href="services.html">Services catalog</a></li>
+        <li><a href="service-edit.html">Service edit</a></li>
+        <li><a href="slot-config.html">Slot config</a></li>
+        <li><a href="availability-preview.html">Availability preview</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.12 Appointments</h2>
+      <ul>
+        <li><a href="appointments.html">Appointments</a></li>
+        <li><a href="appointment-detail.html">Appointment detail</a></li>
+        <li><a href="booking-history.html">Booking history</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.13 Transactions</h2>
+      <ul>
+        <li><a href="transactions.html">Transactions</a> (B2C · assigned salons)</li>
+        <li><a href="transaction-detail.html">Transaction detail</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.14.2 Reports</h2>
+      <ul>
+        <li><a href="reports.html">Reports index</a> (branch-level only)</li>
+        <li><a href="report-view.html">Report view</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.15 Support</h2>
+      <ul>
+        <li><a href="support.html">My tickets</a> (create / list)</li>
+        <li><a href="ticket-detail.html">Ticket detail</a> · <a href="ticket-detail.html?await=1">Confirm / reopen</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§5.5 Access</h2>
+      <ul>
+        <li><a href="access-denied.html">Access denied</a> (unassigned branch / module / org-only URL)</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Never in Sub Admin shell</h2>
+      <ul>
+        <li>Organization Profile · Sub Admins · Change Plan · Request Branch → deep links use <a href="access-denied.html">access-denied.html</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

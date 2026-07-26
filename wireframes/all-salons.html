@@ -80,6 +80,9 @@
       min-height: 100vh;
       position: relative;
       z-index: 1;
+      padding: 16px;
+      gap: 16px;
+      box-sizing: border-box;
     }
 
     .sidebar, .app-main-scroll { position: relative; z-index: 1; }
@@ -89,19 +92,21 @@
     .sidebar {
       width: 280px;
       background: linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 94%, #F3EEFF 6%) 100%);
-      border-right: 1px solid var(--border);
+      border: 1px solid var(--border);
+      border-radius: 20px;
       box-shadow: 4px 0 20px rgba(123, 0, 255, 0.025);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      height: 100vh;
+      height: calc(100vh - 32px);
       position: sticky;
-      top: 0;
+      top: 16px;
+      overflow: hidden;
     }
 
     .sidebar-logo {
       box-sizing: border-box;
-      width: 280px;
+      width: 100%;
       height: 100px;
       flex: none;
       padding: 0;
@@ -266,9 +271,14 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
-      min-height: 100vh;
+      min-height: calc(100vh - 32px);
+      height: calc(100vh - 32px);
       overflow-y: auto;
       overflow-x: hidden;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 92%, #F3EEFF 8%) 100%);
+      box-shadow: 0 4px 24px rgba(123, 0, 255, 0.04);
     }
 
     .app-content {
@@ -312,15 +322,21 @@
       overflow: hidden;
     }
 
-    /* Dashboard hero header — login-screen energy in a light admin shell */
+    /* Dashboard hero — min 100px to align with logo; overflow visible so actions are not clipped */
     .dashboard-hero {
       position: relative;
+      z-index: 5;
       margin: -28px -28px 28px;
-      padding: 28px 28px 24px;
-      border-radius: 0 0 24px 24px;
+      padding: 18px 28px;
+      min-height: 100px;
+      height: auto;
+      display: flex;
+      align-items: center;
+      border-radius: 0;
       background: var(--gradient-hero);
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
+      border-bottom: 1px solid #E2E8F0;
+      overflow: visible;
+      box-sizing: border-box;
     }
 
     .dashboard-hero::before,
@@ -352,14 +368,15 @@
       position: relative;
       z-index: 1;
       margin-bottom: 0;
+      width: 100%;
     }
 
     .page-head {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 24px;
-      gap: 16px;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
@@ -368,6 +385,7 @@
       font-size: 1.65rem;
       font-weight: 700;
       letter-spacing: -0.02em;
+      line-height: 1.2;
       background: var(--gradient-brand);
       -webkit-background-clip: text;
       background-clip: text;
@@ -521,7 +539,19 @@
 
     .btn-sm { padding: 6px 12px; font-size: 0.78rem; }
 
-    .page-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+    .page-actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .page-actions .btn {
+      height: 40px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
 
     .screen-tag {
       display: inline-block;
@@ -869,7 +899,7 @@
     .pill.high { background: #FEE2E2; color: #B91C1C; }
     .pill.medium { background: #FFEDD5; color: #C2410C; }
 
-    .page-actions { display: flex; gap: 10px; flex-shrink: 0; }
+    /* page-actions defined above */
 
     .renewal-row {
       display: flex;
@@ -894,6 +924,8 @@
       width: 1440px;
       height: 1024px;
       min-height: 1024px;
+      padding: 0;
+      gap: 0;
     }
 
     html.figma-export .sidebar {
@@ -902,6 +934,9 @@
       min-height: 1024px;
       position: relative;
       top: auto;
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid var(--border);
     }
 
     html.figma-export .app-main-scroll {
@@ -910,6 +945,10 @@
       min-height: 1024px;
       flex: none;
       overflow-y: auto;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
     }
 
     html.figma-export .app-content {
@@ -2049,7 +2088,213 @@
     .modal-body { background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, var(--surface-neutral) 100%); }
     .data-table thead { background: var(--surface-neutral); }
     .screen-tag { color: var(--purple-dark); background: var(--surface-violet); border: 1px solid var(--border); }
+
+    /* Shared with Salon Admin — horizontal card rows + Active org picker */
+    .cards-scroll {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 4px 2px 12px;
+      margin: 0 -2px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+    .cards-scroll::-webkit-scrollbar { height: 6px; }
+    .cards-scroll::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+    .cards-scroll > .card,
+    .cards-scroll > .kpi,
+    .cards-scroll > .op-card,
+    .cards-scroll > .metric-card,
+    .cards-scroll > .org-card {
+      flex: 0 0 calc((100% - 48px) / 4);
+      min-width: 220px;
+      max-width: 280px;
+      scroll-snap-align: start;
+    }
+    .cards-scroll > .op-card {
+      text-decoration: none;
+      color: inherit;
+    }
+    .cards-scroll > .org-card[hidden],
+    .cards-scroll > [hidden] {
+      display: none !important;
+    }
+
+    .org-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--gradient-surface-purple, linear-gradient(145deg,#fff,#F8F5FF));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .org-card:hover {
+      border-color: rgba(123, 0, 255, 0.28);
+      box-shadow: 0 8px 24px rgba(123, 0, 255, 0.08);
+    }
+    .org-card.is-active {
+      border-color: rgba(123, 0, 255, 0.4);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.08);
+    }
+    .org-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .org-card .org-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: Outfit, DM Sans, sans-serif;
+    }
+    .org-card .org-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .org-card .org-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .org-card .org-stat .s-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .org-card .org-stat .s-val {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .branch-switcher {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .branch-switcher > span,
+    .branch-context-label-ui {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .branch-scope { position: relative; }
+    .branch-scope-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 240px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+    }
+    .branch-scope-trigger:hover,
+    .branch-scope-trigger[aria-expanded="true"] {
+      border-color: rgba(123, 0, 255, 0.35);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.08);
+    }
+    .branch-scope-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
+    }
+    .branch-scope-caret {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.55;
+    }
+    .branch-scope-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 280px;
+      max-width: 320px;
+      max-height: min(380px, 70vh);
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #FFFFFF;
+      box-shadow: 0 12px 32px rgba(26, 26, 46, 0.12);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+    .branch-scope-menu[hidden] { display: none !important; }
+    .branch-scope-list {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 240px;
+      padding-right: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+    .branch-scope-list::-webkit-scrollbar { width: 6px; }
+    .branch-scope-list::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+    .branch-scope-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .branch-scope-option:hover { background: var(--surface-purple); }
+    .branch-scope-option input {
+      width: 16px;
+      height: 16px;
+      accent-color: #7B00FF;
+      flex-shrink: 0;
+    }
+    .branch-scope-divider {
+      height: 1px;
+      margin: 4px 6px;
+      background: var(--border);
+    }
+    .branch-scope-hint {
+      margin: 8px 6px 2px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
 </style>
+  <link rel="stylesheet" href="assets/ui-align.css" />
+  <link rel="stylesheet" href="assets/hover-tips.css" />
 </head>
 <body>
 
@@ -2206,6 +2451,51 @@
           <p>Central registry of all onboarded salon organizations. <span class="screen-tag">ORG-01 / ORG-02</span></p>
         </div>
         <div class="page-actions">
+
+            <div class="branch-switcher" data-org-scope>
+              <span class="branch-context-label-ui" id="org-context-label">Active org</span>
+              <div class="branch-scope">
+                <button type="button" class="branch-scope-trigger" id="org-context" aria-labelledby="org-context-label" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="branch-scope-text">All Orgs</span>
+                  <svg class="branch-scope-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="branch-scope-menu" role="listbox" aria-multiselectable="true" hidden>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" checked data-org-all />
+                    <span>All Orgs</span>
+                  </label>
+                  <div class="branch-scope-divider"></div>
+                  <div class="branch-scope-list">
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="serenity" data-org-id />
+                      <span>Serenity Spa &amp; Salon — ORG-001</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="blush" data-org-id />
+                      <span>Blush Beauty Lounge — ORG-002</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="classic" data-org-id />
+                      <span>Classic Cuts — ORG-003</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="radiance" data-org-id />
+                      <span>Radiance Hair Studio — ORG-004</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="glow" data-org-id />
+                      <span>Glow Studio — ORG-005</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="urban" data-org-id />
+                      <span>Urban Edge Salon — ORG-006</span>
+                    </label>
+                  </div>
+                  <p class="branch-scope-hint">Filters this screen (and other operational screens) to the selected org(s). Default is All Orgs.</p>
+                </div>
+              </div>
+            </div>
+
           <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-filter"/></svg> Filters</button>
           <button type="button" class="btn btn-outline"><svg class="svg-icon"><use href="#i-download"/></svg> Export</button>
         </div>
@@ -2220,7 +2510,7 @@
           <button type="button" class="status-tab">Suspended</button>
           <button type="button" class="status-tab">Terminated</button>
         </div>
-        <div class="filter-row">
+        <div class="filter-row filters-aligned">
           <div class="field">
             <label for="city">City</label>
             <select id="city">
@@ -2260,7 +2550,7 @@
             </select>
           </div>
         </div>
-        <div class="filter-row" style="margin-top:12px;">
+<div class="filter-row" style="margin-top:12px;">
           <div class="field">
             <label for="branches">Min. branches</label>
             <select id="branches">
@@ -2291,37 +2581,37 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr data-org="serenity">
                   <td class="salon-cell"><a href="#detail" class="row-link"><strong>Serenity Spa &amp; Salon <span class="branch-count">(8)</span></strong><span>ORG-001 · Anita Desai</span></a></td>
                   <td>Mumbai</td>
                   <td><span class="status-badge active">Active</span></td>
                   <td>Enterprise 24M</td>
                 </tr>
-                <tr>
+                <tr data-org="blush">
                   <td class="salon-cell"><a href="#detail" class="row-link"><strong>Blush Beauty Lounge <span class="branch-count">(4)</span></strong><span>ORG-002 · Kavitha Reddy</span></a></td>
                   <td>Bangalore</td>
                   <td><span class="status-badge active">Active</span></td>
                   <td>Professional 12M</td>
                 </tr>
-                <tr class="selected">
+                <tr data-org="classic" class="selected">
                   <td class="salon-cell"><a href="#detail" class="row-link"><strong>Classic Cuts <span class="branch-count">(2)</span></strong><span>ORG-003 · Vikram Iyer</span></a></td>
                   <td>Chennai</td>
                   <td><span class="status-badge suspended">Suspended</span></td>
                   <td>Growth 6M</td>
                 </tr>
-                <tr>
+                <tr data-org="radiance">
                   <td class="salon-cell"><a href="#detail" class="row-link"><strong>Radiance Hair Studio <span class="branch-count">(3)</span></strong><span>ORG-004 · Sneha Rao</span></a></td>
                   <td>Hyderabad</td>
                   <td><span class="status-badge active">Active</span></td>
                   <td>Growth 6M</td>
                 </tr>
-                <tr>
+                <tr data-org="glow">
                   <td class="salon-cell"><a href="#detail" class="row-link"><strong>Glow Studio <span class="branch-count">(1)</span></strong><span>ORG-005 · Priya Menon</span></a></td>
                   <td>Delhi</td>
                   <td><span class="status-badge active">Active</span></td>
                   <td>Starter 1M</td>
                 </tr>
-                <tr>
+                <tr data-org="urban">
                   <td class="salon-cell"><a href="#detail" class="row-link"><strong>Urban Edge Salon <span class="branch-count">(2)</span></strong><span>ORG-006 · Rahul Singh</span></a></td>
                   <td>Pune</td>
                   <td><span class="status-badge terminated">Terminated</span></td>
@@ -2410,8 +2700,8 @@
                   <tr><th>Branch</th><th>City</th><th>Status</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td>Classic Cuts — T. Nagar</td><td>Chennai</td><td><span class="status-badge active">Active</span></td></tr>
-                  <tr><td>Classic Cuts — Adyar</td><td>Chennai</td><td><span class="status-badge active">Active</span></td></tr>
+                  <tr data-org="classic"><td>Classic Cuts — T. Nagar</td><td>Chennai</td><td><span class="status-badge active">Active</span></td></tr>
+                  <tr data-org="classic"><td>Classic Cuts — Adyar</td><td>Chennai</td><td><span class="status-badge active">Active</span></td></tr>
                 </tbody>
               </table>
             </div>
@@ -2713,5 +3003,10 @@
     </div>
   </div>
 
+  <script src="assets/org-scope.js"></script>
+  <script src="assets/org-scope-filter.js"></script>
+  <script src="assets/hover-tips.js"></script>
+  <script src="assets/date-picker.js"></script>
+  <script src="assets/select-enhance.js"></script>
 </body>
 </html>

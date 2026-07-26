@@ -57,6 +57,24 @@ const docs = [
     output: 'Super-Admin-Figma-Screen-Guide.pdf',
     docTitle: 'Figma Screen Guide',
     plain: true,
+    plainHeader: 'Super Admin — Figma Screen Inventory &amp; Design Guide',
+    plainFooter: 'June 27, 2026 · v1.4',
+  },
+  {
+    input: 'Admin-Figma-Screen-Guide.md',
+    output: 'Admin-Figma-Screen-Guide.pdf',
+    docTitle: 'Figma Screen Guide',
+    plain: true,
+    plainHeader: 'Salon Admin — Figma Screen Inventory &amp; Design Guide',
+    plainFooter: 'July 24, 2026 · v1.0',
+  },
+  {
+    input: 'SubAdmin-Requirements.md',
+    output: 'SubAdmin-Requirements.pdf',
+    docTitle: 'Sub Admin Requirements',
+    docSubtitle: 'Salon Admin Portal — Sub Admin Access vs Main Admin',
+    version: '1.0',
+    date: 'July 26, 2026',
   },
 ];
 
@@ -98,7 +116,7 @@ function buildPdfConfig(doc) {
       printBackground: true,
       displayHeaderFooter: true,
       headerTemplate: doc.plain
-        ? `<div style="width:100%;font-size:8px;padding:0 15mm;color:#666;text-align:center;">Super Admin — Figma Screen Inventory &amp; Design Guide</div>`
+        ? `<div style="width:100%;font-size:8px;padding:0 15mm;color:#666;text-align:center;">${doc.plainHeader || title}</div>`
         : `
         <div style="width:100%;font-size:7px;padding:0 15mm;display:flex;justify-content:space-between;align-items:center;color:${BRAND.grey};">
           <span style="color:${BRAND.primary};font-weight:600;">${BRAND.name}</span>
@@ -106,7 +124,7 @@ function buildPdfConfig(doc) {
           <span>${title}</span>
         </div>`,
       footerTemplate: doc.plain
-        ? `<div style="width:100%;font-size:8px;padding:0 15mm;display:flex;justify-content:space-between;color:#888;"><span>June 27, 2026 · v1.0</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>`
+        ? `<div style="width:100%;font-size:8px;padding:0 15mm;display:flex;justify-content:space-between;color:#888;"><span>${doc.plainFooter || ''}</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>`
         : `
         <div style="width:100%;font-size:7px;padding:0 15mm;display:flex;justify-content:space-between;align-items:center;color:${BRAND.grey};">
           <span>&copy; ${new Date().getFullYear()} ${BRAND.name}</span>

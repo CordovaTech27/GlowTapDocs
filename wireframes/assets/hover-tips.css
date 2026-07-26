@@ -1,0 +1,41 @@
+/* GlowTap — hover detail tips */
+.hover-tip {
+  position: fixed;
+  z-index: 9999;
+  max-width: 260px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(123, 0, 255, 0.16);
+  background: linear-gradient(160deg, #FFFFFF 0%, #F8F5FF 100%);
+  box-shadow: 0 10px 28px rgba(26, 26, 46, 0.14);
+  color: #1A1A2E;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.hover-tip.is-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hover-tip .hover-tip-title {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7B00FF;
+  margin-bottom: 4px;
+}
+
+.hover-tip .hover-tip-body {
+  display: block;
+  color: #4A5568;
+  font-weight: 500;
+}

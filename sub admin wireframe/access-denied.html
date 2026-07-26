@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Sub Admin — Access Denied</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --purple: #7B00FF; --text: #1E2A32; --muted: #6B7A88; --border: rgba(123,0,255,0.12);
+      --surface: #F8F5FF;
+    }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: linear-gradient(165deg, #fff 0%, #F8F5FF 100%);
+      color: var(--text);
+    }
+    .box {
+      width: min(440px, 92vw); padding: 36px 32px; border-radius: 20px;
+      border: 1px solid var(--border); background: #fff;
+      box-shadow: 0 12px 40px rgba(123,0,255,0.08); text-align: center;
+    }
+    h1 { font-family: Outfit, sans-serif; font-size: 1.45rem; margin: 0 0 10px; }
+    p { color: var(--muted); font-size: 0.9rem; line-height: 1.5; margin: 0 0 22px; }
+    a {
+      display: inline-flex; align-items: center; justify-content: center;
+      height: 40px; padding: 0 18px; border-radius: 999px; text-decoration: none;
+      background: linear-gradient(135deg, #7B00FF, #FF03C8); color: #fff; font-weight: 600;
+    }
+    .tag {
+      display: inline-block; margin-bottom: 14px; padding: 4px 10px; border-radius: 999px;
+      background: #FEE2E2; color: #B91C1C; font-size: 0.72rem; font-weight: 700;
+    }
+  </style>
+  <link rel="stylesheet" href="assets/ui-align.css" />
+</head>
+<body>
+  <div class="box" data-figma-frame="SUB-DENY Access Denied">
+    <div class="tag">§5.5 Access denied</div>
+    <h1>You don’t have access</h1>
+    <p>This page is outside your assigned branches or module permissions. Contact your Main Admin if you need access.</p>
+    <a href="dashboard.html">Back to Dashboard</a>
+  </div>
+</body>
+</html>

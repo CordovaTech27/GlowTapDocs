@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GlowTap Super Admin — Dashboard</title>
+  <title>GlowTap Salon Admin — Dashboard</title>
   <script>if (/[?&]figma(?:=1)?(?:&|$)/i.test(location.search)) document.documentElement.classList.add('figma-export');</script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" />
   <style>
@@ -80,6 +80,9 @@
       min-height: 100vh;
       position: relative;
       z-index: 1;
+      padding: 16px;
+      gap: 16px;
+      box-sizing: border-box;
     }
 
     .sidebar, .app-main-scroll { position: relative; z-index: 1; }
@@ -89,19 +92,21 @@
     .sidebar {
       width: 280px;
       background: linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 94%, #F3EEFF 6%) 100%);
-      border-right: 1px solid var(--border);
+      border: 1px solid var(--border);
+      border-radius: 20px;
       box-shadow: 4px 0 20px rgba(123, 0, 255, 0.025);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
-      height: 100vh;
+      height: calc(100vh - 32px);
       position: sticky;
-      top: 0;
+      top: 16px;
+      overflow: hidden;
     }
 
     .sidebar-logo {
       box-sizing: border-box;
-      width: 280px;
+      width: 100%;
       height: 100px;
       flex: none;
       padding: 0;
@@ -266,9 +271,14 @@
       display: flex;
       flex-direction: column;
       min-width: 0;
-      min-height: 100vh;
+      min-height: calc(100vh - 32px);
+      height: calc(100vh - 32px);
       overflow-y: auto;
       overflow-x: hidden;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, color-mix(in srgb, #FFFFFF 92%, #F3EEFF 8%) 100%);
+      box-shadow: 0 4px 24px rgba(123, 0, 255, 0.04);
     }
 
     .app-content {
@@ -312,15 +322,21 @@
       overflow: hidden;
     }
 
-    /* Dashboard hero header — login-screen energy in a light admin shell */
+    /* Dashboard hero — min 100px to align with logo; overflow visible so Active branch pill is not clipped */
     .dashboard-hero {
       position: relative;
+      z-index: 5;
       margin: -28px -28px 28px;
-      padding: 28px 28px 24px;
-      border-radius: 0 0 24px 24px;
+      padding: 18px 28px;
+      min-height: 100px;
+      height: auto;
+      display: flex;
+      align-items: center;
+      border-radius: 0;
       background: var(--gradient-hero);
-      border-bottom: 1px solid var(--border);
-      overflow: hidden;
+      border-bottom: 1px solid #E2E8F0;
+      overflow: visible;
+      box-sizing: border-box;
     }
 
     .dashboard-hero::before,
@@ -352,14 +368,15 @@
       position: relative;
       z-index: 1;
       margin-bottom: 0;
+      width: 100%;
     }
 
     .page-head {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       margin-bottom: 24px;
-      gap: 16px;
+      gap: 20px;
       flex-wrap: wrap;
     }
 
@@ -368,6 +385,7 @@
       font-size: 1.65rem;
       font-weight: 700;
       letter-spacing: -0.02em;
+      line-height: 1.2;
       background: var(--gradient-brand);
       -webkit-background-clip: text;
       background-clip: text;
@@ -516,6 +534,8 @@
       color: inherit;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      text-align: center;
       gap: 12px;
       box-shadow: var(--shadow-card);
       transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
@@ -636,6 +656,17 @@
     }
     .kpi .change { font-size: 0.75rem; margin-top: 6px; font-weight: 600; }
     .kpi .change.up { color: var(--green); }
+    .kpi-lines { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+    .kpi-line {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      font-size: 0.78rem; font-weight: 600; color: var(--muted);
+    }
+    .kpi-line strong {
+      font-size: 1.15rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em;
+    }
+    .kpi-line strong.brand {
+      background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
 
     .kpi-icon {
       width: 42px;
@@ -801,47 +832,6 @@
 
     .alert-item a:hover { color: var(--purple-mid); }
 
-    .quick-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-
-    .quick-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-purple) 100%);
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text);
-      text-decoration: none;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
-    }
-
-    .quick-btn:hover {
-      border-color: rgba(123, 0, 255, 0.2);
-      background: linear-gradient(145deg, #FFFFFF 0%, var(--surface-violet) 100%);
-      box-shadow: var(--shadow-card);
-      transform: translateY(-1px);
-    }
-    .quick-btn .qi {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: var(--gradient-brand);
-      color: var(--white);
-      flex-shrink: 0;
-      box-shadow: 0 3px 10px rgba(123, 0, 255, 0.22);
-    }
-    .quick-btn .svg-icon { width: 18px; height: 18px; }
-
     .ticket-row {
       display: flex;
       justify-content: space-between;
@@ -865,8 +855,22 @@
     .pill.critical { background: #FEE2E2; color: var(--red); }
     .pill.high { background: #FEE2E2; color: #B91C1C; }
     .pill.medium { background: #FFEDD5; color: #C2410C; }
+    .pill.info { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+    .btn-sm { padding: 6px 12px; font-size: 0.78rem; }
 
-    .page-actions { display: flex; gap: 10px; flex-shrink: 0; }
+    .page-actions {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .page-actions .btn {
+      height: 40px;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
 
     .renewal-row {
       display: flex;
@@ -890,6 +894,8 @@
       width: 1440px;
       height: 1024px;
       min-height: 1024px;
+      padding: 0;
+      gap: 0;
     }
 
     html.figma-export .sidebar {
@@ -898,6 +904,9 @@
       min-height: 1024px;
       position: relative;
       top: auto;
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid var(--border);
     }
 
     html.figma-export .app-main-scroll {
@@ -906,6 +915,10 @@
       min-height: 1024px;
       flex: none;
       overflow-y: auto;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
     }
 
     html.figma-export .app-content {
@@ -1074,7 +1087,343 @@
     .modal-body { background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, var(--surface-neutral) 100%); }
     .data-table thead { background: var(--surface-neutral); }
     .screen-tag { color: var(--purple-dark); background: var(--surface-violet); border: 1px solid var(--border); }
+
+    /* Salon Admin — branch context + platform banner */
+    /* Active branch = screen data scope (All Salons default, multi-select) */
+    .branch-switcher {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      position: relative;
+      z-index: 60;
+    }
+
+    .branch-switcher-label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      line-height: 1;
+    }
+
+    .branch-scope { position: relative; }
+
+    .branch-scope-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 240px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: var(--shadow-card);
+      cursor: pointer;
+    }
+
+    .branch-scope-trigger:hover,
+    .branch-scope-trigger[aria-expanded="true"] {
+      border-color: rgba(123, 0, 255, 0.35);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.08);
+    }
+
+    .branch-scope-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
+    }
+
+    .branch-scope-caret {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.55;
+    }
+
+    .branch-scope-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 280px;
+      max-width: 320px;
+      max-height: min(380px, 70vh);
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #FFFFFF;
+      box-shadow: 0 12px 32px rgba(26, 26, 46, 0.12);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .branch-scope-menu[hidden] {
+      display: none !important;
+    }
+
+    .branch-scope-list {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 240px;
+      padding-right: 2px;
+      margin: 0 -2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+
+    .branch-scope-list::-webkit-scrollbar { width: 6px; }
+    .branch-scope-list::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .branch-scope-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .branch-scope-option:hover { background: var(--surface-purple); }
+
+    .branch-scope-option input {
+      width: 16px;
+      height: 16px;
+      accent-color: #7B00FF;
+      flex-shrink: 0;
+    }
+
+    .branch-scope-divider {
+      height: 1px;
+      margin: 4px 6px;
+      background: var(--border);
+    }
+
+    .branch-scope-hint {
+      margin: 8px 6px 2px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .promo-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 16px 20px;
+      border-radius: 18px;
+      border: 1px solid rgba(123, 0, 255, 0.14);
+      background: linear-gradient(120deg, var(--surface-purple) 0%, var(--surface-pink) 100%);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 20px;
+    }
+
+    .promo-banner .promo-copy {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .promo-banner .promo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient-brand);
+      color: var(--white);
+      flex-shrink: 0;
+      box-shadow: var(--shadow-pill);
+    }
+
+    .promo-banner strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .promo-banner p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+
+    /* Salon / branch rows: keep card size, scroll when more than ~4 */
+    .branch-cards-scroll {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 10px;
+      margin-bottom: -2px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+
+    .branch-cards-scroll::-webkit-scrollbar { height: 6px; }
+    .branch-cards-scroll::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .branch-cards-scroll > .branch-card[hidden] {
+      display: none !important;
+    }
+    .branch-cards-scroll > .branch-card {
+      flex: 0 0 calc((100% - 48px) / 4);
+      min-width: 220px;
+      max-width: 280px;
+      scroll-snap-align: start;
+      box-sizing: border-box;
+    }
+
+    .check-scroll {
+      max-height: 220px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+
+    .check-scroll::-webkit-scrollbar { width: 6px; }
+    .check-scroll::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .branch-card {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+
+    .branch-card:hover {
+      border-color: rgba(123, 0, 255, 0.25);
+      box-shadow: var(--shadow-card-hover);
+      transform: translateY(-1px);
+    }
+
+    .branch-card.is-active {
+      border-color: rgba(123, 0, 255, 0.35);
+      box-shadow: var(--shadow-card), 0 0 0 2px rgba(123, 0, 255, 0.12);
+    }
+
+    .branch-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .branch-card .branch-name {
+      font-family: 'Outfit', 'DM Sans', system-ui, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .branch-card .branch-city {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .branch-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .branch-stat {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid var(--border);
+    }
+
+    .branch-stat .s-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .branch-stat .s-val {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-top: 4px;
+      color: var(--text);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .status-pill.active { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+    .status-pill.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+    .status-pill.suspended { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+
+    .data-table { width:100%; border-collapse:separate; border-spacing:0; font-size:0.84rem; }
+    .data-table thead { background: var(--surface-neutral); }
+    .data-table th { text-align:left; padding:11px 12px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); border-bottom:1px solid var(--border); font-weight:700; }
+    .data-table td { padding:11px 12px; border-bottom:1px solid color-mix(in srgb, var(--border) 80%, transparent); vertical-align:top; }
+    .data-table tbody tr:hover { background: rgba(243,238,255,0.35); }
+    .table-wrap { overflow:auto; }
+    .card.table-card { padding:0; overflow:hidden; }
+    .link-btn { font-size:0.76rem; color:var(--purple); text-decoration:none; font-weight:600; }
+    .filters-card { background: var(--gradient-surface-purple); border:1px solid var(--border); border-radius:18px; padding:16px 20px; margin-bottom:20px; box-shadow:var(--shadow-card); }
+    .filter-row { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:12px; align-items:end; }
+    .field label { display:block; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); margin-bottom:6px; }
+    .field input, .field select { width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:10px; font-size:0.85rem; font-family:inherit; background:rgba(255,255,255,0.72); color:var(--text); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.78rem; color:var(--purple-dark); font-weight:600; }
+    .meta { font-size:0.76rem; color:var(--muted); font-weight:600; }
+
 </style>
+  <link rel="stylesheet" href="assets/ui-align.css" />
+  <link rel="stylesheet" href="assets/hover-tips.css" />
 </head>
 <body>
 
@@ -1171,6 +1520,37 @@
       <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
       <path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>
     </symbol>
+
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M3 10h18"/>
+    </symbol>
+    <symbol id="i-calendar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/>
+      <path d="M3 10h18"/><path d="m9 16 2 2 4-4"/>
+    </symbol>
+    <symbol id="i-scissors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/>
+      <circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/>
+    </symbol>
+    <symbol id="i-user-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+      <path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>
+    </symbol>
+    <symbol id="i-map-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+      <circle cx="12" cy="10" r="3"/>
+    </symbol>
+    <symbol id="i-umbrella" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 12a10.06 10.06 1 0 0-20 0Z"/><path d="M12 12v8a2 2 0 0 0 4 0"/><path d="M12 2v1"/>
+    </symbol>
   </svg>
 
   <div class="app-screen" data-figma-frame="DASH-01 Dashboard Home">
@@ -1180,19 +1560,17 @@
     </div>
     <ul class="nav">
       <li><a href="dashboard.html" class="active"><span class="nav-icon"><svg class="svg-icon"><use href="#i-layout-dashboard"/></svg></span> Dashboard</a></li>
-      <li><a href="salon-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-store"/></svg></span> Salon Approvals <span class="badge">12</span></a></li>
-      <li><a href="branch-approvals.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branch Approvals <span class="badge">5</span></a></li>
-      <li><a href="all-salons.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> All Salons</a></li>
+      <li><a href="organization.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-building"/></svg></span> Organization Profile</a></li>
+      <li><a href="branches.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></span> Branches <span class="badge">1</span></a></li>
+      <li><a href="sub-admins.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> Sub Admins</a></li>
+      <li><a href="employees.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-users"/></svg></span> Employees</a></li>
+      <li><a href="leave-holidays.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-umbrella"/></svg></span> Leave &amp; Holidays</a></li>
+      <li><a href="attendance.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-clock"/></svg></span> Attendance</a></li>
+      <li><a href="services.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scissors"/></svg></span> Services</a></li>
+      <li><a href="appointments.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-calendar-check"/></svg></span> Appointments <span class="badge">6</span></a></li>
       <li><a href="transactions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> Transactions</a></li>
-      <li><a href="subscriptions.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></span> Subscriptions</a></li>
       <li><a href="reports.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bar-chart"/></svg></span> Reports</a></li>
-      <li><a href="user-access.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-user-cog"/></svg></span> User Access</a></li>
-      <li><a href="cms-banners.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-image"/></svg></span> CMS &amp; Banners</a></li>
-      <li><a href="analytics.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-line-chart"/></svg></span> Analytics</a></li>
-      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">18</span></a></li>
-      <li><a href="master-config.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-settings"/></svg></span> Master Config</a></li>
-      <li><a href="audit-log.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-scroll-text"/></svg></span> Audit Log</a></li>
-      <li><a href="notifications.html" class="nav-footer-link"><span class="nav-icon"><svg class="svg-icon"><use href="#i-bell"/></svg></span> Notifications <span class="badge">3</span></a></li>
+      <li><a href="support.html"><span class="nav-icon"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Support <span class="badge">2</span></a></li>
       <li><a href="login.html" class="nav-footer-link nav-footer-signout"><span class="nav-icon"><svg class="svg-icon"><use href="#i-log-out"/></svg></span> Sign out</a></li>
       <li class="nav-user">
         <div class="sidebar-user-card">
@@ -1200,8 +1578,8 @@
           <svg class="svg-icon"><use href="#i-user"/></svg>
         </div>
         <div>
-          <div style="font-size:0.8rem;font-weight:600;">Super Admin</div>
-          <div style="font-size:0.7rem;color:var(--muted);">admin@glowtap.com</div>
+          <div style="font-size:0.8rem;font-weight:600;">Main Admin</div>
+          <div style="font-size:0.7rem;color:var(--muted);">owner@luxecurls.in</div>
         </div>
         </div>
       </li>
@@ -1213,356 +1591,699 @@
       <div class="dashboard-hero">
         <div class="page-head">
           <div>
-            <h1>Platform Dashboard</h1>
-            <p>At-a-glance view of platform health and pending actions.</p>
+            <h1>Salon Dashboard</h1>
           </div>
           <div class="page-actions">
-            <button type="button" class="btn btn-primary"><svg class="svg-icon"><use href="#i-file-text"/></svg> Export Report</button>
+            <div class="branch-switcher" data-branch-scope>
+              <span class="branch-switcher-label" id="branch-context-label">Active branch</span>
+              <div class="branch-scope">
+                <button type="button" class="branch-scope-trigger" id="branch-context" aria-labelledby="branch-context-label" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="branch-scope-text">All Salons</span>
+                  <svg class="branch-scope-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="branch-scope-menu" role="listbox" aria-multiselectable="true" hidden>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="all" checked data-branch-all />
+                    <span>All Salons</span>
+                  </label>
+                  <div class="branch-scope-divider"></div>
+                  <div class="branch-scope-list">
+<label class="branch-scope-option">
+                    <input type="checkbox" value="bandra" data-branch-id />
+                    <span>Bandra West — Mumbai</span>
+                  </label>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="koramangala" data-branch-id />
+                    <span>Koramangala — Bangalore</span>
+                  </label>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="andheri" data-branch-id />
+                    <span>Andheri East — Pending Approval</span>
+                  </label>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="powai" data-branch-id />
+                    <span>Powai Studio — Suspended</span>
+                  </label>
+
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="juhu" data-branch-id />
+                    <span>Juhu Wave — Mumbai</span>
+                  </label>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="indiranagar" data-branch-id />
+                    <span>Indiranagar — Bangalore</span>
+                  </label>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="colaba" data-branch-id />
+                    <span>Colaba Pier — Mumbai</span>
+                  </label>
+                  </div>
+                  <p class="branch-scope-hint">Filters this screen (and all operational screens) to the selected salon(s). Default is All Salons.</p>
+                </div>
+              </div>
+            </div>
+            <a href="appointments.html" class="btn btn-primary"><svg class="svg-icon"><use href="#i-calendar-check"/></svg> Today's Bookings</a>
           </div>
         </div>
       </div>
 
-      <!-- Operation Alerts -->
-      <section class="mb">
-        <div class="section-title">Operation Alerts</div>
+      <!-- Org health at a glance — filtered by Active branch -->
+      <section class="mb" id="org-kpis">
+        <div class="section-title" id="org-kpis-title">Organization KPIs</div>
         <div class="grid g4">
-          <a href="salon-approvals.html" class="op-card purple">
-            <div class="op-icon purple"><svg class="svg-icon"><use href="#i-store"/></svg></div>
-            <div class="count">12</div>
-            <div class="label">Salon Approvals</div>
-          </a>
-          <a href="branch-approvals.html" class="op-card pink">
-            <div class="op-icon pink"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
-            <div class="count">5</div>
-            <div class="label">Branch Approvals</div>
-          </a>
-          <a href="support.html" class="op-card violet">
-            <div class="op-icon violet"><svg class="svg-icon"><use href="#i-ticket"/></svg></div>
-            <div class="count">18</div>
-            <div class="label">Open Tickets</div>
-          </a>
-          <a href="reports.html" class="op-card magenta">
-            <div class="op-icon magenta"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></div>
-            <div class="count">7</div>
-            <div class="label">Defaulters</div>
-          </a>
-        </div>
-      </section>
-
-      <!-- Key KPIs -->
-      <section class="mb">
-        <div class="section-title">Key Metrics</div>
-        <div class="grid g5">
           <div class="card kpi kpi-accent-purple">
             <div class="kpi-top">
-              <div><div class="label">Active Salons</div><div class="value">248</div><div class="change up">+12 this month</div></div>
-              <div class="kpi-icon purple"><svg class="svg-icon"><use href="#i-building"/></svg></div>
+              <div>
+                <div class="label">Appointments</div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>Today</span><strong data-kpi="appts-today">42</strong></div>
+                  <div class="kpi-line"><span>This week</span><strong data-kpi="appts-week">128</strong></div>
+                </div>
+              </div>
+              <div class="kpi-icon purple"><svg class="svg-icon"><use href="#i-calendar-check"/></svg></div>
             </div>
           </div>
           <div class="card kpi kpi-accent-pink">
             <div class="kpi-top">
-              <div><div class="label">Total Branches</div><div class="value">412</div><div class="change up">+28 this month</div></div>
-              <div class="kpi-icon pink"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
-            </div>
-          </div>
-          <div class="card kpi kpi-accent-violet">
-            <div class="kpi-top">
-              <div><div class="label">MRR</div><div class="value brand">₹18.5L</div><div class="change up">+8.4% vs last month</div></div>
-              <div class="kpi-icon violet"><svg class="svg-icon"><use href="#i-indian-rupee"/></svg></div>
+              <div>
+                <div class="label">Revenue</div>
+                <div class="kpi-lines">
+                  <div class="kpi-line"><span>Today</span><strong class="brand" data-kpi="rev-today">₹48,600</strong></div>
+                  <div class="kpi-line"><span>This week</span><strong class="brand" data-kpi="rev-week">₹2.14L</strong></div>
+                  <div class="kpi-line"><span>This month</span><strong class="brand" data-kpi="rev-month">₹8.4L</strong></div>
+                </div>
+              </div>
+              <div class="kpi-icon pink"><svg class="svg-icon"><use href="#i-indian-rupee"/></svg></div>
             </div>
           </div>
           <div class="card kpi kpi-accent-lavender">
             <div class="kpi-top">
-              <div><div class="label">Active End Users</div><div class="value">38,420</div><div class="change up">+1,240 this week</div></div>
+              <div><div class="label">Active Employees</div><div class="value" data-kpi="employees">28</div><div class="change up" data-kpi="employees-note">Across all branches</div></div>
               <div class="kpi-icon lavender"><svg class="svg-icon"><use href="#i-users"/></svg></div>
             </div>
           </div>
           <div class="card kpi kpi-accent-magenta">
             <div class="kpi-top">
-              <div><div class="label">Today's Volume</div><div class="value">₹28.5L</div><div class="change up">142 transactions</div></div>
-              <div class="kpi-icon magenta"><svg class="svg-icon"><use href="#i-credit-card"/></svg></div>
+              <div><div class="label">Upcoming Renewals</div><div class="value" data-kpi="renewals">1</div><div class="change" style="color:var(--amber);" data-kpi="renewals-note">Growth plan · Aug 11</div></div>
+              <div class="kpi-icon magenta"><svg class="svg-icon"><use href="#i-receipt"/></svg></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Subscription Summary -->
+      <!-- Branches — only selected salon cards when filtered -->
       <section class="mb">
-        <div class="section-title">Subscription Summary</div>
-        <div class="grid g23">
-          <div class="card card-analytics">
-            <div class="card-head">
-              <h3>Revenue &amp; Renewals</h3>
+        <div class="section-title" id="branches-title">Branches</div>
+        <div class="branch-cards-scroll" id="branch-cards">
+          <a href="#today-at-branch" class="card branch-card is-active" aria-current="true" data-branch="bandra">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Bandra West</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Mumbai</span> <span class="branch-context-label">· Active context</span></div>
+              </div>
+              <span class="status-pill active">Active</span>
             </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">26</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">₹31.2K</div></div>
+            </div>
+          </a>
+          <a href="#today-at-branch" class="card branch-card" data-branch="koramangala">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Koramangala</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Bangalore</span> <span class="branch-context-label" hidden>· Active context</span></div>
+              </div>
+              <span class="status-pill active">Active</span>
+            </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">16</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">₹17.4K</div></div>
+            </div>
+          </a>
+          <a href="#today-at-branch" class="card branch-card" data-branch="andheri">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Andheri East</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Mumbai</span> <span class="branch-context-label" hidden>· Active context</span></div>
+              </div>
+              <span class="status-pill pending">Pending Approval</span>
+            </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">—</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">—</div></div>
+            </div>
+          </a>
+          <a href="#today-at-branch" class="card branch-card" data-branch="powai">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Powai Studio</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Mumbai</span> <span class="branch-context-label" hidden>· Active context</span></div>
+              </div>
+              <span class="status-pill suspended">Suspended</span>
+            </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">0</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">₹0</div></div>
+            </div>
+          </a>
+          <a href="#today-at-branch" class="card branch-card" data-branch="juhu">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Juhu Wave</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Mumbai</span> <span class="branch-context-label" hidden>· Active context</span></div>
+              </div>
+              <span class="status-pill active">Active</span>
+            </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">11</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">₹9.8K</div></div>
+            </div>
+          </a>
+          <a href="#today-at-branch" class="card branch-card" data-branch="indiranagar">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Indiranagar</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Bangalore</span> <span class="branch-context-label" hidden>· Active context</span></div>
+              </div>
+              <span class="status-pill active">Active</span>
+            </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">9</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">₹8.1K</div></div>
+            </div>
+          </a>
+          <a href="#today-at-branch" class="card branch-card" data-branch="colaba">
+            <div class="branch-card-top">
+              <div>
+                <div class="branch-name">Colaba Pier</div>
+                <div class="branch-city"><span style="display:inline-flex;align-items:center;gap:4px;"><svg class="svg-icon" style="width:12px;height:12px;"><use href="#i-map-pin"/></svg> Mumbai</span> <span class="branch-context-label" hidden>· Active context</span></div>
+              </div>
+              <span class="status-pill pending">Pending Approval</span>
+            </div>
+            <div class="branch-stats">
+              <div class="branch-stat"><div class="s-label">Today's appts</div><div class="s-val">—</div></div>
+              <div class="branch-stat"><div class="s-label">Today's revenue</div><div class="s-val">—</div></div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- 5. Day ops for selected branch -->
+      <section class="mb" id="today-at-branch">
+        <div class="section-title" id="today-branch-title">Today at Active Branch — Bandra West</div>
+        <div class="grid g3" id="today-branch-body">
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Booking Snapshot</h3></div>
             <div class="stat-grid">
-              <div class="stat-box stat-brand">
-                <div class="s-label">MRR</div>
-                <div class="s-val brand">₹18,47,500</div>
-              </div>
-              <div class="stat-box stat-brand">
-                <div class="s-label">ARR</div>
-                <div class="s-val brand">₹2.22 Cr</div>
-              </div>
-              <div class="stat-box">
-                <div class="s-label">Renewals (30 days)</div>
-                <div class="s-val">34</div>
-              </div>
-              <div class="stat-box">
-                <div class="s-label">At-risk renewals</div>
-                <div class="s-val" style="color:var(--amber);">5</div>
-              </div>
+              <div class="stat-box"><div class="s-label">Booked</div><div class="s-val" data-k="booked">8</div></div>
+              <div class="stat-box stat-brand"><div class="s-label">Confirmed</div><div class="s-val brand" data-k="confirmed">14</div></div>
+              <div class="stat-box"><div class="s-label">In progress</div><div class="s-val" data-k="progress">3</div></div>
+              <div class="stat-box"><div class="s-label">Pending confirm</div><div class="s-val" style="color:var(--amber);" data-k="pending">6</div></div>
             </div>
-            <div style="margin-top:16px;">
-              <div class="renewal-row"><span>Luxe Curls Studio — Growth 6M</span><span style="color:var(--amber);">Jun 30</span></div>
-              <div class="renewal-row"><span>The Groom Room — Pro 12M</span><span>Jul 12</span></div>
-              <div class="renewal-row"><span>Glow Studio — Starter 1M</span><span>Jul 18</span></div>
+            <div style="margin-top:14px;font-size:0.75rem;color:var(--muted);" data-k="note">Upcoming next 24h: 19 · No-shows this week: 2</div>
+          </div>
+          <div class="card card-analytics">
+            <div class="card-head"><h3>Top Services Today</h3></div>
+            <div data-k="services">
+              <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Haircut &amp; Styling</div><div class="list-sub">9 bookings</div></div></div><span class="list-val">₹12.6K</span></div>
+              <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Hair Colour</div><div class="list-sub">5 bookings</div></div></div><span class="list-val">₹9.8K</span></div>
+              <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Keratin Treatment</div><div class="list-sub">2 bookings</div></div></div><span class="list-val">₹8.4K</span></div>
+              <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Facial &amp; Cleanup</div><div class="list-sub">4 bookings</div></div></div><span class="list-val">₹4.2K</span></div>
             </div>
           </div>
           <div class="card card-analytics">
-            <div class="card-head"><h3>Plan Distribution</h3></div>
-            <div class="plan-row"><span>Starter 1M</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span>54</span></div>
-            <div class="plan-row"><span>Growth 6M</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span>94</span></div>
-            <div class="plan-row"><span>Pro 12M</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span>72</span></div>
-            <div class="plan-row"><span>Enterprise 24M</span><div class="bar-track"><div class="bar-fill" style="width:18%"></div></div><span>28</span></div>
+            <div class="card-head"><h3>Staff Today</h3></div>
+            <div data-k="staff">
+              <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Present</div><div class="list-sub">Marked in</div></div></div><span class="list-val">11</span></div>
+              <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">On leave</div><div class="list-sub">Approved</div></div></div><span class="list-val">2</span></div>
+              <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Weekly off</div><div class="list-sub">Scheduled</div></div></div><span class="list-val">1</span></div>
+              <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Not marked</div><div class="list-sub">Attendance due</div></div></div><span class="list-val" style="color:var(--amber);">2</span></div>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- Revenue & Commission -->
+      <!-- 5. Support -->
       <section class="mb">
-        <div class="section-title">Revenue &amp; Commission Analytics</div>
-        <div class="card card-analytics card-chart">
-          <div class="card-head">
-            <h3>Subscription vs Commission Revenue</h3>
-            <div class="tabs">
-              <button type="button" class="on">Monthly</button>
-              <button type="button">Yearly</button>
-            </div>
+        <div class="section-title">Recent Tickets</div>
+        <div class="card card-analytics">
+          <div class="ticket-row" data-branch="bandra">
+            <div><strong>Payment settlement mismatch</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-2214 · Bandra West · In Progress</span></div>
+            <span class="pill high">High</span>
           </div>
-          <div class="chart-area">
-            <div class="chart-wrap">
-              <canvas id="revenueChart" aria-label="Subscription vs Commission Revenue chart" role="img"></canvas>
-            </div>
+          <div class="ticket-row" data-branch="andheri">
+            <div><strong>Branch request status follow-up</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-2209 · Andheri East · Created</span></div>
+            <span class="pill medium">Medium</span>
           </div>
-          <div class="legend">
-            <span><i class="dot-sub"></i> Subscription Revenue</span>
-            <span><i class="dot-comm"></i> Commission Revenue</span>
-          </div>
-          <div class="stat-grid" style="margin-top:18px;">
-            <div class="stat-box"><div class="s-label">Commission (MTD)</div><div class="s-val">₹4.2L</div></div>
-            <div class="stat-box"><div class="s-label">Commission (YTD)</div><div class="s-val">₹48.6L</div></div>
-            <div class="stat-box"><div class="s-label">Avg commission rate</div><div class="s-val">7.2%</div></div>
-            <div class="stat-box stat-brand"><div class="s-label">Combined platform revenue</div><div class="s-val brand">₹22.7L MTD</div></div>
+          <div class="ticket-row" data-branch="org">
+            <div><strong>Invoice PDF download issue</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-2198 · Org · Resolved</span></div>
+            <span class="pill info">Done</span>
           </div>
         </div>
       </section>
 
-      <!-- Platform Analytics + Alerts -->
+      <!-- 6. Billing + alerts (lower on page) -->
       <section class="mb">
-        <div class="section-title">Platform Analytics — User Growth &amp; Retention</div>
-        <div class="grid g23">
-          <div class="card card-analytics">
-            <div class="card-head"><h3>Engagement</h3></div>
-            <div class="stat-grid">
-              <div class="stat-box"><div class="s-label">DAU</div><div class="s-val">2,840</div></div>
-              <div class="stat-box stat-brand"><div class="s-label">MAU</div><div class="s-val brand">38,420</div></div>
-              <div class="stat-box"><div class="s-label">Churn rate</div><div class="s-val" style="color:var(--red);">2.1%</div></div>
-              <div class="stat-box"><div class="s-label">Repeat bookings</div><div class="s-val">64%</div></div>
-            </div>
-            <div style="margin-top:14px;font-size:0.75rem;color:var(--muted);">DAU/MAU ratio: 7.4% · +0.3pp vs last month</div>
-          </div>
-          <div class="card">
-            <div class="card-head"><h3>System Alerts</h3></div>
-            <div class="alert-item warn">7 salons have failed subscription payments <a href="#">View defaulters →</a></div>
-            <div class="alert-item info">12 salon approvals pending review <a href="#">Review now →</a></div>
-            <div class="alert-item danger">3 critical support tickets overdue SLA <a href="#">Open tickets →</a></div>
-            <div class="alert-item info">5 salons nearing expiry (30 days) <a href="#">View renewals →</a></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Top Salons, Cities, Services -->
-      <section class="mb">
-        <div class="section-title">Performance &amp; Insights</div>
-        <div class="grid g3">
-          <div class="card card-analytics">
-            <div class="card-head"><h3>Top Salons</h3></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Luxe Curls Studio</div><div class="list-sub">Mumbai · 3 branches</div></div></div><span class="list-val">₹8.4L</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">The Groom Room</div><div class="list-sub">Bangalore · 2 branches</div></div></div><span class="list-val">₹6.2L</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Glow Studio</div><div class="list-sub">Delhi · 4 branches</div></div></div><span class="list-val">₹5.9L</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Urban Edge Salon</div><div class="list-sub">Pune · 1 branch</div></div></div><span class="list-val">₹4.1L</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Bliss &amp; Bloom</div><div class="list-sub">Hyderabad · 2 branches</div></div></div><span class="list-val">₹3.8L</span></div>
-          </div>
-          <div class="card card-analytics">
-            <div class="card-head"><h3>Geographical — Top Cities</h3></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Mumbai</div><div class="list-sub">68 salons · ₹42L GMV</div></div></div><span class="list-val">+14%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Bangalore</div><div class="list-sub">54 salons · ₹38L GMV</div></div></div><span class="list-val">+11%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Delhi NCR</div><div class="list-sub">47 salons · ₹35L GMV</div></div></div><span class="list-val">+9%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Pune</div><div class="list-sub">31 salons · ₹18L GMV</div></div></div><span class="list-val">+6%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Hyderabad</div><div class="list-sub">28 salons · ₹16L GMV</div></div></div><span class="list-val">+8%</span></div>
-          </div>
-          <div class="card card-analytics">
-            <div class="card-head"><h3>Most Booked Services</h3></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">1</span><div><div class="list-name">Haircut &amp; Styling</div><div class="list-sub">12,480 bookings</div></div></div><span class="list-val">32%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">2</span><div><div class="list-name">Hair Colour</div><div class="list-sub">6,240 bookings</div></div></div><span class="list-val">18%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank top">3</span><div><div class="list-name">Beard Grooming</div><div class="list-sub">5,890 bookings</div></div></div><span class="list-val">15%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank">4</span><div><div class="list-name">Facial &amp; Cleanup</div><div class="list-sub">4,120 bookings</div></div></div><span class="list-val">11%</span></div>
-            <div class="list-item"><div class="list-left"><span class="rank">5</span><div><div class="list-name">Spa &amp; Massage</div><div class="list-sub">3,450 bookings</div></div></div><span class="list-val">9%</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Quick Actions + Recent Tickets -->
-      <section class="mb">
-        <div class="section-title">Actions &amp; Support</div>
         <div class="grid g2">
-          <div class="card card-analytics">
-            <div class="card-head"><h3>Quick Actions</h3></div>
-            <div class="quick-grid">
-              <a href="salon-approvals.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-clipboard-check"/></svg></span> Approve Salon</a>
-              <a href="reports.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-circle-dollar"/></svg></span> Defaulter Report</a>
-              <a href="transactions.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-credit-card"/></svg></span> View Transactions</a>
-              <a href="support.html" class="quick-btn"><span class="qi"><svg class="svg-icon"><use href="#i-life-buoy"/></svg></span> Open Support</a>
+          <div>
+            <div class="section-title">Subscription</div>
+            <div class="card card-analytics">
+              <div class="card-head">
+                <h3>Current Plan — Growth 6M</h3>
+                <a href="organization.html#subscription" class="btn btn-outline btn-sm" style="text-decoration:none;">Manage</a>
+              </div>
+              <div class="stat-grid">
+                <div class="stat-box">
+                  <div class="s-label">Renewal date</div>
+                  <div class="s-val">Aug 11, 2026</div>
+                </div>
+                <div class="stat-box">
+                  <div class="s-label">Billing cycle</div>
+                  <div class="s-val">6 months</div>
+                </div>
+                <div class="stat-box">
+                  <div class="s-label">Payment method</div>
+                  <div class="s-val">•••• 4242</div>
+                </div>
+              </div>
+              <div style="margin-top:16px;">
+                <div class="renewal-row"><span>Last invoice INV-2048 — Paid ₹24,999</span><span style="color:var(--green);">Paid</span></div>
+                <div class="renewal-row"><span>Auto-renew attempt failed Jul 22</span><span style="color:var(--red);">Retry</span></div>
+              </div>
             </div>
           </div>
-          <div class="card card-analytics">
-            <div class="card-head"><h3>Recent Tickets</h3></div>
-            <div class="ticket-row">
-              <div><strong>Payment gateway timeout</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1042 · Luxe Curls Studio</span></div>
-              <span class="pill high">High</span>
-            </div>
-            <div class="ticket-row">
-              <div><strong>Branch limit exceeded</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1039 · Glow Studio</span></div>
-              <span class="pill medium">Medium</span>
-            </div>
-            <div class="ticket-row">
-              <div><strong>Subscription renewal failed</strong><br><span style="color:var(--muted);font-size:0.75rem;">TKT-1035 · The Groom Room</span></div>
-              <span class="pill medium">Medium</span>
+          <div>
+            <div class="section-title">In-app alerts</div>
+            <div class="card card-analytics" data-figma-layer="§4.16 In-app notifications">
+              <div class="alert-item danger">Invoice / payment failed — auto-renew attempt failed Jul 22 <a href="organization.html#invoices">Retry payment →</a></div>
+              <div class="alert-item warn">Branch request pending Super Admin approval (Andheri East) <a href="branches.html">View request →</a></div>
+              <div class="alert-item info">Branch approved — Koramangala is now Active <a href="branch-profile.html">Open branch →</a></div>
+              <div class="alert-item info">Plan change confirmed — Growth 6M is active <a href="organization.html#subscription">View plan →</a></div>
+              <div class="alert-item info">Subscription renewal reminder — renews in 18 days <a href="organization.html#subscription">Review →</a></div>
+              <div class="alert-item info">Ticket status update — TKT-2041 awaiting your confirmation <a href="ticket-detail.html?await=1">Open ticket →</a></div>
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- 7. Platform in-app banners (§4.16 — Super Admin configured; Admin consumes) -->
+      <section class="mb" data-figma-layer="§4.16 Platform banners">
+        <div class="section-title">Platform offers</div>
+        <aside class="promo-banner" data-figma-frame="BNR Upgrade" aria-label="Plan upgrade offer banner">
+          <div class="promo-copy">
+            <div class="promo-icon"><svg class="svg-icon"><use href="#i-sparkles"/></svg></div>
+            <div>
+              <strong>Upgrade to Pro — unlock 5 branches</strong>
+              <p>Plan upgrade offer · You're on Growth. Offer ends Jul 31.</p>
+            </div>
+          </div>
+          <a href="organization.html#subscription" class="btn btn-primary">View plans</a>
+        </aside>
+        <aside class="promo-banner" data-figma-frame="BNR Renewal" aria-label="Renewal reminder banner" style="background:linear-gradient(120deg,var(--surface-pink) 0%,var(--surface-magenta) 100%);">
+          <div class="promo-copy">
+            <div class="promo-icon"><svg class="svg-icon"><use href="#i-receipt"/></svg></div>
+            <div>
+              <strong>Renewal reminder — Growth 6M renews Aug 11</strong>
+              <p>Keep payment method current to avoid service interruption.</p>
+            </div>
+          </div>
+          <a href="organization.html#invoices" class="btn btn-outline">Review billing</a>
+        </aside>
+        <aside class="promo-banner" data-figma-frame="BNR Branch limit" aria-label="Branch limit warning banner" style="margin-bottom:0;background:linear-gradient(120deg,var(--surface-violet) 0%,var(--surface-lavender) 100%);">
+          <div class="promo-copy">
+            <div class="promo-icon"><svg class="svg-icon"><use href="#i-git-branch"/></svg></div>
+            <div>
+              <strong>Branch limit warning — 3 / 3 branches used</strong>
+              <p>New branch requests are blocked until you upgrade or a pending request is rejected.</p>
+            </div>
+          </div>
+          <a href="organization.html#subscription" class="btn btn-outline">See limit</a>
+        </aside>
       </section>
 
     </div>
   </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script>
-    (function () {
-      var canvas = document.getElementById('revenueChart');
-      if (!canvas || typeof Chart === 'undefined') return;
+<script>
+(function () {
+  function listHtml(items) {
+    return items.map(function (item, i) {
+      var rankClass = i < 3 ? 'rank top' : 'rank';
+      var valStyle = item.warn ? ' style="color:var(--amber);"' : '';
+      return '<div class="list-item"><div class="list-left"><span class="' + rankClass + '">' + (i + 1) + '</span><div><div class="list-name">' + item.name + '</div><div class="list-sub">' + item.sub + '</div></div></div><span class="list-val"' + valStyle + '>' + item.val + '</span></div>';
+    }).join('');
+  }
 
-      var ctx = canvas.getContext('2d');
-      var chartW = canvas.parentElement ? canvas.parentElement.clientWidth : 600;
-      var purple = '#7B00FF';
-      var violet = '#9B2FD9';
-      var lavender = '#C4B5FD';
-      var pink = '#FF03C8';
-      var muted = '#6B7A88';
-      var grid = 'rgba(196, 181, 253, 0.28)';
+  function money(n) {
+    if (!isFinite(n) || n <= 0) return '₹0';
+    if (n >= 100000) {
+      var l = n / 100000;
+      return '₹' + (l >= 10 ? l.toFixed(1) : l.toFixed(2).replace(/0$/, '')) + 'L';
+    }
+    if (n >= 1000) {
+      var k = n / 1000;
+      return '₹' + (Number.isInteger(k) ? k : k.toFixed(1)) + 'K';
+    }
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
 
-      var subFill = ctx.createLinearGradient(0, 0, 0, 260);
-      subFill.addColorStop(0, 'rgba(123, 0, 255, 0.16)');
-      subFill.addColorStop(0.45, 'rgba(155, 47, 217, 0.08)');
-      subFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  function moneyFull(n) {
+    if (!isFinite(n)) return '₹0';
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
 
-      var subStroke = ctx.createLinearGradient(0, 0, chartW, 0);
-      subStroke.addColorStop(0, purple);
-      subStroke.addColorStop(0.55, violet);
-      subStroke.addColorStop(1, lavender);
+  // Per-salon mock metrics — KPIs + day-ops. Selection sums only these.
+  var branches = {
+    bandra: {
+      label: 'Bandra West',
+      kpi: { apptsToday: 26, apptsWeek: 78, revToday: 31200, revWeek: 128000, revMonth: 510000, employees: 12 },
+      booked: 8, confirmed: 14, progress: 3, pending: 6,
+      upcoming: 19, noshows: 2,
+      services: [
+        { name: 'Haircut &amp; Styling', sub: '9 bookings', val: '₹12.6K', book: 9, rev: 12600 },
+        { name: 'Hair Colour', sub: '5 bookings', val: '₹9.8K', book: 5, rev: 9800 },
+        { name: 'Keratin Treatment', sub: '2 bookings', val: '₹8.4K', book: 2, rev: 8400 },
+        { name: 'Facial &amp; Cleanup', sub: '4 bookings', val: '₹4.2K', book: 4, rev: 4200 }
+      ],
+      staff: { present: 11, leave: 2, off: 1, unmarked: 2 }
+    },
+    koramangala: {
+      label: 'Koramangala',
+      kpi: { apptsToday: 16, apptsWeek: 50, revToday: 17400, revWeek: 86000, revMonth: 330000, employees: 9 },
+      booked: 5, confirmed: 8, progress: 2, pending: 1,
+      upcoming: 11, noshows: 1,
+      services: [
+        { name: 'Haircut &amp; Styling', sub: '6 bookings', val: '₹7.2K', book: 6, rev: 7200 },
+        { name: 'Beard Trim', sub: '4 bookings', val: '₹2.8K', book: 4, rev: 2800 },
+        { name: 'Hair Colour', sub: '3 bookings', val: '₹5.4K', book: 3, rev: 5400 },
+        { name: 'Spa Ritual', sub: '2 bookings', val: '₹4.0K', book: 2, rev: 4000 }
+      ],
+      staff: { present: 9, leave: 1, off: 2, unmarked: 1 }
+    },
+    andheri: {
+      label: 'Andheri East',
+      kpi: { apptsToday: 0, apptsWeek: 0, revToday: 0, revWeek: 0, revMonth: 0, employees: 0 },
+      booked: null, confirmed: null, progress: null, pending: null,
+      upcoming: 0, noshows: 0, pendingBranch: true,
+      services: [],
+      staff: { present: 0, leave: 0, off: 0, unmarked: 0 }
+    },
+    powai: {
+      label: 'Powai Studio',
+      kpi: { apptsToday: 0, apptsWeek: 0, revToday: 0, revWeek: 0, revMonth: 0, employees: 4 },
+      booked: 0, confirmed: 0, progress: 0, pending: 0,
+      upcoming: 0, noshows: 0, suspended: true,
+      services: [],
+      staff: { present: 0, leave: 0, off: 0, unmarked: 0 }
+    },
+    juhu: {
+      label: 'Juhu Wave',
+      kpi: { apptsToday: 11, apptsWeek: 34, revToday: 9800, revWeek: 42000, revMonth: 165000, employees: 6 },
+      booked: 3, confirmed: 6, progress: 1, pending: 1,
+      upcoming: 8, noshows: 0,
+      services: [
+        { name: 'Haircut &amp; Styling', sub: '4 bookings', val: '₹4.8K', book: 4, rev: 4800 },
+        { name: 'Blow Dry', sub: '3 bookings', val: '₹2.1K', book: 3, rev: 2100 },
+        { name: 'Hair Colour', sub: '2 bookings', val: '₹3.6K', book: 2, rev: 3600 },
+        { name: 'Manicure', sub: '2 bookings', val: '₹1.8K', book: 2, rev: 1800 }
+      ],
+      staff: { present: 5, leave: 0, off: 1, unmarked: 1 }
+    },
+    indiranagar: {
+      label: 'Indiranagar',
+      kpi: { apptsToday: 9, apptsWeek: 28, revToday: 8100, revWeek: 38000, revMonth: 148000, employees: 5 },
+      booked: 2, confirmed: 5, progress: 1, pending: 1,
+      upcoming: 6, noshows: 1,
+      services: [
+        { name: 'Haircut &amp; Styling', sub: '3 bookings', val: '₹3.6K', book: 3, rev: 3600 },
+        { name: 'Facial &amp; Cleanup', sub: '2 bookings', val: '₹2.4K', book: 2, rev: 2400 },
+        { name: 'Hair Colour', sub: '2 bookings', val: '₹3.2K', book: 2, rev: 3200 },
+        { name: 'Beard Trim', sub: '2 bookings', val: '₹1.4K', book: 2, rev: 1400 }
+      ],
+      staff: { present: 4, leave: 1, off: 0, unmarked: 1 }
+    },
+    colaba: {
+      label: 'Colaba Pier',
+      kpi: { apptsToday: 0, apptsWeek: 0, revToday: 0, revWeek: 0, revMonth: 0, employees: 0 },
+      booked: null, confirmed: null, progress: null, pending: null,
+      upcoming: 0, noshows: 0, pendingBranch: true,
+      services: [],
+      staff: { present: 0, leave: 0, off: 0, unmarked: 0 }
+    }
+  };
 
-      var commFill = ctx.createLinearGradient(0, 0, 0, 260);
-      commFill.addColorStop(0, 'rgba(255, 3, 200, 0.1)');
-      commFill.addColorStop(0.5, 'rgba(155, 47, 217, 0.05)');
-      commFill.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  var titleEl = document.getElementById('today-branch-title');
+  var kpiTitleEl = document.getElementById('org-kpis-title');
+  var branchesTitleEl = document.getElementById('branches-title');
+  var cards = document.querySelectorAll('#branch-cards .branch-card');
 
-      var commStroke = ctx.createLinearGradient(0, 0, chartW, 0);
-      commStroke.addColorStop(0, violet);
-      commStroke.addColorStop(1, pink);
+  function allIds() {
+    return Object.keys(branches);
+  }
 
-      new Chart(canvas, {
-        type: 'line',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-          datasets: [
-            {
-              label: 'Subscription Revenue',
-              data: [758, 825, 878, 945, 1065, 1148],
-              borderColor: subStroke,
-              backgroundColor: subFill,
-              borderWidth: 2.5,
-              fill: true,
-              tension: 0.35,
-              pointRadius: 0,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: purple
-            },
-            {
-              label: 'Commission Revenue',
-              data: [135, 150, 165, 180, 203, 225],
-              borderColor: commStroke,
-              backgroundColor: commFill,
-              borderWidth: 2.5,
-              fill: true,
-              tension: 0.35,
-              pointRadius: 0,
-              pointHoverRadius: 5,
-              pointHoverBackgroundColor: pink
-            }
+  function resolveIds(state) {
+    if (!state || state.all || !state.ids || !state.ids.length) return allIds();
+    return state.ids.filter(function (id) { return !!branches[id]; });
+  }
+
+  function isAll(state) {
+    return !state || state.all || !state.ids || !state.ids.length;
+  }
+
+  function sumKpi(ids) {
+    var out = { apptsToday: 0, apptsWeek: 0, revToday: 0, revWeek: 0, revMonth: 0, employees: 0 };
+    ids.forEach(function (id) {
+      var k = branches[id] && branches[id].kpi;
+      if (!k) return;
+      out.apptsToday += k.apptsToday;
+      out.apptsWeek += k.apptsWeek;
+      out.revToday += k.revToday;
+      out.revWeek += k.revWeek;
+      out.revMonth += k.revMonth;
+      out.employees += k.employees;
+    });
+    return out;
+  }
+
+  function setText(sel, text) {
+    var el = document.querySelector(sel);
+    if (el) el.textContent = text;
+  }
+
+  function renderKpis(ids, all) {
+    var k = sumKpi(ids);
+    setText('[data-kpi="appts-today"]', String(k.apptsToday));
+    setText('[data-kpi="appts-week"]', String(k.apptsWeek));
+    setText('[data-kpi="rev-today"]', moneyFull(k.revToday));
+    setText('[data-kpi="rev-week"]', money(k.revWeek));
+    setText('[data-kpi="rev-month"]', money(k.revMonth));
+    setText('[data-kpi="employees"]', String(k.employees));
+    if (all) {
+      setText('[data-kpi="employees-note"]', 'Across all branches');
+      if (kpiTitleEl) kpiTitleEl.textContent = 'Organization KPIs';
+    } else if (ids.length === 1) {
+      setText('[data-kpi="employees-note"]', 'At ' + branches[ids[0]].label);
+      if (kpiTitleEl) kpiTitleEl.textContent = 'Organization KPIs · ' + branches[ids[0]].label;
+    } else {
+      setText('[data-kpi="employees-note"]', 'Across ' + ids.length + ' selected salons');
+      if (kpiTitleEl) kpiTitleEl.textContent = 'Organization KPIs · ' + ids.length + ' salons';
+    }
+    // Renewals stay org-level (subscription is not branch-scoped)
+    setText('[data-kpi="renewals"]', '1');
+    setText('[data-kpi="renewals-note"]', 'Growth plan · Aug 11');
+  }
+
+  function filterBranchCards(ids, all) {
+    var visible = 0;
+    cards.forEach(function (card) {
+      var id = card.getAttribute('data-branch');
+      var show = all || ids.indexOf(id) !== -1;
+      card.hidden = !show;
+      if (show) visible += 1;
+      card.classList.toggle('is-active', show && !all);
+      card.setAttribute('aria-current', show && !all ? 'true' : 'false');
+      var label = card.querySelector('.branch-context-label');
+      if (label) label.hidden = all || !show;
+    });
+    if (branchesTitleEl) {
+      if (all) branchesTitleEl.textContent = 'Branches';
+      else if (ids.length === 1) branchesTitleEl.textContent = 'Branches · ' + branches[ids[0]].label;
+      else branchesTitleEl.textContent = 'Branches · ' + visible + ' selected';
+    }
+  }
+
+  function dash(n) {
+    return n === null || n === undefined ? '—' : String(n);
+  }
+
+  function aggregateToday(ids) {
+    if (ids.length === 1) {
+      var one = branches[ids[0]];
+      if (one.pendingBranch) {
+        return {
+          booked: '—', confirmed: '—', progress: '—', pending: '—',
+          note: 'Pending Approval — day ops unlock after Super Admin approval.',
+          services: [
+            { name: 'No services live', sub: 'Awaiting branch approval', val: '—' },
+            { name: 'Catalog draft', sub: 'Not published', val: '—' },
+            { name: 'Specialists', sub: 'Not assigned', val: '—' },
+            { name: 'Slots', sub: 'Not generated', val: '—' }
+          ],
+          staff: [
+            { name: 'Present', sub: 'N/A', val: '—' },
+            { name: 'On leave', sub: 'N/A', val: '—' },
+            { name: 'Weekly off', sub: 'N/A', val: '—' },
+            { name: 'Not marked', sub: 'N/A', val: '—' }
           ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: { mode: 'index', intersect: false },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: 'rgba(91, 33, 182, 0.94)',
-              titleFont: { family: 'DM Sans', weight: '600' },
-              bodyFont: { family: 'DM Sans' },
-              padding: 12,
-              cornerRadius: 10,
-              borderColor: 'rgba(255, 3, 200, 0.35)',
-              borderWidth: 1,
-              callbacks: {
-                label: function (item) {
-                  return item.dataset.label + ': ₹' + item.formattedValue + 'K';
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              grid: { display: false },
-              border: { display: false },
-              ticks: {
-                color: muted,
-                font: { family: 'DM Sans', size: 12, weight: '600' }
-              }
-            },
-            y: {
-              beginAtZero: true,
-              max: 1200,
-              grid: {
-                color: grid,
-                lineWidth: 1,
-                tickLength: 0,
-                borderDash: [4, 4]
-              },
-              border: { display: false },
-              ticks: {
-                color: muted,
-                font: { family: 'DM Sans', size: 11, weight: '500' },
-                callback: function (value) { return '₹' + value + 'K'; },
-                stepSize: 300
-              }
-            }
-          }
-        }
+        };
+      }
+      if (one.suspended) {
+        return {
+          booked: '0', confirmed: '0', progress: '0', pending: '0',
+          note: 'Branch suspended — bookings and slot generation are blocked.',
+          services: [
+            { name: 'No live bookings', sub: 'Suspended branch', val: '₹0' },
+            { name: 'Haircut &amp; Styling', sub: 'Catalog retained', val: '—' },
+            { name: 'Hair Colour', sub: 'Catalog retained', val: '—' },
+            { name: 'Keratin Treatment', sub: 'Catalog retained', val: '—' }
+          ],
+          staff: [
+            { name: 'Present', sub: 'Blocked', val: '0' },
+            { name: 'On leave', sub: 'Historical', val: '0' },
+            { name: 'Weekly off', sub: 'Historical', val: '0' },
+            { name: 'Not marked', sub: 'N/A', val: '0' }
+          ]
+        };
+      }
+      return {
+        booked: dash(one.booked), confirmed: dash(one.confirmed),
+        progress: dash(one.progress), pending: dash(one.pending),
+        note: 'Upcoming next 24h: ' + one.upcoming + ' · No-shows this week: ' + one.noshows,
+        services: one.services,
+        staff: [
+          { name: 'Present', sub: 'Marked in', val: String(one.staff.present) },
+          { name: 'On leave', sub: 'Approved', val: String(one.staff.leave) },
+          { name: 'Weekly off', sub: 'Scheduled', val: String(one.staff.off) },
+          { name: 'Not marked', sub: 'Attendance due', val: String(one.staff.unmarked), warn: one.staff.unmarked > 0 }
+        ]
+      };
+    }
+
+    var booked = 0, confirmed = 0, progress = 0, pending = 0, upcoming = 0, noshows = 0;
+    var staff = { present: 0, leave: 0, off: 0, unmarked: 0 };
+    var svcMap = {};
+    var live = 0;
+
+    ids.forEach(function (id) {
+      var b = branches[id];
+      if (!b || b.pendingBranch) return;
+      live += 1;
+      booked += b.booked || 0;
+      confirmed += b.confirmed || 0;
+      progress += b.progress || 0;
+      pending += b.pending || 0;
+      upcoming += b.upcoming || 0;
+      noshows += b.noshows || 0;
+      staff.present += b.staff.present;
+      staff.leave += b.staff.leave;
+      staff.off += b.staff.off;
+      staff.unmarked += b.staff.unmarked;
+      (b.services || []).forEach(function (s) {
+        if (!svcMap[s.name]) svcMap[s.name] = { name: s.name, book: 0, rev: 0 };
+        svcMap[s.name].book += s.book || 0;
+        svcMap[s.name].rev += s.rev || 0;
       });
-    })();
-  </script>
+    });
+
+    var services = Object.keys(svcMap).map(function (name) {
+      var s = svcMap[name];
+      return { name: name, sub: s.book + ' bookings', val: money(s.rev), book: s.book, rev: s.rev };
+    }).sort(function (a, b) { return b.rev - a.rev; }).slice(0, 4);
+
+    if (!services.length) {
+      services = [{ name: 'No live bookings', sub: 'Selected salons', val: '—' }];
+    }
+
+    return {
+      booked: String(booked), confirmed: String(confirmed),
+      progress: String(progress), pending: String(pending),
+      note: 'Selected salons next 24h: ' + upcoming + ' · No-shows this week: ' + noshows,
+      services: services,
+      staff: [
+        { name: 'Present', sub: 'Marked in', val: String(staff.present) },
+        { name: 'On leave', sub: 'Approved', val: String(staff.leave) },
+        { name: 'Weekly off', sub: 'Scheduled', val: String(staff.off) },
+        { name: 'Not marked', sub: 'Attendance due', val: String(staff.unmarked), warn: staff.unmarked > 0 }
+      ]
+    };
+  }
+
+  function renderToday(data, title) {
+    if (!titleEl || !data) return;
+    titleEl.textContent = title;
+    var root = document.getElementById('today-branch-body');
+    if (!root) return;
+    root.querySelector('[data-k="booked"]').textContent = data.booked;
+    root.querySelector('[data-k="confirmed"]').textContent = data.confirmed;
+    root.querySelector('[data-k="progress"]').textContent = data.progress;
+    root.querySelector('[data-k="pending"]').textContent = data.pending;
+    root.querySelector('[data-k="note"]').textContent = data.note;
+    root.querySelector('[data-k="services"]').innerHTML = listHtml(data.services);
+    root.querySelector('[data-k="staff"]').innerHTML = listHtml(data.staff);
+  }
+
+  function applyScope(state) {
+    var all = isAll(state);
+    var ids = resolveIds(state);
+
+    renderKpis(ids, all);
+    filterBranchCards(ids, all);
+
+    if (all) {
+      renderToday(aggregateToday(ids), 'Today across All Salons');
+      return;
+    }
+    if (ids.length === 1) {
+      renderToday(aggregateToday(ids), 'Today at ' + branches[ids[0]].label);
+      return;
+    }
+    var labels = ids.map(function (id) { return branches[id].label; });
+    var title = labels.length <= 2
+      ? 'Today — ' + labels.join(' + ')
+      : 'Today — ' + ids.length + ' selected salons';
+    renderToday(aggregateToday(ids), title);
+  }
+
+  cards.forEach(function (card) {
+    card.addEventListener('click', function (e) {
+      e.preventDefault();
+      var id = card.getAttribute('data-branch');
+      var root = document.querySelector('[data-branch-scope]');
+      if (root) {
+        var allInput = root.querySelector('input[data-branch-all]');
+        var branchInputs = root.querySelectorAll('input[data-branch-id]');
+        if (allInput) allInput.checked = false;
+        branchInputs.forEach(function (input) { input.checked = input.value === id; });
+        var checked = root.querySelector('input[data-branch-id][value="' + id + '"]');
+        if (checked) checked.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      var target = document.getElementById('today-at-branch');
+      if (target && target.scrollIntoView) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  document.addEventListener('glowtap:branch-scope', function (e) {
+    applyScope(e.detail);
+  });
+
+  applyScope({ all: true, ids: [] });
+})();
+</script>
+
+  <script src="assets/branch-scope.js"></script>
+  <script src="assets/branch-scope-filter.js"></script>
+  <script src="assets/hover-tips.js"></script>
 </body>
 </html>

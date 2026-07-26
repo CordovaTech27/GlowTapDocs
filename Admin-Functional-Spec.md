@@ -71,7 +71,7 @@ Dashboard (org-wide; branch selector)
 └── Support & Ticketing         (raise/view tickets to Super Admin)
 ```
 
-**Branch context:** Most operational modules require an active branch selection (from dashboard or branch switcher). Org-level modules (Organization Profile, Sub Admins, org-wide Reports, subscription upgrade) do not require branch context.
+**Branch context:** Operational modules use the **Active branch** control to filter screen data. Default is **All Salons** (org-wide). User can select one or multiple salons; the screen shows only those salons’ data. Org-level modules (Organization Profile, Sub Admins, plan change) do not use branch scope. See `wireframes_admin/BRANCH-CONTEXT.md`.
 
 ---
 
@@ -94,7 +94,7 @@ Dashboard (org-wide; branch selector)
 **Main Admin view — org-wide landing:**
 
 - **Branch cards / list:** All branches with name, city, status (Active, Pending Approval, Suspended), today's appointment count, today's revenue snapshot
-- **Branch selector:** Choose one branch to enter branch context for operational modules; selection persists until changed
+- **Branch selector (Active branch):** Filters what the current screen shows. Default is **All Salons** (org-wide data). User may select **one or multiple** salons; the screen then shows only those salons’ data. Selection persists until changed (see `wireframes_admin/BRANCH-CONTEXT.md`)
 - **Org KPIs:** Total appointments (today / week), total revenue (today / week / month), active employees across branches, upcoming renewals
 - **Alerts:** Pending branch approval requests, subscription expiry window, failed renewal payment, open support tickets, staff on leave today
 - **Quick actions:** Switch branch, view appointments, add employee, create service, raise support ticket

@@ -1,0 +1,145 @@
+/**
+ * GlowTap wireframe layout alignment — filters, KPIs, summary tiles.
+ * Loaded on all portal screens for consistent edges / centering.
+ */
+
+.filters-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filters-card .filter-row {
+  align-items: end;
+  gap: 12px 14px;
+}
+
+.filters-card .field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.filters-card .field .gt-sel,
+.filters-card .field .gt-dp-wrap,
+.filters-card .field .gt-tp-wrap,
+.filters-card .field .branch-multi {
+  width: 100%;
+}
+
+.filters-card .field.filter-submit label {
+  visibility: hidden;
+  user-select: none;
+}
+
+.filters-card .filter-row > .btn,
+.filters-card .field.filter-submit .btn {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+  align-self: end;
+  margin-bottom: 0;
+}
+
+.filters-card .field.filter-submit .btn {
+  width: 100%;
+}
+
+/* Equal columns when a row ends with a filter action */
+.filters-card .filter-row.filters-aligned {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0;
+}
+
+.filters-card .filter-row.filters-aligned + .filter-row.filters-aligned {
+  margin-top: 14px;
+}
+
+.filters-card .filter-row.filters-aligned-5 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(112px, 120px);
+  margin-top: 0;
+}
+
+.filters-card .filter-row.filters-aligned-5 + .filter-row.filters-aligned-5 {
+  margin-top: 14px;
+}
+
+.filters-card .filter-row.filters-eq-5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.filters-card .filter-row.filters-aligned-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.filters-card .filter-row.filters-aligned-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Centered summary / KPI tiles (simple label+value cards only) */
+.apt-widgets,
+.kpi-row {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.apt-widget,
+.kpi-tile,
+.stat-box,
+.summary-tile {
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.apt-widget {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 78px;
+}
+
+.kpi-tile,
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+}
+
+.apt-widget .s-label,
+.kpi-tile .s-label,
+.stat-box .s-label {
+  text-align: center;
+}
+
+.apt-widget .s-val,
+.kpi-tile .s-val,
+.stat-box .s-val {
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .filters-card .filter-row.filters-aligned,
+  .filters-card .filter-row.filters-aligned-5,
+  .filters-card .filter-row.filters-eq-5,
+  .filters-card .filter-row.filters-aligned-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .filters-card .field.filter-submit {
+    grid-column: 1 / -1;
+  }
+  .filters-card .field.filter-submit[aria-hidden="true"] {
+    display: none;
+  }
+}
