@@ -21,7 +21,7 @@ The same Active branch selection filters **all** branch-scoped screens (not only
 | **Employees / Leave / Attendance** | Staff / leave / attendance rows for selected salons |
 | **Services / Slots / Availability** | Catalog & config rows for selected salons |
 | **Appointments / History / Detail** | Bookings for selected salons |
-| **Transactions / Support / Reports** | Rows / tickets linked to selected salons (org-wide tickets stay visible) |
+| **Transactions / Support / Reports** | Rows / tickets / report KPIs & branch breakdown for selected salons (org-wide tickets stay visible; Subscription report stays org-level) |
 
 ### Example
 

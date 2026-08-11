@@ -1,0 +1,23 @@
+{
+  "name": "glowtap-html-to-figma",
+  "version": "1.0.0",
+  "description": "GlowTap HTML wireframes → Figma (Auto Layout + prototype), html.to.design-style capture + plugin import",
+  "type": "commonjs",
+  "bin": {
+    "glowtap-h2f": "./bin/glowtap-h2f.js"
+  },
+  "scripts": {
+    "capture": "node bin/glowtap-h2f.js capture --all",
+    "capture:subadmin": "node bin/glowtap-h2f.js capture --portal subadmin",
+    "capture:admin": "node bin/glowtap-h2f.js capture --portal admin",
+    "capture:super": "node bin/glowtap-h2f.js capture --portal super",
+    "gui": "node gui/server.js",
+    "postinstall": "node -e \"try{require('puppeteer')}catch(e){process.exit(0)}\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "puppeteer": "^24.10.0"
+  }
+}

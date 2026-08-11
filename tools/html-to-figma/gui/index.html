@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GlowTap HTML → Figma</title>
+  <style>
+    :root {
+      --bg: #0b0714;
+      --card: #161022;
+      --text: #f8f5ff;
+      --muted: #9b8fb0;
+      --line: rgba(123,0,255,.28);
+      --a: #7B00FF;
+      --b: #FF03C8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: Outfit, DM Sans, Segoe UI, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 10% -10%, rgba(123,0,255,.35), transparent 55%),
+        radial-gradient(700px 400px at 100% 0%, rgba(255,3,200,.2), transparent 50%),
+        var(--bg);
+      padding: 40px 20px 60px;
+    }
+    .wrap { max-width: 880px; margin: 0 auto; }
+    h1 { font-size: 2rem; margin: 0 0 8px; letter-spacing: -0.03em; }
+    .lead { color: var(--muted); margin: 0 0 28px; max-width: 60ch; }
+    .grid { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: linear-gradient(160deg, rgba(255,255,255,.04), transparent 40%), var(--card);
+      border: 1px solid var(--line); border-radius: 18px; padding: 18px;
+    }
+    .card h2 { margin: 0 0 8px; font-size: 1.05rem; }
+    .card p { margin: 0 0 14px; color: var(--muted); font-size: .9rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      padding: 4px 10px; border-radius: 999px; margin-bottom: 10px;
+      background: rgba(123,0,255,.18); color: #d8b4fe; border: 1px solid rgba(123,0,255,.3);
+    }
+    .pill.ok { background: rgba(52,211,153,.12); color: #6ee7b7; border-color: rgba(52,211,153,.3); }
+    .pill.miss { background: rgba(248,113,113,.1); color: #fca5a5; border-color: rgba(248,113,113,.25); }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .8rem;
+    }
+    pre {
+      background: #0a0612; border: 1px solid var(--line); border-radius: 12px;
+      padding: 14px 16px; overflow: auto; color: #e9d5ff; margin: 0 0 12px;
+    }
+    a.btn, button.btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 16px; border-radius: 999px; border: none; cursor: pointer;
+      font-weight: 700; text-decoration: none; color: #fff;
+      background: linear-gradient(135deg, var(--a), var(--b));
+    }
+    .steps { display: grid; gap: 12px; margin-top: 22px; }
+    .step { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+    .num {
+      width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center;
+      font-weight: 800; background: rgba(123,0,255,.2); border: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>HTML → Figma</h1>
+    <p class="lead">
+      Capture GlowTap wireframe folders into editable Figma Auto Layout frames with scroll regions and click prototypes —
+      same pipeline idea as html.to.design (DOM + computed styles → design nodes).
+    </p>
+
+    <div class="grid" id="status-grid">
+      <div class="card" data-portal="subadmin"><span class="pill">Checking…</span><h2>Sub Admin</h2><p>sub admin wireframe/</p></div>
+      <div class="card" data-portal="admin"><span class="pill">Checking…</span><h2>Salon Admin</h2><p>wireframes_admin/</p></div>
+      <div class="card" data-portal="super"><span class="pill">Checking…</span><h2>Super Admin</h2><p>wireframes/</p></div>
+    </div>
+
+    <div class="card steps" style="margin-top:16px;">
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h2>Capture (CLI)</h2>
+          <pre>cd tools/html-to-figma
+npm install
+npm run capture:subadmin
+# or: npm run capture   → all portals</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h2>Install Figma plugin (once)</h2>
+          <p>Figma Desktop → Plugins → Development → Import plugin from manifest…</p>
+          <pre>tools/html-to-figma/figma-plugin/manifest.json</pre>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h2>Import</h2>
+          <p>Keep this GUI running, open the plugin, click <strong>Import from localhost:3847</strong> — or drop <code>figma-export/&lt;portal&gt;/&lt;portal&gt;.gt2f-pack.json</code>.</p>
+          <p style="margin-top:12px;"><a class="btn" href="/api/pack?portal=subadmin" download="subadmin.gt2f-pack.json">Download Sub Admin pack</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    fetch('/api/status').then(r => r.json()).then(data => {
+      for (const [id, info] of Object.entries(data.portals || {})) {
+        const card = document.querySelector('[data-portal="' + id + '"]');
+        if (!card) continue;
+        const pill = card.querySelector('.pill');
+        if (info.hasPack || info.hasManifest) {
+          pill.textContent = 'Ready';
+          pill.classList.add('ok');
+        } else {
+          pill.textContent = 'Not captured';
+          pill.classList.add('miss');
+        }
+      }
+    }).catch(() => {});
+  </script>
+</body>
+</html>

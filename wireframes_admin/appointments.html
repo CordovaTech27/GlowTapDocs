@@ -1552,6 +1552,50 @@
     .cal-slot a { text-decoration: none; color: inherit; display: block; }
     .cal-slot strong { font-size: 0.84rem; }
     .cal-slot .meta { margin-top: 2px; }
+
+    .modal {
+      position: fixed; inset: 0; z-index: 11000; display: none;
+      align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal:target { display: flex; }
+    .modal-backdrop { position: absolute; inset: 0; background: rgba(30, 42, 50, 0.54); }
+    .modal-box {
+      position: relative; z-index: 1; width: min(480px, 92vw); max-height: 90vh;
+      background: var(--gradient-surface-purple); border-radius: 18px;
+      border: 1px solid var(--border); box-shadow: 0 24px 64px rgba(123, 0, 255, 0.15);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .modal-box.wide { width: min(560px, 94vw); }
+    .modal-head {
+      padding: 18px 24px 14px; border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+      background: rgba(255,255,255,0.45);
+    }
+    .modal-head h2 {
+      font-family: Outfit, DM Sans, sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--text);
+    }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 999px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.75); color: var(--muted); display: flex;
+      align-items: center; justify-content: center; text-decoration: none; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .modal-body {
+      flex: 1; overflow: auto; padding: 20px 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, var(--surface-neutral) 100%);
+      font-size: 0.9rem; color: var(--text); line-height: 1.5;
+    }
+    .modal-foot {
+      padding: 14px 24px 18px; border-top: 1px solid var(--border);
+      display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;
+      background: rgba(255,255,255,0.5);
+    }
+    .modal-foot .btn-danger {
+      background: linear-gradient(135deg, #FF03C8 0%, #B91C1C 100%);
+      color: #fff; border: none; text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 10px 16px; border-radius: 999px; font-weight: 700;
+    }
+
     .apt-widgets {
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
       margin-bottom: 18px; width: 100%; box-sizing: border-box;

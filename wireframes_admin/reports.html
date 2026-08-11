@@ -1781,6 +1781,7 @@
         <div class="page-head">
           <div>
             <h1>Reports</h1>
+            <p class="meta" style="margin-top:6px;" data-scope-meta="Showing reports for {scope}">Showing reports for All Salons</p>
           </div>
           <div class="page-actions">
             <div class="branch-switcher" data-branch-scope>
@@ -1835,10 +1836,10 @@
         </div>
       </div>
 
-      <div class="sa-note" style="margin-bottom:18px;">Advanced analytics may be gated by subscription entitlements.</div>
+      <div class="sa-note" style="margin-bottom:18px;">Figures follow <strong>Active branch</strong> (All Salons or selected salon). Open a report to see scoped KPIs and branch rows. Advanced analytics may be gated by subscription entitlements.</div>
 
       <section class="rpt-section" data-figma-layer="RPT-01 Org Reports">
-        <h2>Organization-level (Main Admin)</h2>
+        <h2 data-scope-title="Organization-level">Organization-level</h2>
         <div class="rpt-grid">
           <a class="rpt-card" href="report-view.html?r=earnings-summary"><strong>Earnings Summary</strong><span>Total revenue, net to salon, online vs offline, refunds</span><span class="chip">Org</span></a>
           <a class="rpt-card" href="report-view.html?r=earnings-branch"><strong>Earnings by Branch</strong><span>Comparative revenue per branch</span><span class="chip">Org</span></a>
@@ -1852,7 +1853,7 @@
       </section>
 
       <section class="rpt-section" data-figma-layer="RPT-01 Branch Reports">
-        <h2>Branch-level</h2>
+        <h2 data-scope-title="Branch-level">Branch-level</h2>
         <div class="rpt-grid">
           <a class="rpt-card" href="report-view.html?r=daily-summary"><strong>Branch Daily Summary</strong><span>Appointments, revenue, attendance for the day</span><span class="chip">Branch</span></a>
           <a class="rpt-card" href="report-view.html?r=branch-earnings"><strong>Branch Earnings</strong><span>Revenue breakdown for the branch</span><span class="chip">Branch</span></a>

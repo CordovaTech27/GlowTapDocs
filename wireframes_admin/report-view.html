@@ -1119,14 +1119,17 @@
     .screen-tag { color: var(--purple-dark); background: var(--surface-violet); border: 1px solid var(--border); }
 
     /* Salon Admin — branch context + platform banner */
+    /* Active branch = screen data scope (All Salons default, multi-select) */
     .branch-switcher {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       gap: 6px;
+      position: relative;
+      z-index: 60;
     }
 
-    .branch-switcher label {
+    .branch-switcher-label {
       display: block;
       font-size: 0.7rem;
       font-weight: 700;
@@ -1136,8 +1139,14 @@
       line-height: 1;
     }
 
-    .branch-switcher select {
-      min-width: 220px;
+    .branch-scope { position: relative; }
+
+    .branch-scope-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 240px;
       height: 40px;
       padding: 0 14px;
       border: 1px solid var(--border);
@@ -1148,12 +1157,99 @@
       color: var(--text);
       background: rgba(255, 255, 255, 0.85);
       box-shadow: var(--shadow-card);
+      cursor: pointer;
     }
 
-    .branch-switcher select:focus {
-      outline: none;
+    .branch-scope-trigger:hover,
+    .branch-scope-trigger[aria-expanded="true"] {
       border-color: rgba(123, 0, 255, 0.35);
       box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.08);
+    }
+
+    .branch-scope-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 200px;
+    }
+
+    .branch-scope-caret {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.55;
+    }
+
+    .branch-scope-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 280px;
+      max-width: 320px;
+      max-height: min(380px, 70vh);
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #FFFFFF;
+      box-shadow: 0 12px 32px rgba(26, 26, 46, 0.12);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .branch-scope-menu[hidden] {
+      display: none !important;
+    }
+
+    .branch-scope-list {
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 240px;
+      padding-right: 2px;
+      margin: 0 -2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(123, 0, 255, 0.35) transparent;
+    }
+
+    .branch-scope-list::-webkit-scrollbar { width: 6px; }
+    .branch-scope-list::-webkit-scrollbar-thumb {
+      background: rgba(123, 0, 255, 0.28);
+      border-radius: 999px;
+    }
+
+    .branch-scope-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 10px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .branch-scope-option:hover { background: var(--surface-purple); }
+
+    .branch-scope-option input {
+      width: 16px;
+      height: 16px;
+      accent-color: #7B00FF;
+      flex-shrink: 0;
+    }
+
+    .branch-scope-divider {
+      height: 1px;
+      margin: 4px 6px;
+      background: var(--border);
+    }
+
+    .branch-scope-hint {
+      margin: 8px 6px 2px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--muted);
+      line-height: 1.35;
     }
 
     .promo-banner {
@@ -1721,8 +1817,56 @@
           <div>
             <h1 id="rpt-title">Earnings Summary</h1>
             <div class="rpt-title-meta" id="rpt-desc">Total revenue, net to salon, online vs offline split, refund total</div>
+            <div class="meta" style="margin-top:6px;" data-scope-meta="Scope: {scope}">Scope: All Salons</div>
           </div>
           <div class="page-actions">
+            <div class="branch-switcher" data-branch-scope>
+              <span class="branch-switcher-label" id="branch-context-label">Active branch</span>
+              <div class="branch-scope">
+                <button type="button" class="branch-scope-trigger" id="branch-context" aria-labelledby="branch-context-label" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="branch-scope-text">All Salons</span>
+                  <svg class="branch-scope-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="branch-scope-menu" role="listbox" aria-multiselectable="true" hidden>
+                  <label class="branch-scope-option">
+                    <input type="checkbox" value="all" checked data-branch-all />
+                    <span>All Salons</span>
+                  </label>
+                  <div class="branch-scope-divider"></div>
+                  <div class="branch-scope-list">
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="bandra" data-branch-id />
+                      <span>Bandra West — Mumbai</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="koramangala" data-branch-id />
+                      <span>Koramangala — Bangalore</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="andheri" data-branch-id />
+                      <span>Andheri East — Pending Approval</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="powai" data-branch-id />
+                      <span>Powai Studio — Suspended</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="juhu" data-branch-id />
+                      <span>Juhu Wave — Mumbai</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="indiranagar" data-branch-id />
+                      <span>Indiranagar — Bangalore</span>
+                    </label>
+                    <label class="branch-scope-option">
+                      <input type="checkbox" value="colaba" data-branch-id />
+                      <span>Colaba Pier — Mumbai</span>
+                    </label>
+                  </div>
+                  <p class="branch-scope-hint">Report figures follow Active branch. Default is All Salons.</p>
+                </div>
+              </div>
+            </div>
             <a href="reports.html" class="btn btn-outline">All reports</a>
             <button type="button" class="btn btn-outline">Export CSV</button>
             <button type="button" class="btn btn-primary">Export Excel</button>
@@ -1734,7 +1878,7 @@
         <div class="filter-row filters-aligned">
           <div class="field"><label>From</label><input type="date" value="2026-07-01" /></div>
           <div class="field"><label>To</label><input type="date" value="2026-07-24" /></div>
-          <div class="field"><label>Branches</label>
+          <div class="field"><label>Branches <span class="meta" style="text-transform:none;letter-spacing:0;">(follows Active branch)</span></label>
             <div class="branch-multi" id="rpt-branch-multi">
               <button type="button" class="branch-multi-trigger" aria-expanded="false" aria-haspopup="listbox" id="rpt-branch-trigger">
                 <span id="rpt-branch-label">All salons (7)</span>
@@ -1755,7 +1899,7 @@
                   <label class="branch-multi-option"><input type="checkbox" value="indiranagar" data-branch-id /> Indiranagar</label>
                   <label class="branch-multi-option"><input type="checkbox" value="colaba" data-branch-id /> Colaba Pier</label>
                 </div>
-                <p class="branch-multi-hint">Scroll for more when the org has many salons. Pick one or many.</p>
+                <p class="branch-multi-hint">Synced with Active branch above. Changing either updates the report.</p>
               </div>
             </div>
           </div>
@@ -1764,19 +1908,19 @@
       </div>
 
       <div class="kpi-row" data-figma-layer="RPT-02 KPIs">
-        <div class="kpi-tile"><div class="s-label">Gross revenue</div><div class="s-val">₹4.2L</div></div>
-        <div class="kpi-tile"><div class="s-label">Net to salon</div><div class="s-val">₹3.8L</div></div>
-        <div class="kpi-tile"><div class="s-label">Online share</div><div class="s-val">68%</div></div>
-        <div class="kpi-tile"><div class="s-label">Refunds</div><div class="s-val">₹18.4k</div></div>
+        <div class="kpi-tile"><div class="s-label">Gross revenue</div><div class="s-val" data-rpt-kpi="gross">₹4.2L</div></div>
+        <div class="kpi-tile"><div class="s-label">Net to salon</div><div class="s-val" data-rpt-kpi="net">₹3.8L</div></div>
+        <div class="kpi-tile"><div class="s-label">Online share</div><div class="s-val" data-rpt-kpi="online">68%</div></div>
+        <div class="kpi-tile"><div class="s-label">Refunds</div><div class="s-val" data-rpt-kpi="refunds">₹18.4k</div></div>
       </div>
 
       <section class="mb" data-figma-layer="RPT-02 Table">
         <div class="card table-card">
           <div class="card-head" style="padding:16px 20px;border-bottom:1px solid var(--border);margin:0;">
             <h2 style="font-size:0.95rem;font-family:Outfit,DM Sans,sans-serif;" id="rpt-table-title">Breakdown</h2>
-            <span class="meta">1–24 Jul 2026 · 2 branches</span>
+            <span class="meta" id="rpt-table-meta" data-scope-meta="1–24 Jul 2026 · {scope}">1–24 Jul 2026 · All Salons</span>
           </div>
-          <div class="table-wrap">
+          <div class="table-wrap" data-scope-list>
             <table class="data-table">
               <thead>
                 <tr>
@@ -1788,33 +1932,68 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr data-branch="org" data-rpt-channel="online">
                   <td><strong>Online</strong></td>
-                  <td>186</td>
-                  <td>₹2.86L</td>
-                  <td>₹2.57L</td>
-                  <td>68%<div class="bar-simple"><i style="width:68%"></i></div></td>
+                  <td data-rpt-col="bookings">186</td>
+                  <td data-rpt-col="gross">₹2.86L</td>
+                  <td data-rpt-col="net">₹2.57L</td>
+                  <td data-rpt-col="share">68%<div class="bar-simple"><i style="width:68%"></i></div></td>
                 </tr>
-                <tr>
+                <tr data-branch="org" data-rpt-channel="offline">
                   <td><strong>Offline</strong></td>
-                  <td>92</td>
-                  <td>₹1.34L</td>
-                  <td>₹1.34L</td>
-                  <td>32%<div class="bar-simple"><i style="width:32%"></i></div></td>
+                  <td data-rpt-col="bookings">92</td>
+                  <td data-rpt-col="gross">₹1.34L</td>
+                  <td data-rpt-col="net">₹1.34L</td>
+                  <td data-rpt-col="share">32%<div class="bar-simple"><i style="width:32%"></i></div></td>
                 </tr>
-                <tr>
+                <tr data-branch="bandra">
                   <td><strong>Bandra West</strong></td>
                   <td>168</td>
                   <td>₹2.51L</td>
                   <td>₹2.28L</td>
                   <td>60%<div class="bar-simple"><i style="width:60%"></i></div></td>
                 </tr>
-                <tr>
+                <tr data-branch="koramangala">
                   <td><strong>Koramangala</strong></td>
                   <td>110</td>
                   <td>₹1.69L</td>
                   <td>₹1.52L</td>
                   <td>40%<div class="bar-simple"><i style="width:40%"></i></div></td>
+                </tr>
+                <tr data-branch="juhu">
+                  <td><strong>Juhu Wave</strong></td>
+                  <td>64</td>
+                  <td>₹0.98L</td>
+                  <td>₹0.88L</td>
+                  <td>23%<div class="bar-simple"><i style="width:23%"></i></div></td>
+                </tr>
+                <tr data-branch="indiranagar">
+                  <td><strong>Indiranagar</strong></td>
+                  <td>52</td>
+                  <td>₹0.81L</td>
+                  <td>₹0.73L</td>
+                  <td>19%<div class="bar-simple"><i style="width:19%"></i></div></td>
+                </tr>
+                <tr data-branch="andheri">
+                  <td><strong>Andheri East</strong></td>
+                  <td>0</td>
+                  <td>₹0</td>
+                  <td>₹0</td>
+                  <td>0%<div class="bar-simple"><i style="width:0%"></i></div></td>
+                </tr>
+                <tr data-branch="powai">
+                  <td><strong>Powai Studio</strong></td>
+                  <td>0</td>
+                  <td>₹0</td>
+                  <td>₹0</td>
+                  <td>0%<div class="bar-simple"><i style="width:0%"></i></div></td>
+                </tr>
+                <tr data-branch="colaba">
+                  <td><strong>Colaba Pier</strong></td>
+                  <td>0</td>
+                  <td>₹0</td>
+                  <td>₹0</td>
+                  <td>0%<div class="bar-simple"><i style="width:0%"></i></div></td>
                 </tr>
               </tbody>
             </table>
@@ -1853,14 +2032,6 @@
     document.title = 'GlowTap Salon Admin — ' + map[r][0];
   }
 
-  /* Report branch multi-select — handles N salons via scrollable list */
-  var root = document.getElementById('rpt-branch-multi');
-  if (!root) return;
-  var trigger = document.getElementById('rpt-branch-trigger');
-  var menu = document.getElementById('rpt-branch-menu');
-  var label = document.getElementById('rpt-branch-label');
-  var allCb = root.querySelector('[data-branch-all]');
-  var branchCbs = Array.prototype.slice.call(root.querySelectorAll('[data-branch-id]'));
   var LABELS = {
     bandra: 'Bandra West',
     koramangala: 'Koramangala',
@@ -1870,9 +2041,44 @@
     indiranagar: 'Indiranagar',
     colaba: 'Colaba Pier'
   };
-  var total = branchCbs.length;
+
+  var BRANCH_KPI = {
+    bandra: { gross: 251000, net: 228000, online: 0.72, refunds: 11000, bookings: 168, onlineBook: 121, offlineBook: 47 },
+    koramangala: { gross: 169000, net: 152000, online: 0.62, refunds: 7400, bookings: 110, onlineBook: 68, offlineBook: 42 },
+    juhu: { gross: 98000, net: 88000, online: 0.7, refunds: 3200, bookings: 64, onlineBook: 45, offlineBook: 19 },
+    indiranagar: { gross: 81000, net: 73000, online: 0.65, refunds: 2800, bookings: 52, onlineBook: 34, offlineBook: 18 },
+    andheri: { gross: 0, net: 0, online: 0, refunds: 0, bookings: 0, onlineBook: 0, offlineBook: 0 },
+    powai: { gross: 0, net: 0, online: 0, refunds: 0, bookings: 0, onlineBook: 0, offlineBook: 0 },
+    colaba: { gross: 0, net: 0, online: 0, refunds: 0, bookings: 0, onlineBook: 0, offlineBook: 0 }
+  };
+
+  function moneyL(n) {
+    if (!n) return '₹0';
+    if (n >= 100000) {
+      var l = n / 100000;
+      return '₹' + (Math.round(l * 100) / 100) + 'L';
+    }
+    if (n >= 1000) return '₹' + Math.round(n / 100) / 10 + 'K';
+    return '₹' + Math.round(n);
+  }
+
+  function moneyK(n) {
+    if (!n) return '₹0';
+    if (n >= 1000) return '₹' + (Math.round(n / 100) / 10) + 'k';
+    return '₹' + Math.round(n);
+  }
+
+  var multi = document.getElementById('rpt-branch-multi');
+  var trigger = document.getElementById('rpt-branch-trigger');
+  var menu = document.getElementById('rpt-branch-menu');
+  var label = document.getElementById('rpt-branch-label');
+  var allCb = multi && multi.querySelector('[data-branch-all]');
+  var branchCbs = multi ? Array.prototype.slice.call(multi.querySelectorAll('[data-branch-id]')) : [];
+  var syncing = false;
 
   function syncLabel() {
+    if (!label || !allCb) return;
+    var total = branchCbs.length;
     if (allCb.checked) {
       label.textContent = 'All salons (' + total + ')';
       return;
@@ -1887,34 +2093,164 @@
     else label.textContent = picked.length + ' salons';
   }
 
-  function openMenu(open) {
-    menu.hidden = !open;
-    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  function setMultiFromState(state) {
+    if (!allCb) return;
+    syncing = true;
+    if (!state || state.all || !state.ids || !state.ids.length) {
+      allCb.checked = true;
+      branchCbs.forEach(function (cb) { cb.checked = false; });
+    } else {
+      allCb.checked = false;
+      branchCbs.forEach(function (cb) {
+        cb.checked = state.ids.indexOf(cb.value) !== -1;
+      });
+    }
+    syncLabel();
+    syncing = false;
   }
 
-  trigger.addEventListener('click', function (e) {
-    e.stopPropagation();
-    openMenu(menu.hidden);
-  });
-  menu.addEventListener('click', function (e) { e.stopPropagation(); });
-  document.addEventListener('click', function () { openMenu(false); });
+  function readMultiState() {
+    if (!allCb || allCb.checked) return { all: true, ids: [] };
+    var ids = branchCbs.filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+    if (!ids.length) return { all: true, ids: [] };
+    return { all: false, ids: ids };
+  }
 
-  allCb.addEventListener('change', function () {
-    if (allCb.checked) branchCbs.forEach(function (cb) { cb.checked = false; });
-    syncLabel();
+  function persistAndBroadcast(state) {
+    try {
+      localStorage.setItem('glowtap.branchScope', JSON.stringify(state));
+    } catch (e) {}
+    var root = document.querySelector('[data-branch-scope]');
+    if (root && window.GlowTapBranchScope && typeof window.GlowTapBranchScope.applyExternal !== 'function') {
+      /* branch-scope.js will pick up via event */
+    }
+    // Mirror into Active branch UI if present
+    if (root) {
+      var allInput = root.querySelector('input[data-branch-all]');
+      var branchInputs = root.querySelectorAll('input[data-branch-id]');
+      if (allInput) allInput.checked = !!state.all;
+      branchInputs.forEach(function (input) {
+        input.checked = !state.all && state.ids.indexOf(input.value) !== -1;
+      });
+      var text = root.querySelector('.branch-scope-text');
+      if (text) {
+        if (state.all || !state.ids.length) text.textContent = 'All Salons';
+        else if (state.ids.length === 1) text.textContent = LABELS[state.ids[0]] || state.ids[0];
+        else text.textContent = state.ids.length + ' salons';
+      }
+      root.setAttribute('data-scope-all', state.all ? '1' : '0');
+      root.setAttribute('data-scope-ids', state.all ? '' : state.ids.join(','));
+    }
+    document.dispatchEvent(new CustomEvent('glowtap:branch-scope', { detail: state }));
+  }
+
+  function applyReportKpis(state) {
+    var ids = (!state || state.all || !state.ids.length) ? Object.keys(BRANCH_KPI) : state.ids;
+    var gross = 0, net = 0, refunds = 0, onlineBook = 0, offlineBook = 0, onlineW = 0, w = 0;
+    ids.forEach(function (id) {
+      var k = BRANCH_KPI[id];
+      if (!k) return;
+      gross += k.gross;
+      net += k.net;
+      refunds += k.refunds;
+      onlineBook += k.onlineBook;
+      offlineBook += k.offlineBook;
+      onlineW += k.online * k.gross;
+      w += k.gross;
+    });
+    var onlineShare = w ? Math.round((onlineW / w) * 100) : 0;
+    function set(key, val) {
+      document.querySelectorAll('[data-rpt-kpi="' + key + '"]').forEach(function (el) {
+        el.textContent = val;
+      });
+    }
+    set('gross', moneyL(gross));
+    set('net', moneyL(net));
+    set('online', onlineShare + '%');
+    set('refunds', moneyK(refunds));
+
+    var onlineRow = document.querySelector('tr[data-rpt-channel="online"]');
+    var offlineRow = document.querySelector('tr[data-rpt-channel="offline"]');
+    var totalBook = onlineBook + offlineBook;
+    if (onlineRow) {
+      onlineRow.querySelector('[data-rpt-col="bookings"]').textContent = String(onlineBook);
+      onlineRow.querySelector('[data-rpt-col="gross"]').textContent = moneyL(Math.round(gross * (onlineShare / 100)));
+      onlineRow.querySelector('[data-rpt-col="net"]').textContent = moneyL(Math.round(net * (onlineShare / 100)));
+      var shareCell = onlineRow.querySelector('[data-rpt-col="share"]');
+      shareCell.innerHTML = onlineShare + '%<div class="bar-simple"><i style="width:' + onlineShare + '%"></i></div>';
+    }
+    if (offlineRow) {
+      var offShare = totalBook ? Math.round((offlineBook / totalBook) * 100) : (100 - onlineShare);
+      offlineRow.querySelector('[data-rpt-col="bookings"]').textContent = String(offlineBook);
+      offlineRow.querySelector('[data-rpt-col="gross"]').textContent = moneyL(Math.round(gross * (offShare / 100)));
+      offlineRow.querySelector('[data-rpt-col="net"]').textContent = moneyL(Math.round(net * (offShare / 100)));
+      var shareCell2 = offlineRow.querySelector('[data-rpt-col="share"]');
+      shareCell2.innerHTML = offShare + '%<div class="bar-simple"><i style="width:' + offShare + '%"></i></div>';
+    }
+  }
+
+  document.addEventListener('glowtap:branch-scope', function (e) {
+    var state = e.detail || { all: true, ids: [] };
+    if (!syncing) setMultiFromState(state);
+    applyReportKpis(state);
   });
+
+  document.addEventListener('glowtap:branch-scope-applied', function (e) {
+    applyReportKpis(e.detail || { all: true, ids: [] });
+  });
+
+  if (trigger && menu) {
+    trigger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.hidden = !menu.hidden;
+      trigger.setAttribute('aria-expanded', menu.hidden ? 'false' : 'true');
+    });
+    menu.addEventListener('click', function (e) { e.stopPropagation(); });
+    document.addEventListener('click', function () {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  if (allCb) {
+    allCb.addEventListener('change', function () {
+      if (syncing) return;
+      if (allCb.checked) branchCbs.forEach(function (cb) { cb.checked = false; });
+      syncLabel();
+      persistAndBroadcast(readMultiState());
+    });
+  }
   branchCbs.forEach(function (cb) {
     cb.addEventListener('change', function () {
+      if (syncing) return;
       if (cb.checked) allCb.checked = false;
       else if (!branchCbs.some(function (c) { return c.checked; })) allCb.checked = true;
       syncLabel();
+      persistAndBroadcast(readMultiState());
     });
   });
-  syncLabel();
+
+  // Seed multi from storage before branch-scope.js boots (it will re-fire)
+  try {
+    var raw = localStorage.getItem('glowtap.branchScope');
+    if (raw) {
+      var data = JSON.parse(raw);
+      setMultiFromState(data && data.all ? { all: true, ids: [] } : data);
+      applyReportKpis(data && data.all ? { all: true, ids: [] } : (data || { all: true, ids: [] }));
+    } else {
+      syncLabel();
+      applyReportKpis({ all: true, ids: [] });
+    }
+  } catch (err) {
+    syncLabel();
+  }
 })();
 </script>
 
+  <script src="assets/branch-scope.js"></script>
+  <script src="assets/branch-scope-filter.js"></script>
   <script src="assets/hover-tips.js"></script>
   <script src="assets/date-picker.js"></script>
+  <script src="assets/select-enhance.js"></script>
 </body>
 </html>

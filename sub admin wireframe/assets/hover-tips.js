@@ -46,10 +46,6 @@
     'login.html': {
       title: 'Sign out',
       body: 'End this Sub Admin session.'
-    },
-    'change-password.html': {
-      title: 'Change Password',
-      body: 'Update your Sub Admin login password.'
     }
   };
 

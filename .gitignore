@@ -27,3 +27,8 @@ yarn-error.log*
 # Build output
 dist/
 build/
+
+# HTML→Figma capture output (large JSON/PNG packs)
+figma-export/
+tools/html-to-figma/node_modules/
+

@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "pdf": "node generate-pdfs.js",
+    "h2f:capture": "npm --prefix tools/html-to-figma run capture",
+    "h2f:capture:subadmin": "npm --prefix tools/html-to-figma run capture:subadmin",
+    "h2f:gui": "npm --prefix tools/html-to-figma run gui",
     "db:test": "node SchemaMaking/superAdmin/scripts/test-connection.js",
     "db:status": "node SchemaMaking/superAdmin/scripts/check-db-state.js",
     "db:migrate": "node SchemaMaking/superAdmin/scripts/apply-migration.js",

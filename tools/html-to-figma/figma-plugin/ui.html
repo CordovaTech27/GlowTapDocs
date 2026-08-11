@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GlowTap HTML → Figma</title>
+  <style>
+    :root {
+      --bg: #0f0b1a;
+      --card: #1a1329;
+      --text: #f5f0ff;
+      --muted: #a89bb8;
+      --accent: #7B00FF;
+      --accent2: #FF03C8;
+      --ok: #34d399;
+      --err: #f87171;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font: 13px/1.45 Inter, Segoe UI, sans-serif;
+      background: var(--bg); color: var(--text); padding: 16px;
+    }
+    h1 { font-size: 16px; margin: 0 0 4px; }
+    p { color: var(--muted); margin: 0 0 14px; }
+    .card {
+      background: var(--card); border: 1px solid rgba(123,0,255,.25);
+      border-radius: 12px; padding: 14px; margin-bottom: 12px;
+    }
+    label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    button, .file {
+      appearance: none; border: none; border-radius: 999px; padding: 10px 14px;
+      font-weight: 700; cursor: pointer; font-size: 12px;
+    }
+    button.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; width: 100%;
+    }
+    button.ghost {
+      background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.15); width: 100%; margin-top: 8px;
+    }
+    button:disabled { opacity: .5; cursor: wait; }
+    .row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .row label.chk { text-transform: none; font-weight: 600; color: var(--text); display: flex; gap: 8px; align-items: center; }
+    #status { margin-top: 10px; font-size: 12px; white-space: pre-wrap; }
+    #status.ok { color: var(--ok); }
+    #status.err { color: var(--err); }
+    ol { margin: 8px 0 0 18px; padding: 0; color: var(--muted); }
+    code { color: #e9d5ff; font-size: 11px; }
+    input[type=file] { width: 100%; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <h1>GlowTap HTML → Figma</h1>
+  <p>Import captured wireframes as Auto Layout frames + prototype links.</p>
+
+  <div class="card">
+    <label>1. Load local pack (CLI / GUI server running)</label>
+    <button class="primary" id="btnLocal">Import from localhost:3847</button>
+    <div class="row">
+      <label class="chk"><input type="radio" name="portal" value="subadmin" checked /> Sub Admin</label>
+      <label class="chk"><input type="radio" name="portal" value="admin" /> Admin</label>
+      <label class="chk"><input type="radio" name="portal" value="super" /> Super</label>
+    </div>
+  </div>
+
+  <div class="card">
+    <label>2. Or drop <code>.gt2f-pack.json</code> / <code>.gt2f.json</code></label>
+    <input type="file" id="file" accept=".json,application/json" />
+  </div>
+
+  <div class="card">
+    <label class="chk"><input type="checkbox" id="replace" /> Replace existing frames on page</label>
+    <button class="ghost" id="close">Close</button>
+    <div id="status"></div>
+  </div>
+
+  <div class="card">
+    <label>How to capture first</label>
+    <ol>
+      <li><code>cd tools/html-to-figma && npm i</code></li>
+      <li><code>npm run capture:subadmin</code> (or <code>capture --all</code>)</li>
+      <li>Keep <code>npm run gui</code> running for localhost import</li>
+    </ol>
+  </div>
+
+  <script>
+    const status = document.getElementById('status');
+    function setStatus(msg, kind) {
+      status.textContent = msg;
+      status.className = kind || '';
+    }
+
+    function portal() {
+      const el = document.querySelector('input[name=portal]:checked');
+      return el ? el.value : 'subadmin';
+    }
+
+    function importPack(pack) {
+      setStatus('Importing into Figma…');
+      parent.postMessage({
+        pluginMessage: {
+          type: 'import-pack',
+          pack,
+          replace: document.getElementById('replace').checked,
+        },
+      }, '*');
+    }
+
+    document.getElementById('btnLocal').onclick = async () => {
+      const url = 'http://localhost:3847/api/pack?portal=' + encodeURIComponent(portal());
+      setStatus('Fetching ' + url + ' …');
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' — start: npm run gui');
+        const pack = await res.json();
+        importPack(pack);
+      } catch (e) {
+        setStatus(String(e.message || e), 'err');
+      }
+    };
+
+    document.getElementById('file').onchange = async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      try {
+        const text = await f.text();
+        const pack = JSON.parse(text);
+        importPack(pack);
+      } catch (err) {
+        setStatus('Invalid JSON: ' + err.message, 'err');
+      }
+    };
+
+    document.getElementById('close').onclick = () => {
+      parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+    };
+
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      if (!msg) return;
+      if (msg.type === 'done') {
+        setStatus(
+          'Done\nPage: ' + msg.result.page +
+          '\nScreens: ' + msg.result.screens +
+          '\nPrototype links: ' + msg.result.prototypeLinks,
+          'ok'
+        );
+      }
+      if (msg.type === 'error') setStatus(msg.message, 'err');
+    };
+  </script>
+</body>
+</html>
