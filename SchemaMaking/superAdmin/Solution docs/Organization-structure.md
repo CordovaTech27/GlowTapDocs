@@ -500,12 +500,14 @@ Intra-state billing uses CGST + SGST; inter-state uses IGST.
 
 ### 6.2 Seeded plans
 
-| Plan | Max branches | Amount (INR) | Example org |
-|------|-------------|--------------|-------------|
-| Starter | 1 | ₹999 | Enrich Salon |
-| Growth | 3 | ₹2,499 | Looks Salon & Spa |
-| Professional | 10 | ₹4,999 | Glamour Zone |
-| Enterprise | 999 (unlimited) | ₹9,999 | Naturals Salon Partners |
+| Plan | Max branches | Amount (INR / month) | Example org |
+|------|-------------:|---------------------:|-------------|
+| Basic | 1 | ₹999 | Enrich Salon |
+| Growth | 5 | ₹2,999 | Looks Salon & Spa |
+| Pro | 999 (unlimited) | ₹4,999 | Glamour Zone / Naturals |
+
+Feature comparison is stored as JSON in `subscription_plans.description`:
+`{ tagline, billing, features: [{ name, desc, isAllowed }] }`.
 
 Branch limits are read via join: `org_bill_structure.subscription_plan_id → subscription_plans.max_branches`.
 
@@ -542,7 +544,6 @@ Super Admin configures discounts against a **plan**, a **billing cycle**, or **b
 | Yearly — 10% off all plans | *(any)* | Yearly | PERCENTAGE | 10 |
 | Half Yearly — 5% off | *(any)* | Half Yearly | PERCENTAGE | 5 |
 | Growth Yearly — ₹500 off | Growth | Yearly | FIXED_AMOUNT | 500 |
-| Enterprise Yearly — ₹1,000 off | Enterprise | Yearly | FIXED_AMOUNT | 1000 |
 
 **Fee calculation (app logic):**
 
@@ -607,16 +608,16 @@ Append-only audit log — same idea as `org_status_actions`. **Current** plan/cy
 
 **Rule:** `from_subscription_plan_id` ≠ `to_subscription_plan_id`. Classify `UPGRADE` / `DOWNGRADE` by plan tier (e.g. `max_branches` or catalog `amount`).
 
-**Seeded example:** Looks Salon & Spa — `Starter` → `Growth` (`UPGRADE`).
+**Seeded example:** Looks Salon & Spa — `Basic` → `Growth` (`UPGRADE`).
 
 ### 8.3 Seeded billing examples
 
 | Organization | Plan | Cycle | Payment | Commission |
 |--------------|------|-------|---------|------------|
 | Looks Salon & Spa | Growth | Monthly | NACH | 8% |
-| Glamour Zone | Professional | Quarterly | Bank transfer | 6% |
-| Enrich Salon | Starter | Monthly | UPI | 5% |
-| Naturals Salon Partners | Enterprise | Yearly | NACH | 4% |
+| Glamour Zone | Pro | Quarterly | Bank transfer | 6% |
+| Enrich Salon | Basic | Monthly | UPI | 5% |
+| Naturals Salon Partners | Pro | Yearly | NACH | 4% |
 | Blush & Bloom | Growth | Monthly | UPI | 7% |
 
 ### 8.4 Invoices, payments & credits (salon → GlowTap)
@@ -735,9 +736,9 @@ Assigned via `org_bill_structure.billing_cycle_id → billing_cycles.id`.
 | Org | City | Status | Plan | Branches | Commission |
 |-----|------|--------|------|----------|------------|
 | **Looks Salon & Spa** | Mumbai | ACTIVE | Growth | 3 (2 live, 1 pending) | 8.00% |
-| **Glamour Zone** | New Delhi | **SUSPENDED** (non-payment) | Professional | 2 (1 live, 1 pending) | 6.50% |
-| **Enrich Salon** | Bengaluru | ACTIVE | Starter | 1 (at plan limit) | 10.00% |
-| **Naturals Salon Partners** | Chennai | ACTIVE | Enterprise | 4 (3 live, 1 pending) | 5.00% |
+| **Glamour Zone** | New Delhi | **SUSPENDED** (non-payment) | Pro | 2 (1 live, 1 pending) | 6.50% |
+| **Enrich Salon** | Bengaluru | ACTIVE | Basic | 1 (at plan limit) | 10.00% |
+| **Naturals Salon Partners** | Chennai | ACTIVE | Pro | 4 (3 live, 1 pending) | 5.00% |
 | **Blush & Bloom** | Pune | **PENDING** | Growth | 1 (awaiting org approval) | 5.00% |
 
 ### 7.2 Branch inventory (11 total)

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Interconnected performance seed (additive; keeps demo data).
  *
  * NOTE: Prefer scripts/bulk-seed-perf-append.js to ADD more orgs onto an

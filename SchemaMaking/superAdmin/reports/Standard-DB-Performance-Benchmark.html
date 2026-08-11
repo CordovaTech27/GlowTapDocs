@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>GlowTap — Standard Database Performance Benchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root { --ink:#12201c; --muted:#5c726a; --line:#d7e3dc; --teal:#0f766e; --bg:#f3f8f5; }
+  body {
+    margin:0; font-family:"IBM Plex Sans",system-ui,sans-serif; color:var(--ink);
+    background: radial-gradient(900px 500px at 0% 0%, rgba(20,184,166,.12), transparent 55%),
+                linear-gradient(180deg,#eef6f2,#f7faf8 40%,#eef2f0);
+    line-height:1.5;
+  }
+  .wrap { max-width:980px; margin:0 auto; padding:32px 20px 64px; }
+  .hero {
+    background: linear-gradient(135deg,#0b3d38,#0f766e 55%,#0e7490);
+    color:#f4fffb; border-radius:22px; padding:32px 36px; margin-bottom:24px;
+    box-shadow:0 12px 40px rgba(18,32,28,.12);
+  }
+  .hero .brand { font-family:Sora,sans-serif; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; opacity:.85; }
+  .hero h1 { font-family:Sora,sans-serif; margin:8px 0 6px; font-size:clamp(1.6rem,3vw,2.2rem); letter-spacing:-.02em; }
+  .hero p { margin:0; opacity:.9; font-size:.95rem; }
+  .card {
+    background:#fff; border:1px solid var(--line); border-radius:18px; padding:22px 26px;
+    box-shadow:0 10px 30px rgba(18,32,28,.06); margin-bottom:18px;
+  }
+  h2 { font-family:Sora,sans-serif; font-size:1.15rem; margin:1.4rem 0 .6rem; color:var(--teal); }
+  h3 { font-family:Sora,sans-serif; font-size:1rem; margin:1.1rem 0 .45rem; }
+  p,li { font-size:.95rem; }
+  hr { border:none; border-top:1px solid var(--line); margin:1.5rem 0; }
+  table { width:100%; border-collapse:collapse; font-size:.86rem; margin:10px 0 16px; }
+  th,td { border-bottom:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:var(--bg); color:var(--muted); font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; font-family:Sora,sans-serif; }
+  td:nth-child(n+2) { text-align:right; font-variant-numeric:tabular-nums; }
+  th:nth-child(n+2) { text-align:right; }
+  blockquote {
+    margin:12px 0; padding:12px 16px; border-left:4px solid var(--teal);
+    background:var(--bg); border-radius:0 12px 12px 0; color:var(--muted);
+  }
+  code { background:#e7f2ee; padding:1px 6px; border-radius:6px; font-size:.88em; }
+  pre { background:#10241f; color:#d7ebe4; padding:14px; border-radius:12px; overflow:auto; }
+  footer { text-align:center; color:var(--muted); font-size:.8rem; margin-top:28px; }
+  .chip {
+    display:inline-block; margin:6px 6px 0 0; padding:4px 10px; border-radius:999px;
+    background:rgba(255,255,255,.16); font-size:.78rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="brand">GlowTap</div>
+    <h1>Standard Database Performance Benchmark</h1>
+    <p>Industry latency SLOs &amp; standard test-data volumes for OLTP SaaS (bookings / dashboards / writes).</p>
+    <div>
+      <span class="chip">Industry norms only</span>
+      <span class="chip">6 Aug 2026</span>
+      <span class="chip">Postgres OLTP</span>
+    </div>
+  </header>
+  <div class="card">
+
+<p><strong>Document type:</strong> Industry reference (latency SLOs &amp; test-data norms)  </p>
+<p><strong>Audience:</strong> Product / engineering / stakeholders  </p>
+<p><strong>Date:</strong> 6 August 2026  </p>
+<p><strong>Scope:</strong> OLTP SaaS databases (bookings, dashboards, writes) — <em>not</em> warehouse/BI-only workloads  </p>
+<hr/>
+<h2>1. Purpose</h2>
+<p>This document defines <strong>industry-typical</strong> performance targets and <strong>dataset sizes</strong> used when bench­marking transactional Postgres-style applications (e.g. salon/booking platforms).</p>
+<p>Use it to answer:</p>
+<p>1. What latency range is considered <strong>good</strong>?</p>
+<p>2. How much data should performance tests usually load?</p>
+<hr/>
+<h2>2. Latency standards (what “good” means)</h2>
+<p>Times below are <strong>end-to-end query / API latency</strong> (includes network when remote). Prefer <strong>p95</strong> for product SLOs; <strong>avg/p50</strong> for developer benches.</p>
+<h3>2.1 By query type</h3>
+<table><thead><tr>
+<th>Workload</th>
+<th>Excellent (local / same-region)</th>
+<th>Good</th>
+<th>Acceptable</th>
+<th>Investigate</th>
+</tr></thead><tbody>
+<tr>
+<td>Point lookup (PK / unique key)</td>
+<td>≤ 5–10 ms</td>
+<td>≤ 20–40 ms</td>
+<td>≤ 100–150 ms</td>
+<td>&gt; 200–300 ms</td>
+</tr>
+<tr>
+<td>Filtered list (paginated, indexed)</td>
+<td>≤ 20 ms</td>
+<td>≤ 50 ms</td>
+<td>≤ 150–200 ms</td>
+<td>&gt; 300–500 ms</td>
+</tr>
+<tr>
+<td>Multi-table join (screen-sized)</td>
+<td>≤ 50 ms</td>
+<td>≤ 100 ms</td>
+<td>≤ 250–300 ms</td>
+<td>&gt; 500 ms</td>
+</tr>
+<tr>
+<td>Single-row INSERT / UPDATE</td>
+<td>≤ 10–20 ms</td>
+<td>≤ 50–80 ms</td>
+<td>≤ 200–300 ms</td>
+<td>&gt; 500 ms</td>
+</tr>
+<tr>
+<td>Analytics / platform rollup (interactive)</td>
+<td>≤ 200 ms</td>
+<td>≤ 1 s</td>
+<td>≤ 2–3 s</td>
+<td>&gt; 3–5 s</td>
+</tr>
+<tr>
+<td>Analytics (batch / offline OK)</td>
+<td>—</td>
+<td>&amp;lt; 30 s</td>
+<td>&amp;lt; 5 min</td>
+<td>job design</td>
+</tr>
+</tbody></table>
+<h3>2.2 Product-level API SLOs (common industry practice)</h3>
+<table><thead><tr>
+<th>Metric</th>
+<th>Typical target</th>
+</tr></thead><tbody>
+<tr>
+<td>Interactive API <strong>p50</strong></td>
+<td>&amp;lt; 100 ms</td>
+</tr>
+<tr>
+<td>Interactive API <strong>p95</strong></td>
+<td>&amp;lt; 200–300 ms</td>
+</tr>
+<tr>
+<td>Interactive API <strong>p99</strong></td>
+<td>&amp;lt; 500 ms – 1 s</td>
+</tr>
+<tr>
+<td>User-blocking UI</td>
+<td>Keep under ~2–3 s; else async / pagination</td>
+</tr>
+</tbody></table>
+<h3>2.3 Local vs remote (serverless) interpretation</h3>
+<table><thead><tr>
+<th>Environment</th>
+<th>What the number mostly reflects</th>
+<th>How to read it</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>Local Postgres</strong></td>
+<td>Disk / CPU / planner / indexes</td>
+<td>Treat <strong>≤ 10–40 ms</strong> lookups as strong</td>
+</tr>
+<tr>
+<td><strong>Remote serverless (e.g. Neon)</strong></td>
+<td><strong>WAN RTT + pooler +</strong> DB work</td>
+<td>Lookups often sit <strong>~80–150 ms</strong> even when the plan is fine</td>
+</tr>
+</tbody></table>
+<p>A remote lookup of ~100 ms can be <strong>healthy</strong> if EXPLAIN shows index use and local equivalent is a few ms.  </p>
+<p>A local lookup of ~100 ms on an indexed unique key usually means <strong>missing index, cold disk, or bad plan</strong>.</p>
+<h3>2.4 Thumb-rule “good range” (quick reference)</h3>
+<li><strong>Lookups / lists / writes (local):</strong> aim <strong>under ~50 ms</strong>; celebrate <strong>under ~10–20 ms</strong>  </li>
+<li><strong>Lookups (remote same-ish region):</strong> aim <strong>under ~100–150 ms</strong>  </li>
+<li><strong>Dashboard aggregates (interactive):</strong> aim <strong>under ~200–500 ms</strong>; move heavier work async  </li>
+<li><strong>Anything interactive over ~2–3 s:</strong> redesign query, add index, or make it a background job  </li>
+<hr/>
+<h2>3. Standard test-data volumes</h2>
+<p>Industry performance tests are only trustworthy when hot tables are large enough that <strong>wrong plans hurt</strong>.</p>
+<h3>3.1 Recommended dataset sizes</h3>
+<table><thead><tr>
+<th>Stage</th>
+<th>Hot-table rows (approx.)</th>
+<th>Overall DB</th>
+<th>Use</th>
+</tr></thead><tbody>
+<tr>
+<td>CI / smoke</td>
+<td>10K – 100K</td>
+<td>&amp;lt; 500 MB</td>
+<td>Correctness + basic timings</td>
+</tr>
+<tr>
+<td><strong>Engineering perf (standard)</strong></td>
+<td><strong>1M – 10M+</strong> on hottest tables</td>
+<td><strong>~1–10 GB</strong></td>
+<td>Index, join, pagination realism</td>
+</tr>
+<tr>
+<td>Pre-prod / capacity</td>
+<td>10M – 100M+ or production clone</td>
+<td>tens of GB+</td>
+<td>Peak load, degradation</td>
+</tr>
+<tr>
+<td>Analytics / warehouse</td>
+<td>Months–years of history</td>
+<td>Separate store often</td>
+<td>Reporting SLOs, not OLTP</td>
+</tr>
+</tbody></table>
+<h3>3.2 Content rules (not just row count)</h3>
+<p>1. <strong>Skew:</strong> some orgs/branches huge, some tiny (like production).  </p>
+<p>2. <strong>Indexes under load:</strong> unique keys, <code>(org_id, status)</code>, date ranges, FKs used in joins.  </p>
+<p>3. <strong>Writes included:</strong> INSERT / UPDATE / DELETE — not SELECT-only.  </p>
+<p>4. <strong>Warm-up + N rounds:</strong> discard first run; report avg / p50 / p95 from measured rounds.  </p>
+<p>5. <strong>Separate environments:</strong> local CPU baseline vs remote RTT-inclusive baseline — never mix grades blindly.</p>
+<h3>3.3 Rule of thumb</h3>
+<blockquote>
+<p>If a full table scan of the hottest table would still finish in tens of ms, the dataset is <strong>too small</strong> for a serious OLTP perf claim.</p>
+</blockquote>
+<p>Use at least <strong>~1 million rows</strong> on primary transactional tables (appointments, attendance, ledger, etc.) for release-grade perf statements.</p>
+<hr/>
+<h2>4. Methodology checklist (industry-aligned)</h2>
+<table><thead><tr>
+<th>Step</th>
+<th>Standard practice</th>
+</tr></thead><tbody>
+<tr>
+<td>Warm-up</td>
+<td>1 discarded run (cache / cold start)</td>
+</tr>
+<tr>
+<td>Measured rounds</td>
+<td>3–10 timed runs (5 is common)</td>
+</tr>
+<tr>
+<td>Reported stats</td>
+<td>min, avg, <strong>p50</strong>, <strong>p95</strong>, max</td>
+</tr>
+<tr>
+<td>Grades</td>
+<td>Band by workload type (lookup vs write vs analytics)</td>
+</tr>
+<tr>
+<td>Environment note</td>
+<td>CPU/RAM or compute CU, region, DB size, row counts</td>
+</tr>
+<tr>
+<td>Plans</td>
+<td>Spot-check with <code>EXPLAIN (ANALYZE, BUFFERS)</code> on outliers</td>
+</tr>
+<tr>
+<td>Pass criteria</td>
+<td>No interactive path in <strong>Investigate</strong> band on target env</td>
+</tr>
+</tbody></table>
+<hr/>
+<h2>5. Grading bands used in GlowTap suite (aligned to §2)</h2>
+<p>These bands encode the industry ranges above for automated reports.</p>
+<h3>Local PostgreSQL</h3>
+<table><thead><tr>
+<th>Grade</th>
+<th>Lookups / joins</th>
+<th>Writes</th>
+<th>Analytics</th>
+</tr></thead><tbody>
+<tr>
+<td>EXCELLENT</td>
+<td>≤ 10 ms</td>
+<td>≤ 20 ms</td>
+<td>≤ 200 ms</td>
+</tr>
+<tr>
+<td>GOOD</td>
+<td>≤ 40 ms</td>
+<td>≤ 80 ms</td>
+<td>≤ 1 s</td>
+</tr>
+<tr>
+<td>ACCEPTABLE</td>
+<td>≤ 150 ms</td>
+<td>≤ 300 ms</td>
+<td>≤ 3 s</td>
+</tr>
+<tr>
+<td>SLOW</td>
+<td>above</td>
+<td>above</td>
+<td>above</td>
+</tr>
+</tbody></table>
+<h3>Neon / remote serverless</h3>
+<table><thead><tr>
+<th>Grade</th>
+<th>Lookups / joins</th>
+<th>Writes</th>
+<th>Analytics</th>
+</tr></thead><tbody>
+<tr>
+<td>EXCELLENT</td>
+<td>≤ 30 ms</td>
+<td>≤ 50 ms</td>
+<td>≤ 500 ms</td>
+</tr>
+<tr>
+<td>GOOD</td>
+<td>≤ 100 ms</td>
+<td>≤ 200 ms</td>
+<td>≤ 2 s</td>
+</tr>
+<tr>
+<td>ACCEPTABLE</td>
+<td>≤ 400 ms</td>
+<td>≤ 800 ms</td>
+<td>≤ 5 s</td>
+</tr>
+<tr>
+<td>SLOW</td>
+<td>above</td>
+<td>above</td>
+<td>above</td>
+</tr>
+</tbody></table>
+<hr/>
+<h2>6. One-page summary</h2>
+<table><thead><tr>
+<th>Question</th>
+<th>Standard answer</th>
+</tr></thead><tbody>
+<tr>
+<td>Is my lookup “good”?</td>
+<td>Local <strong>&amp;lt; 20–40 ms</strong>; remote <strong>&amp;lt; 100–150 ms</strong> usually yes</td>
+</tr>
+<tr>
+<td>Is my interactive dashboard “good”?</td>
+<td>Prefer <strong>&amp;lt; 200–500 ms</strong>; treat &amp;gt; 2–3 s as a product problem</td>
+</tr>
+<tr>
+<td>How much data to load for real perf?</td>
+<td><strong>1M–10M+ rows</strong> on hot tables; full suite often <strong>multi-GB</strong></td>
+</tr>
+<tr>
+<td>Smoke data enough?</td>
+<td>No — fine for CI, not for “we’re production-ready” claims</td>
+</tr>
+<tr>
+<td>What to publish?</td>
+<td>Environment, dataset size, rounds, <strong>p95</strong>, grade mix, top slow queries</td>
+</tr>
+</tbody></table>
+<hr/>
+<h2>7. References (practice basis)</h2>
+<li>Interactive SaaS API SLO practice: p95 often in the <strong>200–300 ms</strong> band  </li>
+<li>Postgres OLTP tuning focus: index-backed point lookups and keyset pagination under <strong>millions of rows</strong>  </li>
+<li>Serverless Postgres: separate <strong>RTT</strong> from <strong>execution time</strong> via EXPLAIN vs client wall clock  </li>
+<li>GlowTap automated suite: <code>SchemaMaking/superAdmin/scripts/run-perf-benchmark.js</code></li>
+<hr/>
+<p><em>GlowTap · Standard Database Performance Benchmark · industry norms only · Confidential</em></p>
+  </div>
+  <footer>GlowTap · Standard Database Performance Benchmark · Confidential</footer>
+</div>
+</body>
+</html>

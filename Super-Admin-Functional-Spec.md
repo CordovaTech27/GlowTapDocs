@@ -101,16 +101,17 @@ The landing page provides an at-a-glance view of platform health:
 4. Super Admin reviews and **Approves** or **Rejects** (with reason)
 5. On approval, branch becomes active and visible in the salon's admin portal
 
-**Branch Limit by Subscription Plan (example tiers):**
+**Branch Limit by Subscription Plan:**
 
-| Plan | Max Branches | Notes |
-|------|-------------|-------|
-| Starter (1M) | 1 | Single location only |
-| Growth (6M) | 3 | Small multi-location |
-| Professional (12M) | 10 | Mid-size chains |
-| Enterprise (24M) | Unlimited | Custom pricing |
+| Plan | Monthly price | Max Branches | Notes |
+|------|--------------:|-------------:|-------|
+| Basic | ₹999 | 1 | Core reporting, staff, export |
+| Growth | ₹2,999 | 5 | Multi-branch analytics (up to 5 outlets), marketing ROI, priority support |
+| Pro | ₹4,999 | Unlimited | AI forecasts/churn, segmentation, custom reports, dedicated AM |
 
-> Plan-branch limits are configurable in Subscription Management. Existing salons are grandfathered or prompted to upgrade when limits change.
+> Feature list for each plan is stored as JSON in `subscription.subscription_plans.description`:
+> `{ tagline, billing, features: [{ name, desc, isAllowed }] }`.
+> Branch hard-cap is `max_branches` (Pro uses 999 = unlimited in product UI).
 
 ---
 

@@ -503,10 +503,21 @@ effective_max = COALESCE(
 
 ```json
 {
-  "STARTER_1M":  { "max_branches": 1,  "features": ["appointments", "services"] },
-  "GROWTH_6M":   { "max_branches": 3,  "features": ["appointments", "services", "manpower"] },
-  "PRO_12M":     { "max_branches": 10, "features": ["appointments", "services", "manpower", "analytics_basic"] },
-  "ENTERPRISE_24M": { "max_branches": -1, "features": ["all"] }
+  "BASIC":  {
+    "amount": 999,
+    "max_branches": 1,
+    "features": ["revenue_dashboard", "appointment_analytics", "reports", "no_show_analysis", "export", "staff_management"]
+  },
+  "GROWTH": {
+    "amount": 2999,
+    "max_branches": 5,
+    "features": ["BASIC+", "customer_growth", "top_services", "peak_hours", "stylist_performance", "product_sales", "marketing_roi", "priority_support"]
+  },
+  "PRO": {
+    "amount": 4999,
+    "max_branches": -1,
+    "features": ["GROWTH+", "retention", "segmentation", "ai_recommendations", "churn", "forecasting", "custom_reports", "dedicated_am"]
+  }
 }
 ```
 

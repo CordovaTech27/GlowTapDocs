@@ -1,21 +1,66 @@
 {
-  "generatedAt": "2026-08-03T21:26:17.962Z",
+  "generatedAt": "2026-08-03T21:43:15.988Z",
   "rounds": 5,
+  "runtime": {
+    "client": {
+      "role": "benchmark_client",
+      "hostname": "LAPTOP-0VLFL1GO",
+      "os": "Windows_NT 10.0.19045",
+      "platform": "win32",
+      "arch": "x64",
+      "cpu_model": "Intel(R) Core(TM) i5-9300H CPU @ 2.40GHz",
+      "cpu_cores_logical": 8,
+      "cpu_avg_mhz": 2400,
+      "ram_total_gb": 7.9,
+      "ram_free_gb": 0.6,
+      "node": "v24.15.0"
+    },
+    "postgres": {
+      "role": "postgres_server",
+      "target": "neon",
+      "host": "ep-lively-shadow-ao184du5-pooler.c-2.ap-southeast-1.aws.neon.tech",
+      "database": "superAdmin",
+      "server_version": "18.4 (df16b3c)",
+      "shared_buffers": "230MB",
+      "shared_buffers_pretty": "230 MB",
+      "work_mem": "4096 kB",
+      "effective_cache_size": "6553MB",
+      "effective_cache_size_pretty": "6553 MB",
+      "max_parallel_workers": "8",
+      "max_parallel_workers_per_gather": "2",
+      "max_connections": "901",
+      "server_addr": "::1/128",
+      "server_port": 5432,
+      "provider": "Neon Postgres (serverless)",
+      "region": "ap-southeast-1",
+      "project_id": "little-feather-12343290",
+      "endpoint_id": "ep-lively-shadow-ao184du5",
+      "allocated_cpus": 1,
+      "estimated_cu": 0.25,
+      "estimated_ram_gb": 1,
+      "estimated_lfc_gb": 0.75,
+      "compute_estimate_basis": "shared_buffers ≈ 230 MB",
+      "cpu_model": "Neon compute (~0.25 CU)",
+      "cpu_cores_logical": 1,
+      "ram_total_gb": 1,
+      "note": "Hardware metrics are Neon compute (not the laptop that ran Node). num_cpus()=1 (fractional CUs may round up). Wall-clock timings still include client↔Neon WAN RTT."
+    }
+  },
   "inventory": {
     "db_size": {
-      "bytes": "485572608",
+      "bytes": "485605376",
       "pretty": "463 MB"
     },
     "schemas": [
       {
         "schema": "appointments",
         "tables": 4,
-        "bytes": "183271424"
+        "bytes": "183296000"
       },
       {
         "schema": "employee",
         "tables": 9,
-        "bytes": "129802240"
+        "bytes": "129810432"
       },
       {
         "schema": "rms",
@@ -62,13 +107,13 @@
       {
         "relation": "appointments.appointments",
         "live_rows": "170003",
-        "bytes": "148086784",
+        "bytes": "148111360",
         "size": "141 MB"
       },
       {
         "relation": "employee.attendance_records",
         "live_rows": "272002",
-        "bytes": "79519744",
+        "bytes": "79527936",
         "size": "76 MB"
       },
       {
@@ -214,11 +259,14 @@
       "perf_orgs": 850,
       "perf_branches": 4250,
       "perf_appointments": 170000,
+      "perf_status_events": 170000,
       "perf_eut": 63750,
       "perf_attendance": 272000,
       "perf_employees": 34000,
-      "perf_services": 42500
-    }
+      "perf_services": 42500,
+      "perf_row_sum": 757350
+    },
+    "approx_live_rows": 1211629
   },
   "benchmarks": [
     {
@@ -228,14 +276,14 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 83.37,
-        "avg_ms": 89.22,
-        "p50_ms": 86.27,
-        "p95_ms": 97,
-        "p99_ms": 97,
-        "max_ms": 97
+        "min_ms": 99.76,
+        "avg_ms": 103.95,
+        "p50_ms": 100.4,
+        "p95_ms": 114.34,
+        "p99_ms": 114.34,
+        "max_ms": 114.34
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "GET appointment by booking_number (unique)",
@@ -244,14 +292,14 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 90.16,
-        "avg_ms": 97.34,
-        "p50_ms": 94.37,
-        "p95_ms": 110.71,
-        "p99_ms": 110.71,
-        "max_ms": 110.71
+        "min_ms": 118.64,
+        "avg_ms": 122.72,
+        "p50_ms": 120.66,
+        "p95_ms": 133.57,
+        "p99_ms": 133.57,
+        "max_ms": 133.57
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "GET EUT by transaction_ref (unique)",
@@ -260,12 +308,12 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 85.8,
-        "avg_ms": 111.53,
-        "p50_ms": 121.2,
-        "p95_ms": 134.7,
-        "p99_ms": 134.7,
-        "max_ms": 134.7
+        "min_ms": 89.84,
+        "avg_ms": 115.14,
+        "p50_ms": 119.29,
+        "p95_ms": 135.2,
+        "p99_ms": 135.2,
+        "max_ms": 135.2
       },
       "grade": "ACCEPTABLE"
     },
@@ -276,14 +324,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 89.55,
-        "avg_ms": 93.49,
-        "p50_ms": 94.48,
-        "p95_ms": 95.36,
-        "p99_ms": 95.36,
-        "max_ms": 95.36
+        "min_ms": 97.53,
+        "avg_ms": 107.93,
+        "p50_ms": 102.01,
+        "p95_ms": 132.17,
+        "p99_ms": 132.17,
+        "max_ms": 132.17
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "List appointments for branch (30-day window)",
@@ -292,14 +340,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 93.41,
-        "avg_ms": 94.51,
-        "p50_ms": 94.36,
-        "p95_ms": 95.28,
-        "p99_ms": 95.28,
-        "max_ms": 95.28
+        "min_ms": 99.97,
+        "avg_ms": 115.24,
+        "p50_ms": 115.62,
+        "p95_ms": 141.05,
+        "p99_ms": 141.05,
+        "max_ms": 141.05
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "Filter appointments by status + org",
@@ -308,14 +356,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 87.35,
-        "avg_ms": 93.6,
-        "p50_ms": 94.42,
-        "p95_ms": 100.69,
-        "p99_ms": 100.69,
-        "max_ms": 100.69
+        "min_ms": 109.62,
+        "avg_ms": 119.78,
+        "p50_ms": 120.77,
+        "p95_ms": 130.28,
+        "p99_ms": 130.28,
+        "max_ms": 130.28
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "Attendance for employee (date range)",
@@ -324,14 +372,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 85.75,
-        "avg_ms": 92.81,
-        "p50_ms": 93.97,
-        "p95_ms": 95.71,
-        "p99_ms": 95.71,
-        "max_ms": 95.71
+        "min_ms": 99.64,
+        "avg_ms": 111.81,
+        "p50_ms": 109.99,
+        "p95_ms": 130.5,
+        "p99_ms": 130.5,
+        "max_ms": 130.5
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "EUT success list for org (recent)",
@@ -340,14 +388,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 94.23,
-        "avg_ms": 95.01,
-        "p50_ms": 95.15,
-        "p95_ms": 95.41,
-        "p99_ms": 95.41,
-        "max_ms": 95.41
+        "min_ms": 99.58,
+        "avg_ms": 114.1,
+        "p50_ms": 110.35,
+        "p95_ms": 139.99,
+        "p99_ms": 139.99,
+        "max_ms": 139.99
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "Appointment + service + specialist join",
@@ -356,14 +404,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 93.73,
-        "avg_ms": 98.56,
-        "p50_ms": 98.89,
-        "p95_ms": 101.23,
-        "p99_ms": 101.23,
-        "max_ms": 101.23
+        "min_ms": 109.63,
+        "avg_ms": 118.02,
+        "p50_ms": 110.72,
+        "p95_ms": 130.76,
+        "p99_ms": 130.76,
+        "max_ms": 130.76
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "EUT + appointment + branch join",
@@ -372,14 +420,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 91.87,
-        "avg_ms": 96.2,
-        "p50_ms": 94.2,
-        "p95_ms": 102.67,
-        "p99_ms": 102.67,
-        "max_ms": 102.67
+        "min_ms": 112.54,
+        "avg_ms": 123.94,
+        "p50_ms": 121.98,
+        "p95_ms": 138.22,
+        "p99_ms": 138.22,
+        "max_ms": 138.22
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "Branch services with specialist count",
@@ -388,14 +436,14 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 91.1,
-        "avg_ms": 95.52,
-        "p50_ms": 94.9,
-        "p95_ms": 99.69,
-        "p99_ms": 99.69,
-        "max_ms": 99.69
+        "min_ms": 108,
+        "avg_ms": 117.62,
+        "p50_ms": 111.87,
+        "p95_ms": 134.37,
+        "p99_ms": 134.37,
+        "max_ms": 134.37
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "Invoice + line items + payment join",
@@ -404,14 +452,14 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 97.04,
-        "avg_ms": 99.42,
-        "p50_ms": 99.88,
-        "p95_ms": 100.83,
-        "p99_ms": 100.83,
-        "max_ms": 100.83
+        "min_ms": 106.37,
+        "avg_ms": 118.69,
+        "p50_ms": 123.47,
+        "p95_ms": 126.65,
+        "p99_ms": 126.65,
+        "max_ms": 126.65
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "Org revenue rollup (EUT sum/count by day)",
@@ -420,12 +468,12 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 88.04,
-        "avg_ms": 94.59,
-        "p50_ms": 95.86,
-        "p95_ms": 98.51,
-        "p99_ms": 98.51,
-        "max_ms": 98.51
+        "min_ms": 109.75,
+        "avg_ms": 118.03,
+        "p50_ms": 119.11,
+        "p95_ms": 129.71,
+        "p99_ms": 129.71,
+        "max_ms": 129.71
       },
       "grade": "EXCELLENT"
     },
@@ -436,12 +484,12 @@
       "rowCount": 5,
       "stats": {
         "n": 5,
-        "min_ms": 189.54,
-        "avg_ms": 250.44,
-        "p50_ms": 199.14,
-        "p95_ms": 401,
-        "p99_ms": 401,
-        "max_ms": 401
+        "min_ms": 186.84,
+        "avg_ms": 199.59,
+        "p50_ms": 200.77,
+        "p95_ms": 205.91,
+        "p99_ms": 205.91,
+        "max_ms": 205.91
       },
       "grade": "EXCELLENT"
     },
@@ -452,12 +500,12 @@
       "rowCount": 20,
       "stats": {
         "n": 5,
-        "min_ms": 169.02,
-        "avg_ms": 186.08,
-        "p50_ms": 171.56,
-        "p95_ms": 246.86,
-        "p99_ms": 246.86,
-        "max_ms": 246.86
+        "min_ms": 164.64,
+        "avg_ms": 203.89,
+        "p50_ms": 199.54,
+        "p95_ms": 277.58,
+        "p99_ms": 277.58,
+        "max_ms": 277.58
       },
       "grade": "EXCELLENT"
     },
@@ -468,12 +516,12 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 89.31,
-        "avg_ms": 94.75,
-        "p50_ms": 95.11,
-        "p95_ms": 99.71,
-        "p99_ms": 99.71,
-        "max_ms": 99.71
+        "min_ms": 119.17,
+        "avg_ms": 124.74,
+        "p50_ms": 121.45,
+        "p95_ms": 140.78,
+        "p99_ms": 140.78,
+        "max_ms": 140.78
       },
       "grade": "EXCELLENT"
     },
@@ -484,12 +532,12 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 89.65,
-        "avg_ms": 94.69,
-        "p50_ms": 90.21,
-        "p95_ms": 104.09,
-        "p99_ms": 104.09,
-        "max_ms": 104.09
+        "min_ms": 99.87,
+        "avg_ms": 114.92,
+        "p50_ms": 108.94,
+        "p95_ms": 140.24,
+        "p99_ms": 140.24,
+        "max_ms": 140.24
       },
       "grade": "EXCELLENT"
     },
@@ -500,12 +548,12 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 86.77,
-        "avg_ms": 100.33,
-        "p50_ms": 94.38,
-        "p95_ms": 129.99,
-        "p99_ms": 129.99,
-        "max_ms": 129.99
+        "min_ms": 102.27,
+        "avg_ms": 105.99,
+        "p50_ms": 104.61,
+        "p95_ms": 113.06,
+        "p99_ms": 113.06,
+        "max_ms": 113.06
       },
       "grade": "EXCELLENT"
     },
@@ -516,12 +564,12 @@
       "rowCount": 50,
       "stats": {
         "n": 5,
-        "min_ms": 110.56,
-        "avg_ms": 133.74,
-        "p50_ms": 112.88,
-        "p95_ms": 219.95,
-        "p99_ms": 219.95,
-        "max_ms": 219.95
+        "min_ms": 129.96,
+        "avg_ms": 159.99,
+        "p50_ms": 139.48,
+        "p95_ms": 249.55,
+        "p99_ms": 249.55,
+        "max_ms": 249.55
       },
       "grade": "EXCELLENT"
     },
@@ -532,12 +580,12 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 89.95,
-        "avg_ms": 95.47,
-        "p50_ms": 95.54,
-        "p95_ms": 101.6,
-        "p99_ms": 101.6,
-        "max_ms": 101.6
+        "min_ms": 111.07,
+        "avg_ms": 119.29,
+        "p50_ms": 119.59,
+        "p95_ms": 128.46,
+        "p99_ms": 128.46,
+        "max_ms": 128.46
       },
       "grade": "GOOD"
     },
@@ -548,12 +596,12 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 89.71,
-        "avg_ms": 94.05,
-        "p50_ms": 95.11,
-        "p95_ms": 95.23,
-        "p99_ms": 95.23,
-        "max_ms": 95.23
+        "min_ms": 93.12,
+        "avg_ms": 118.37,
+        "p50_ms": 126.92,
+        "p95_ms": 133.68,
+        "p99_ms": 133.68,
+        "max_ms": 133.68
       },
       "grade": "GOOD"
     },
@@ -564,12 +612,12 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 88.18,
-        "avg_ms": 91.87,
-        "p50_ms": 90.92,
-        "p95_ms": 96.6,
-        "p99_ms": 96.6,
-        "max_ms": 96.6
+        "min_ms": 119.9,
+        "avg_ms": 125.97,
+        "p50_ms": 122.63,
+        "p95_ms": 136.44,
+        "p99_ms": 136.44,
+        "max_ms": 136.44
       },
       "grade": "GOOD"
     },
@@ -580,12 +628,12 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 89.64,
-        "avg_ms": 94.27,
-        "p50_ms": 92.76,
-        "p95_ms": 99.33,
-        "p99_ms": 99.33,
-        "max_ms": 99.33
+        "min_ms": 101.14,
+        "avg_ms": 112.08,
+        "p50_ms": 114.64,
+        "p95_ms": 120.09,
+        "p99_ms": 120.09,
+        "max_ms": 120.09
       },
       "grade": "GOOD"
     },
@@ -596,12 +644,12 @@
       "rowCount": 0,
       "stats": {
         "n": 5,
-        "min_ms": 93.17,
-        "avg_ms": 95.07,
-        "p50_ms": 95.51,
-        "p95_ms": 96.58,
-        "p99_ms": 96.58,
-        "max_ms": 96.58
+        "min_ms": 99.71,
+        "avg_ms": 113.38,
+        "p50_ms": 110.07,
+        "p95_ms": 125.05,
+        "p99_ms": 125.05,
+        "max_ms": 125.05
       },
       "grade": "GOOD"
     },
@@ -612,14 +660,14 @@
       "rowCount": 1,
       "stats": {
         "n": 5,
-        "min_ms": 91.38,
-        "avg_ms": 99.5,
-        "p50_ms": 96.91,
-        "p95_ms": 116.21,
-        "p99_ms": 116.21,
-        "max_ms": 116.21
+        "min_ms": 98.47,
+        "avg_ms": 103.64,
+        "p50_ms": 99.91,
+        "p95_ms": 120.36,
+        "p99_ms": 120.36,
+        "max_ms": 120.36
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     },
     {
       "name": "End-user booking history by end_user_ref",
@@ -628,52 +676,52 @@
       "rowCount": 17,
       "stats": {
         "n": 5,
-        "min_ms": 87.85,
-        "avg_ms": 94.61,
-        "p50_ms": 94.98,
-        "p95_ms": 100.35,
-        "p99_ms": 100.35,
-        "max_ms": 100.35
+        "min_ms": 119.49,
+        "avg_ms": 132.96,
+        "p50_ms": 125.37,
+        "p95_ms": 164.91,
+        "p99_ms": 164.91,
+        "max_ms": 164.91
       },
-      "grade": "GOOD"
+      "grade": "ACCEPTABLE"
     }
   ],
   "explains": [
     {
       "name": "Branch appointments 45d",
-      "planning_ms": 0.136,
-      "execution_ms": 0.042,
+      "planning_ms": 0.135,
+      "execution_ms": 0.055,
       "total_cost": 158.15,
       "actual_rows": 0,
       "node": "Limit",
-      "wall_ms": 96.48
+      "wall_ms": 105.89
     },
     {
       "name": "Org EUT daily rollup",
-      "planning_ms": 0.12,
-      "execution_ms": 0.04,
+      "planning_ms": 0.104,
+      "execution_ms": 0.045,
       "total_cost": 275.23,
       "actual_rows": 0,
       "node": "Aggregate",
-      "wall_ms": 94.02
+      "wall_ms": 121.13
     },
     {
       "name": "Top branches by GMV",
-      "planning_ms": 15.869,
-      "execution_ms": 65.641,
+      "planning_ms": 16.332,
+      "execution_ms": 57.437,
       "total_cost": 11826.75,
       "actual_rows": 20,
       "node": "Sort",
-      "wall_ms": 188.61
+      "wall_ms": 198.28
     },
     {
       "name": "Appointment+service+specialist",
-      "planning_ms": 5.645,
-      "execution_ms": 0.05,
+      "planning_ms": 5.673,
+      "execution_ms": 0.049,
       "total_cost": 854.59,
       "actual_rows": 0,
       "node": "Limit",
-      "wall_ms": 103.13
+      "wall_ms": 149.89
     }
   ]
 }

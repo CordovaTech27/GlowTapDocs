@@ -150,7 +150,7 @@
     display: flex; align-items: center; gap: 18px; margin-top: 8px;
   }
   .ring {
-    --p: 80;
+    --p: 55;
     width: 88px; height: 88px; border-radius: 50%;
     background: conic-gradient(var(--teal-bright) calc(var(--p) * 1%), #dbe7e2 0);
     display: grid; place-items: center; flex-shrink: 0;
@@ -181,24 +181,54 @@
   <header class="hero">
     <div class="brand">GlowTap</div>
     <h1>Database Performance</h1>
-    <p class="meta">Neon Postgres · 4/8/2026, 2:56:17 am IST · 5 measured rounds · DB 463 MB</p>
+    <p class="meta">Neon Postgres · 4/8/2026, 3:13:15 am IST · 5 measured rounds · DB 463 MB</p>
     <div class="hero-row">
       <span class="chip">26 workloads</span>
       <span class="chip">7 excellent</span>
       <span class="chip">Latency suite</span>
-      <span class="chip">Health score 80%</span>
+      <span class="chip">Health score 55%</span>
     </div>
   </header>
 
   <section class="kpis">
     <div class="kpi"><div class="label">Tests</div><div class="value">26</div><div class="sub">timed queries</div></div>
     <div class="kpi"><div class="label">Excellent</div><div class="value" style="color:var(--emerald)">7</div></div>
-    <div class="kpi"><div class="label">Good</div><div class="value" style="color:var(--teal)">18</div></div>
-    <div class="kpi"><div class="label">Acceptable</div><div class="value" style="color:var(--amber)">1</div></div>
+    <div class="kpi"><div class="label">Good</div><div class="value" style="color:var(--teal)">5</div></div>
+    <div class="kpi"><div class="label">Acceptable</div><div class="value" style="color:var(--amber)">14</div></div>
     <div class="kpi"><div class="label">Slow</div><div class="value" style="color:var(--rose)">0</div></div>
     <div class="kpi"><div class="label">DB size</div><div class="value" style="font-size:1.25rem">463 MB</div></div>
-    
+    <div class="kpi"><div class="label">Live rows</div><div class="value" style="font-size:1.15rem">12,11,629</div><div class="sub">approx · all schemas</div></div>
+    <div class="kpi"><div class="label">Neon CU</div><div class="value" style="font-size:1.25rem">~0.25</div><div class="sub">~1 GB RAM · 1 CPU</div></div>
   </section>
+
+  <div class="grid3" style="margin-bottom:14px">
+    <div class="card">
+      <h2>Neon compute</h2>
+      <p class="hint">Database host resources (not the laptop runner)</p>
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Provider</td><td>Neon Postgres (serverless)</td></tr><tr><td>Region</td><td>ap-southeast-1</td></tr><tr><td>Project ID</td><td>little-feather-12343290</td></tr><tr><td>Endpoint ID</td><td>ep-lively-shadow-ao184du5</td></tr><tr><td>Host</td><td>ep-lively-shadow-ao184du5-pooler.c-2.ap-southeast-1.aws.neon.tech</td></tr><tr><td>Estimated CU</td><td>~0.25 CU</td></tr><tr><td>Estimated RAM</td><td>~1 GB</td></tr><tr><td>Local file cache</td><td>~0.75 GB</td></tr><tr><td>Allocated CPUs (num_cpus)</td><td>1</td></tr><tr><td>Estimate basis</td><td>shared_buffers ≈ 230 MB</td></tr></tbody>
+      </table>
+      <p class="muted" style="margin:12px 0 0;font-size:0.82rem">Hardware metrics are Neon compute (not the laptop that ran Node). num_cpus()=1 (fractional CUs may round up). Wall-clock timings still include client↔Neon WAN RTT.</p>
+    </div>
+    <div class="card">
+      <h2>PostgreSQL settings</h2>
+      <p class="hint">Neon serverless Postgres knobs</p>
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Database</td><td>superAdmin</td></tr><tr><td>Version</td><td>18.4 (df16b3c)</td></tr><tr><td>shared_buffers</td><td>230 MB</td></tr><tr><td>work_mem</td><td>4096 kB</td></tr><tr><td>effective_cache_size</td><td>6553 MB</td></tr><tr><td>max_parallel_workers</td><td>8</td></tr><tr><td>max_parallel_workers_per_gather</td><td>2</td></tr><tr><td>max_connections</td><td>901</td></tr></tbody>
+      </table>
+      
+    </div>
+    <div class="card">
+      <h2>Dataset under test</h2>
+      <p class="hint">PERF seed + tracked live rows</p>
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody><tr><td>Database size</td><td>463 MB</td></tr><tr><td>Approx. live rows</td><td>12,11,629</td></tr><tr><td>PERF seed row sum</td><td>7,57,350</td></tr><tr><td>Organizations</td><td>850</td></tr><tr><td>Branches</td><td>4,250</td></tr><tr><td>Appointments</td><td>1,70,000</td></tr><tr><td>Status events</td><td>1,70,000</td></tr><tr><td>End-user transactions</td><td>63,750</td></tr><tr><td>Attendance rows</td><td>2,72,000</td></tr><tr><td>Employees</td><td>34,000</td></tr><tr><td>Branch services</td><td>42,500</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 
   
 
@@ -213,7 +243,7 @@
       <p class="hint">Share of results under local SLO bands</p>
       <div class="chart-box med"><canvas id="chartGrades"></canvas></div>
       <div class="health">
-        <div class="ring"><span>80%</span></div>
+        <div class="ring"><span>55%</span></div>
         <div>
           <strong style="font-family:Sora,sans-serif">Suite health</strong>
           <p class="muted" style="margin:4px 0 0;font-size:0.88rem">Weighted from grades (Excellent=4 … Slow=0). Target: keep analytics under 1s at this scale.</p>
@@ -269,32 +299,32 @@
         <td class="name">GET organization by slug (unique)</td>
         <td><span class="pill cat-point_lookup">Point lookup</span></td>
         <td>1</td>
-        <td>89.22</td>
-        <td>86.27</td>
-        <td>97</td>
-        <td>97</td>
+        <td>103.95</td>
+        <td>100.4</td>
+        <td>114.34</td>
+        <td>114.34</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">GET appointment by booking_number (unique)</td>
         <td><span class="pill cat-point_lookup">Point lookup</span></td>
         <td>1</td>
-        <td>97.34</td>
-        <td>94.37</td>
-        <td>110.71</td>
-        <td>110.71</td>
+        <td>122.72</td>
+        <td>120.66</td>
+        <td>133.57</td>
+        <td>133.57</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">GET EUT by transaction_ref (unique)</td>
         <td><span class="pill cat-point_lookup">Point lookup</span></td>
         <td>1</td>
-        <td>111.53</td>
-        <td>121.2</td>
-        <td>134.7</td>
-        <td>134.7</td>
+        <td>115.14</td>
+        <td>119.29</td>
+        <td>135.2</td>
+        <td>135.2</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
@@ -302,109 +332,109 @@
         <td class="name">GET employee by org + employee_number</td>
         <td><span class="pill cat-point_lookup">Point lookup</span></td>
         <td>0</td>
-        <td>93.49</td>
-        <td>94.48</td>
-        <td>95.36</td>
-        <td>95.36</td>
+        <td>107.93</td>
+        <td>102.01</td>
+        <td>132.17</td>
+        <td>132.17</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">List appointments for branch (30-day window)</td>
         <td><span class="pill cat-range_scan">Range scan</span></td>
         <td>0</td>
-        <td>94.51</td>
-        <td>94.36</td>
-        <td>95.28</td>
-        <td>95.28</td>
+        <td>115.24</td>
+        <td>115.62</td>
+        <td>141.05</td>
+        <td>141.05</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">Filter appointments by status + org</td>
         <td><span class="pill cat-range_scan">Range scan</span></td>
         <td>0</td>
-        <td>93.6</td>
-        <td>94.42</td>
-        <td>100.69</td>
-        <td>100.69</td>
+        <td>119.78</td>
+        <td>120.77</td>
+        <td>130.28</td>
+        <td>130.28</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">Attendance for employee (date range)</td>
         <td><span class="pill cat-range_scan">Range scan</span></td>
         <td>0</td>
-        <td>92.81</td>
-        <td>93.97</td>
-        <td>95.71</td>
-        <td>95.71</td>
+        <td>111.81</td>
+        <td>109.99</td>
+        <td>130.5</td>
+        <td>130.5</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">EUT success list for org (recent)</td>
         <td><span class="pill cat-range_scan">Range scan</span></td>
         <td>0</td>
-        <td>95.01</td>
-        <td>95.15</td>
-        <td>95.41</td>
-        <td>95.41</td>
+        <td>114.1</td>
+        <td>110.35</td>
+        <td>139.99</td>
+        <td>139.99</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">Appointment + service + specialist join</td>
         <td><span class="pill cat-join">Join</span></td>
         <td>0</td>
-        <td>98.56</td>
-        <td>98.89</td>
-        <td>101.23</td>
-        <td>101.23</td>
+        <td>118.02</td>
+        <td>110.72</td>
+        <td>130.76</td>
+        <td>130.76</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">EUT + appointment + branch join</td>
         <td><span class="pill cat-join">Join</span></td>
         <td>0</td>
-        <td>96.2</td>
-        <td>94.2</td>
-        <td>102.67</td>
-        <td>102.67</td>
+        <td>123.94</td>
+        <td>121.98</td>
+        <td>138.22</td>
+        <td>138.22</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">Branch services with specialist count</td>
         <td><span class="pill cat-join">Join</span></td>
         <td>1</td>
-        <td>95.52</td>
-        <td>94.9</td>
-        <td>99.69</td>
-        <td>99.69</td>
+        <td>117.62</td>
+        <td>111.87</td>
+        <td>134.37</td>
+        <td>134.37</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">Invoice + line items + payment join</td>
         <td><span class="pill cat-join">Join</span></td>
         <td>0</td>
-        <td>99.42</td>
-        <td>99.88</td>
-        <td>100.83</td>
-        <td>100.83</td>
+        <td>118.69</td>
+        <td>123.47</td>
+        <td>126.65</td>
+        <td>126.65</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">Org revenue rollup (EUT sum/count by day)</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>0</td>
-        <td>94.59</td>
-        <td>95.86</td>
-        <td>98.51</td>
-        <td>98.51</td>
+        <td>118.03</td>
+        <td>119.11</td>
+        <td>129.71</td>
+        <td>129.71</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -412,10 +442,10 @@
         <td class="name">Platform-wide appointment status histogram</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>5</td>
-        <td>250.44</td>
-        <td>199.14</td>
-        <td>401</td>
-        <td>401</td>
+        <td>199.59</td>
+        <td>200.77</td>
+        <td>205.91</td>
+        <td>205.91</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -423,10 +453,10 @@
         <td class="name">Top 20 branches by completed booking GMV</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>20</td>
-        <td>186.08</td>
-        <td>171.56</td>
-        <td>246.86</td>
-        <td>246.86</td>
+        <td>203.89</td>
+        <td>199.54</td>
+        <td>277.58</td>
+        <td>277.58</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -434,10 +464,10 @@
         <td class="name">Specialist utilization (appt hours / specialist)</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>0</td>
-        <td>94.75</td>
-        <td>95.11</td>
-        <td>99.71</td>
-        <td>99.71</td>
+        <td>124.74</td>
+        <td>121.45</td>
+        <td>140.78</td>
+        <td>140.78</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -445,10 +475,10 @@
         <td class="name">Attendance present-rate by branch (window)</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>0</td>
-        <td>94.69</td>
-        <td>90.21</td>
-        <td>104.09</td>
-        <td>104.09</td>
+        <td>114.92</td>
+        <td>108.94</td>
+        <td>140.24</td>
+        <td>140.24</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -456,10 +486,10 @@
         <td class="name">Running GMV window (org appointments)</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>0</td>
-        <td>100.33</td>
-        <td>94.38</td>
-        <td>129.99</td>
-        <td>129.99</td>
+        <td>105.99</td>
+        <td>104.61</td>
+        <td>113.06</td>
+        <td>113.06</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -467,10 +497,10 @@
         <td class="name">Cross-schema merchant payable vs appointments</td>
         <td><span class="pill cat-analytics">Analytics</span></td>
         <td>50</td>
-        <td>133.74</td>
-        <td>112.88</td>
-        <td>219.95</td>
-        <td>219.95</td>
+        <td>159.99</td>
+        <td>139.48</td>
+        <td>249.55</td>
+        <td>249.55</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
       </tr>
@@ -478,10 +508,10 @@
         <td class="name">INSERT appointment (single row)</td>
         <td><span class="pill cat-write">Write</span></td>
         <td>1</td>
-        <td>95.47</td>
-        <td>95.54</td>
-        <td>101.6</td>
-        <td>101.6</td>
+        <td>119.29</td>
+        <td>119.59</td>
+        <td>128.46</td>
+        <td>128.46</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-GOOD">GOOD</span></td>
       </tr>
@@ -489,10 +519,10 @@
         <td class="name">UPDATE appointment status BOOKED→CONFIRMED</td>
         <td><span class="pill cat-write">Write</span></td>
         <td>0</td>
-        <td>94.05</td>
-        <td>95.11</td>
-        <td>95.23</td>
-        <td>95.23</td>
+        <td>118.37</td>
+        <td>126.92</td>
+        <td>133.68</td>
+        <td>133.68</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-GOOD">GOOD</span></td>
       </tr>
@@ -500,10 +530,10 @@
         <td class="name">INSERT attendance row</td>
         <td><span class="pill cat-write">Write</span></td>
         <td>1</td>
-        <td>91.87</td>
-        <td>90.92</td>
-        <td>96.6</td>
-        <td>96.6</td>
+        <td>125.97</td>
+        <td>122.63</td>
+        <td>136.44</td>
+        <td>136.44</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-GOOD">GOOD</span></td>
       </tr>
@@ -511,10 +541,10 @@
         <td class="name">UPDATE org merchant balances</td>
         <td><span class="pill cat-write">Write</span></td>
         <td>1</td>
-        <td>94.27</td>
-        <td>92.76</td>
-        <td>99.33</td>
-        <td>99.33</td>
+        <td>112.08</td>
+        <td>114.64</td>
+        <td>120.09</td>
+        <td>120.09</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-GOOD">GOOD</span></td>
       </tr>
@@ -522,10 +552,10 @@
         <td class="name">DELETE bench appointments (cleanup slice)</td>
         <td><span class="pill cat-write">Write</span></td>
         <td>0</td>
-        <td>95.07</td>
-        <td>95.51</td>
-        <td>96.58</td>
-        <td>96.58</td>
+        <td>113.38</td>
+        <td>110.07</td>
+        <td>125.05</td>
+        <td>125.05</td>
         <td class="muted">—</td>
         <td><span class="grade-chip g-GOOD">GOOD</span></td>
       </tr>
@@ -533,23 +563,23 @@
         <td class="name">Salon dashboard snapshot (multi-aggregate)</td>
         <td><span class="pill cat-mixed">Mixed</span></td>
         <td>1</td>
-        <td>99.5</td>
-        <td>96.91</td>
-        <td>116.21</td>
-        <td>116.21</td>
+        <td>103.64</td>
+        <td>99.91</td>
+        <td>120.36</td>
+        <td>120.36</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr>
 <tr>
         <td class="name">End-user booking history by end_user_ref</td>
         <td><span class="pill cat-mixed">Mixed</span></td>
         <td>17</td>
-        <td>94.61</td>
-        <td>94.98</td>
-        <td>100.35</td>
-        <td>100.35</td>
+        <td>132.96</td>
+        <td>125.37</td>
+        <td>164.91</td>
+        <td>164.91</td>
         <td class="muted">—</td>
-        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
       </tr></tbody>
       </table>
     </div>
@@ -588,41 +618,82 @@
     <summary>Full markdown appendix</summary>
     <pre># GlowTap — Database Performance
 
-**Generated:** 4/8/2026, 2:56:17 am IST
+**Generated:** 4/8/2026, 3:13:15 am IST
 **Engine:** Neon Postgres (serverless)
 **Rounds per test:** 5 (after 1 warm-up)
 **Methodology:** client-side wall clock (Node `perf_hooks`) + `EXPLAIN (ANALYZE, BUFFERS)`
 
 ---
 
-## 1. Executive summary
+## 1. Test environment
+
+### Neon compute (database host)
+
+| Metric | Value |
+|--------|-------|
+| Provider | Neon Postgres (serverless) |
+| Region | ap-southeast-1 |
+| Project ID | little-feather-12343290 |
+| Endpoint ID | ep-lively-shadow-ao184du5 |
+| Host | ep-lively-shadow-ao184du5-pooler.c-2.ap-southeast-1.aws.neon.tech |
+| Estimated compute | ~0.25 CU |
+| Estimated RAM | ~1 GB |
+| Local file cache (LFC) | ~0.75 GB |
+| Allocated CPUs (num_cpus) | 1 |
+| Estimate basis | shared_buffers ≈ 230 MB |
+
+&gt; Laptop/client CPU is **not** listed — timings are Neon compute + WAN RTT from the runner.
+
+### PostgreSQL settings
+
+| Metric | Value |
+|--------|-------|
+| Target | neon |
+| Database | superAdmin |
+| Version | 18.4 (df16b3c) |
+| shared_buffers | 230 MB |
+| work_mem | 4096 kB |
+| effective_cache_size | 6553 MB |
+| max_parallel_workers | 8 |
+| max_parallel_workers_per_gather | 2 |
+| max_connections | 901 |
+
+&gt; Hardware metrics are Neon compute (not the laptop that ran Node). num_cpus()=1 (fractional CUs may round up). Wall-clock timings still include client↔Neon WAN RTT.
+
+---
+
+## 2. Dataset under test
 
 | Metric | Value |
 |--------|------:|
-| Database size | 463 MB / 512 MB |
+| Database size | 463 MB / 512 MB free-tier cap |
+| Approx. live rows (tracked schemas) | 12,11,629 |
+| PERF seed row sum (listed below) | 7,57,350 |
 | Perf organizations | 850 |
 | Perf branches | 4,250 |
 | Perf appointments | 1,70,000 |
+| Perf status events | 1,70,000 |
 | Perf EUT | 63,750 |
 | Perf attendance rows | 2,72,000 |
 | Perf employees | 34,000 |
+| Perf branch services | 42,500 |
 | Benchmark tests | 26 |
 | EXPLAIN ANALYZE profiles | 4 |
-| Grade mix | GOOD: 18 · ACCEPTABLE: 1 · EXCELLENT: 7 |
+| Grade mix | ACCEPTABLE: 14 · EXCELLENT: 7 · GOOD: 5 |
 
 ### Slowest operations (by avg latency)
 
 | Rank | Operation | Category | Avg (ms) | P95 (ms) | Grade |
 |-----:|-----------|----------|--------:|---------:|-------|
-| 1 | Platform-wide appointment status histogram | analytics | 250.44 | 401 | EXCELLENT |
-| 2 | Top 20 branches by completed booking GMV | analytics | 186.08 | 246.86 | EXCELLENT |
-| 3 | Cross-schema merchant payable vs appointments | analytics | 133.74 | 219.95 | EXCELLENT |
-| 4 | GET EUT by transaction_ref (unique) | point_lookup | 111.53 | 134.7 | ACCEPTABLE |
-| 5 | Running GMV window (org appointments) | analytics | 100.33 | 129.99 | EXCELLENT |
+| 1 | Top 20 branches by completed booking GMV | analytics | 203.89 | 277.58 | EXCELLENT |
+| 2 | Platform-wide appointment status histogram | analytics | 199.59 | 205.91 | EXCELLENT |
+| 3 | Cross-schema merchant payable vs appointments | analytics | 159.99 | 249.55 | EXCELLENT |
+| 4 | End-user booking history by end_user_ref | mixed | 132.96 | 164.91 | ACCEPTABLE |
+| 5 | INSERT attendance row | write | 125.97 | 136.44 | GOOD |
 
 ---
 
-## 2. Storage &amp; schema footprint
+## 3. Storage &amp; schema footprint
 
 | Schema | Tables | Size |
 |--------|-------:|------|
@@ -669,14 +740,14 @@
 
 ---
 
-## 3. Point lookups (GET by key / unique)
+## 4. Point lookups (GET by key / unique)
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| GET organization by slug (unique) | 1 | 83.37 | **89.22** | 86.27 | 97 | 97 | 97 | GOOD |
-| GET appointment by booking_number (unique) | 1 | 90.16 | **97.34** | 94.37 | 110.71 | 110.71 | 110.71 | GOOD |
-| GET EUT by transaction_ref (unique) | 1 | 85.8 | **111.53** | 121.2 | 134.7 | 134.7 | 134.7 | ACCEPTABLE |
-| GET employee by org + employee_number | 0 | 89.55 | **93.49** | 94.48 | 95.36 | 95.36 | 95.36 | GOOD |
+| GET organization by slug (unique) | 1 | 99.76 | **103.95** | 100.4 | 114.34 | 114.34 | 114.34 | ACCEPTABLE |
+| GET appointment by booking_number (unique) | 1 | 118.64 | **122.72** | 120.66 | 133.57 | 133.57 | 133.57 | ACCEPTABLE |
+| GET EUT by transaction_ref (unique) | 1 | 89.84 | **115.14** | 119.29 | 135.2 | 135.2 | 135.2 | ACCEPTABLE |
+| GET employee by org + employee_number | 0 | 97.53 | **107.93** | 102.01 | 132.17 | 132.17 | 132.17 | ACCEPTABLE |
 
 &lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
 
@@ -708,14 +779,14 @@ SELECT id, full_name, status FROM employee.employees WHERE organization_id = $1 
 
 ---
 
-## 4. Range / filter scans
+## 5. Range / filter scans
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| List appointments for branch (30-day window) | 0 | 93.41 | **94.51** | 94.36 | 95.28 | 95.28 | 95.28 | GOOD |
-| Filter appointments by status + org | 0 | 87.35 | **93.6** | 94.42 | 100.69 | 100.69 | 100.69 | GOOD |
-| Attendance for employee (date range) | 0 | 85.75 | **92.81** | 93.97 | 95.71 | 95.71 | 95.71 | GOOD |
-| EUT success list for org (recent) | 0 | 94.23 | **95.01** | 95.15 | 95.41 | 95.41 | 95.41 | GOOD |
+| List appointments for branch (30-day window) | 0 | 99.97 | **115.24** | 115.62 | 141.05 | 141.05 | 141.05 | ACCEPTABLE |
+| Filter appointments by status + org | 0 | 109.62 | **119.78** | 120.77 | 130.28 | 130.28 | 130.28 | ACCEPTABLE |
+| Attendance for employee (date range) | 0 | 99.64 | **111.81** | 109.99 | 130.5 | 130.5 | 130.5 | ACCEPTABLE |
+| EUT success list for org (recent) | 0 | 99.58 | **114.1** | 110.35 | 139.99 | 139.99 | 139.99 | ACCEPTABLE |
 
 &lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
 
@@ -747,14 +818,14 @@ SELECT transaction_ref, gross_amount, net_to_salon, occurred_at FROM rms.end_use
 
 ---
 
-## 5. Multi-table joins
+## 6. Multi-table joins
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| Appointment + service + specialist join | 0 | 93.73 | **98.56** | 98.89 | 101.23 | 101.23 | 101.23 | GOOD |
-| EUT + appointment + branch join | 0 | 91.87 | **96.2** | 94.2 | 102.67 | 102.67 | 102.67 | GOOD |
-| Branch services with specialist count | 1 | 91.1 | **95.52** | 94.9 | 99.69 | 99.69 | 99.69 | GOOD |
-| Invoice + line items + payment join | 0 | 97.04 | **99.42** | 99.88 | 100.83 | 100.83 | 100.83 | GOOD |
+| Appointment + service + specialist join | 0 | 109.63 | **118.02** | 110.72 | 130.76 | 130.76 | 130.76 | ACCEPTABLE |
+| EUT + appointment + branch join | 0 | 112.54 | **123.94** | 121.98 | 138.22 | 138.22 | 138.22 | ACCEPTABLE |
+| Branch services with specialist count | 1 | 108 | **117.62** | 111.87 | 134.37 | 134.37 | 134.37 | ACCEPTABLE |
+| Invoice + line items + payment join | 0 | 106.37 | **118.69** | 123.47 | 126.65 | 126.65 | 126.65 | ACCEPTABLE |
 
 &lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
 
@@ -786,17 +857,17 @@ SELECT i.invoice_number, i.total_amount, i.status, COUNT(ili.id)::int AS lines, 
 
 ---
 
-## 6. Aggregations &amp; expensive analytics
+## 7. Aggregations &amp; expensive analytics
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| Org revenue rollup (EUT sum/count by day) | 0 | 88.04 | **94.59** | 95.86 | 98.51 | 98.51 | 98.51 | EXCELLENT |
-| Platform-wide appointment status histogram | 5 | 189.54 | **250.44** | 199.14 | 401 | 401 | 401 | EXCELLENT |
-| Top 20 branches by completed booking GMV | 20 | 169.02 | **186.08** | 171.56 | 246.86 | 246.86 | 246.86 | EXCELLENT |
-| Specialist utilization (appt hours / specialist) | 0 | 89.31 | **94.75** | 95.11 | 99.71 | 99.71 | 99.71 | EXCELLENT |
-| Attendance present-rate by branch (window) | 0 | 89.65 | **94.69** | 90.21 | 104.09 | 104.09 | 104.09 | EXCELLENT |
-| Running GMV window (org appointments) | 0 | 86.77 | **100.33** | 94.38 | 129.99 | 129.99 | 129.99 | EXCELLENT |
-| Cross-schema merchant payable vs appointments | 50 | 110.56 | **133.74** | 112.88 | 219.95 | 219.95 | 219.95 | EXCELLENT |
+| Org revenue rollup (EUT sum/count by day) | 0 | 109.75 | **118.03** | 119.11 | 129.71 | 129.71 | 129.71 | EXCELLENT |
+| Platform-wide appointment status histogram | 5 | 186.84 | **199.59** | 200.77 | 205.91 | 205.91 | 205.91 | EXCELLENT |
+| Top 20 branches by completed booking GMV | 20 | 164.64 | **203.89** | 199.54 | 277.58 | 277.58 | 277.58 | EXCELLENT |
+| Specialist utilization (appt hours / specialist) | 0 | 119.17 | **124.74** | 121.45 | 140.78 | 140.78 | 140.78 | EXCELLENT |
+| Attendance present-rate by branch (window) | 0 | 99.87 | **114.92** | 108.94 | 140.24 | 140.24 | 140.24 | EXCELLENT |
+| Running GMV window (org appointments) | 0 | 102.27 | **105.99** | 104.61 | 113.06 | 113.06 | 113.06 | EXCELLENT |
+| Cross-schema merchant payable vs appointments | 50 | 129.96 | **159.99** | 139.48 | 249.55 | 249.55 | 249.55 | EXCELLENT |
 
 &lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
 
@@ -846,15 +917,15 @@ SELECT o.slug, COALESCE(ap.appts, 0)::int AS appts, COALESCE(eu.euts, 0)::int AS
 
 ---
 
-## 7. Write path (INSERT / UPDATE / DELETE)
+## 8. Write path (INSERT / UPDATE / DELETE)
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| INSERT appointment (single row) | 1 | 89.95 | **95.47** | 95.54 | 101.6 | 101.6 | 101.6 | GOOD |
-| UPDATE appointment status BOOKED→CONFIRMED | 0 | 89.71 | **94.05** | 95.11 | 95.23 | 95.23 | 95.23 | GOOD |
-| INSERT attendance row | 1 | 88.18 | **91.87** | 90.92 | 96.6 | 96.6 | 96.6 | GOOD |
-| UPDATE org merchant balances | 1 | 89.64 | **94.27** | 92.76 | 99.33 | 99.33 | 99.33 | GOOD |
-| DELETE bench appointments (cleanup slice) | 0 | 93.17 | **95.07** | 95.51 | 96.58 | 96.58 | 96.58 | GOOD |
+| INSERT appointment (single row) | 1 | 111.07 | **119.29** | 119.59 | 128.46 | 128.46 | 128.46 | GOOD |
+| UPDATE appointment status BOOKED→CONFIRMED | 0 | 93.12 | **118.37** | 126.92 | 133.68 | 133.68 | 133.68 | GOOD |
+| INSERT attendance row | 1 | 119.9 | **125.97** | 122.63 | 136.44 | 136.44 | 136.44 | GOOD |
+| UPDATE org merchant balances | 1 | 101.14 | **112.08** | 114.64 | 120.09 | 120.09 | 120.09 | GOOD |
+| DELETE bench appointments (cleanup slice) | 0 | 99.71 | **113.38** | 110.07 | 125.05 | 125.05 | 125.05 | GOOD |
 
 &lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
 
@@ -892,12 +963,12 @@ DELETE FROM appointments.appointments WHERE organization_id = $1 AND booking_num
 
 ---
 
-## 8. Mixed / application-style workloads
+## 9. Mixed / application-style workloads
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| Salon dashboard snapshot (multi-aggregate) | 1 | 91.38 | **99.5** | 96.91 | 116.21 | 116.21 | 116.21 | GOOD |
-| End-user booking history by end_user_ref | 17 | 87.85 | **94.61** | 94.98 | 100.35 | 100.35 | 100.35 | GOOD |
+| Salon dashboard snapshot (multi-aggregate) | 1 | 98.47 | **103.64** | 99.91 | 120.36 | 120.36 | 120.36 | ACCEPTABLE |
+| End-user booking history by end_user_ref | 17 | 119.49 | **132.96** | 125.37 | 164.91 | 164.91 | 164.91 | ACCEPTABLE |
 
 &lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
 
@@ -917,20 +988,20 @@ SELECT booking_number, service_name, starts_at, status, gross_amount, payment_st
 
 ---
 
-## 9. EXPLAIN ANALYZE profiles
+## 10. EXPLAIN ANALYZE profiles
 
 Postgres planner cost + actual runtime (includes buffer hits). Useful for index / join tuning.
 
 | Query | Planning (ms) | Execution (ms) | Total cost | Actual rows | Top node |
 |-------|-------------:|---------------:|-----------:|------------:|----------|
-| Branch appointments 45d | 0.136 | **0.042** | 158.15 | 0 | Limit |
-| Org EUT daily rollup | 0.12 | **0.04** | 275.23 | 0 | Aggregate |
-| Top branches by GMV | 15.869 | **65.641** | 11826.75 | 20 | Sort |
-| Appointment+service+specialist | 5.645 | **0.05** | 854.59 | 0 | Limit |
+| Branch appointments 45d | 0.135 | **0.055** | 158.15 | 0 | Limit |
+| Org EUT daily rollup | 0.104 | **0.045** | 275.23 | 0 | Aggregate |
+| Top branches by GMV | 16.332 | **57.437** | 11826.75 | 20 | Sort |
+| Appointment+service+specialist | 5.673 | **0.049** | 854.59 | 0 | Limit |
 
 ---
 
-## 10. Grading rubric
+## 11. Grading rubric
 
 | Grade | Point / range / join (avg) | Writes (avg) | Analytics (avg) |
 |-------|---------------------------:|-------------:|----------------:|
@@ -943,11 +1014,24 @@ Postgres planner cost + actual runtime (includes buffer hits). Useful for index 
 
 ---
 
-## 11. Recommendations
+## 12. Recommendations
 
 - **Applied (Round 3):** covering / composite indexes in `076_performance_indexes_round3.sql` (full on local; lite subset `076b` on Neon due to 512 MB cap).
 - **Applied:** analytics SQL rewritten — prefix range predicates (`&gt;= … AND &lt; …`) + `LATERAL` aggregates for cross-schema rollups (avoids cartesian LEFT JOIN blow-up).
-- **GET EUT by transaction_ref (unique)** (ACCEPTABLE, avg 111.53 ms) — review indexes / reduce join width / paginate.
+- **GET organization by slug (unique)** (ACCEPTABLE, avg 103.95 ms) — review indexes / reduce join width / paginate.
+- **GET appointment by booking_number (unique)** (ACCEPTABLE, avg 122.72 ms) — review indexes / reduce join width / paginate.
+- **GET EUT by transaction_ref (unique)** (ACCEPTABLE, avg 115.14 ms) — review indexes / reduce join width / paginate.
+- **GET employee by org + employee_number** (ACCEPTABLE, avg 107.93 ms) — review indexes / reduce join width / paginate.
+- **List appointments for branch (30-day window)** (ACCEPTABLE, avg 115.24 ms) — review indexes / reduce join width / paginate.
+- **Filter appointments by status + org** (ACCEPTABLE, avg 119.78 ms) — review indexes / reduce join width / paginate.
+- **Attendance for employee (date range)** (ACCEPTABLE, avg 111.81 ms) — review indexes / reduce join width / paginate.
+- **EUT success list for org (recent)** (ACCEPTABLE, avg 114.1 ms) — review indexes / reduce join width / paginate.
+- **Appointment + service + specialist join** (ACCEPTABLE, avg 118.02 ms) — review indexes / reduce join width / paginate.
+- **EUT + appointment + branch join** (ACCEPTABLE, avg 123.94 ms) — review indexes / reduce join width / paginate.
+- **Branch services with specialist count** (ACCEPTABLE, avg 117.62 ms) — review indexes / reduce join width / paginate.
+- **Invoice + line items + payment join** (ACCEPTABLE, avg 118.69 ms) — review indexes / reduce join width / paginate.
+- **Salon dashboard snapshot (multi-aggregate)** (ACCEPTABLE, avg 103.64 ms) — review indexes / reduce join width / paginate.
+- **End-user booking history by end_user_ref** (ACCEPTABLE, avg 132.96 ms) — review indexes / reduce join width / paginate.
 - Keep `VACUUM ANALYZE` on large tables after bulk loads (appointments, attendance, EUT).
 - Prefer keyset pagination over `OFFSET` for appointment/EUT lists at this scale.
 - Monitor Neon storage (512 MB free tier); current DB ~463 MB.
@@ -960,7 +1044,7 @@ Postgres planner cost + actual runtime (includes buffer hits). Useful for index 
   <footer>GlowTap — Database Performance · generated by scripts/run-perf-benchmark.js</footer>
 </div>
 <script>
-const DATA = {"labels":["GET organization by slug (unique)","GET appointment by booking_number (unique)","GET EUT by transaction_ref (unique)","GET employee by org + employee_number","List appointments for branch (30-day window)","Filter appointments by status + org","Attendance for employee (date range)","EUT success list for org (recent)","Appointment + service + specialist join","EUT + appointment + branch join","Branch services with specialist count","Invoice + line items + payment join","Org revenue rollup (EUT sum/count by day)","Platform-wide appointment status histogram","Top 20 branches by completed booking GMV","Specialist utilization (appt hours / specialist)","Attendance present-rate by branch (window)","Running GMV window (org appointments)","Cross-schema merchant payable vs appointments","INSERT appointment (single row)","UPDATE appointment status BOOKED→CONFIRMED","INSERT attendance row","UPDATE org merchant balances","DELETE bench appointments (cleanup slice)","Salon dashboard snapshot (multi-aggregate)","End-user booking history by end_user_ref"],"avg":[89.22,97.34,111.53,93.49,94.51,93.6,92.81,95.01,98.56,96.2,95.52,99.42,94.59,250.44,186.08,94.75,94.69,100.33,133.74,95.47,94.05,91.87,94.27,95.07,99.5,94.61],"p50":[86.27,94.37,121.2,94.48,94.36,94.42,93.97,95.15,98.89,94.2,94.9,99.88,95.86,199.14,171.56,95.11,90.21,94.38,112.88,95.54,95.11,90.92,92.76,95.51,96.91,94.98],"p95":[97,110.71,134.7,95.36,95.28,100.69,95.71,95.41,101.23,102.67,99.69,100.83,98.51,401,246.86,99.71,104.09,129.99,219.95,101.6,95.23,96.6,99.33,96.58,116.21,100.35],"grades":{"EXCELLENT":7,"GOOD":18,"ACCEPTABLE":1,"SLOW":0},"categories":["Point lookup","Range scan","Join","Analytics","Write","Mixed"],"categoryAvg":[97.9,93.98,97.42,136.37,94.15,97.06],"categoryP95":[109.44,96.77,101.11,185.73,97.87,108.28],"comparison":[],"topWins":[],"storage":[{"schema":"appointments","mb":175},{"schema":"employee","mb":124},{"schema":"rms","mb":87},{"schema":"services","mb":27},{"schema":"tickets","mb":18},{"schema":"review","mb":11},{"schema":"public","mb":5},{"schema":"admin_org","mb":4},{"schema":"cms","mb":1},{"schema":"subscription","mb":0}],"inventory":{"db_size":{"bytes":"485572608","pretty":"463 MB"},"schemas":[{"schema":"appointments","tables":4,"bytes":"183271424"},{"schema":"employee","tables":9,"bytes":"129802240"},{"schema":"rms","tables":18,"bytes":"90988544"},{"schema":"services","tables":4,"bytes":"28286976"},{"schema":"tickets","tables":9,"bytes":"18849792"},{"schema":"review","tables":7,"bytes":"11075584"},{"schema":"public","tables":8,"bytes":"5636096"},{"schema":"admin_org","tables":3,"bytes":"4505600"},{"schema":"cms","tables":4,"bytes":"638976"},{"schema":"subscription","tables":2,"bytes":"262144"}],"hottest_tables":[{"relation":"appointments.appointments","live_rows":"170003","bytes":"148086784","size":"141 MB"},{"relation":"employee.attendance_records","live_rows":"272002","bytes":"79519744","size":"76 MB"},{"relation":"rms.end_user_transactions","live_rows":"63761","bytes":"45285376","size":"43 MB"},{"relation":"appointments.appointment_status_events","live_rows":"170006","bytes":"35143680","size":"34 MB"},{"relation":"employee.leave_balances","live_rows":"102006","bytes":"22765568","size":"22 MB"},{"relation":"rms.merchant_ledger_entries","live_rows":"63763","bytes":"20357120","size":"19 MB"},{"relation":"employee.employees","live_rows":"34002","bytes":"14745600","size":"14 MB"},{"relation":"services.branch_services","live_rows":"42512","bytes":"14712832","size":"14 MB"},{"relation":"services.branch_service_specialists","live_rows":"85001","bytes":"13328384","size":"13 MB"},{"relation":"tickets.support_tickets","live_rows":"17002","bytes":"10452992","size":"10208 kB"},{"relation":"review.reviews","live_rows":"17003","bytes":"10420224","size":"10176 kB"},{"relation":"rms.salon_payout_items","live_rows":"34014","bytes":"8265728","size":"8072 kB"},{"relation":"tickets.support_ticket_messages","live_rows":"34003","bytes":"7708672","size":"7528 kB"},{"relation":"employee.leave_requests","live_rows":"17001","bytes":"7602176","size":"7424 kB"},{"relation":"public.branches","live_rows":"4261","bytes":"4333568","size":"4232 kB"},{"relation":"rms.invoices","live_rows":"10202","bytes":"4218880","size":"4120 kB"},{"relation":"employee.branch_leave_policies","live_rows":"12756","bytes":"4210688","size":"4112 kB"},{"relation":"rms.payments","live_rows":"10201","bytes":"3653632","size":"3568 kB"},{"relation":"rms.invoice_line_items","live_rows":"10202","bytes":"3080192","size":"3008 kB"},{"relation":"rms.invoice_payments","live_rows":"10201","bytes":"2523136","size":"2464 kB"},{"relation":"admin_org.sub_admin_modules","live_rows":"13615","bytes":"2187264","size":"2136 kB"},{"relation":"rms.salon_payouts","live_rows":"5103","bytes":"1867776","size":"1824 kB"},{"relation":"admin_org.sub_admin_branches","live_rows":"5955","bytes":"1359872","size":"1328 kB"},{"relation":"admin_org.sub_admins","live_rows":"1704","bytes":"958464","size":"936 kB"},{"relation":"employee.leave_types","live_rows":"2553","bytes":"745472","size":"728 kB"}],"perf_counts":{"perf_orgs":850,"perf_branches":4250,"perf_appointments":170000,"perf_eut":63750,"perf_attendance":272000,"perf_employees":34000,"perf_services":42500}},"slowest":[{"name":"Platform-wide appointment status histogram","avg":250.44,"p95":401},{"name":"Top 20 branches by completed booking GMV","avg":186.08,"p95":246.86},{"name":"Cross-schema merchant payable vs appointments","avg":133.74,"p95":219.95},{"name":"GET EUT by transaction_ref (unique)","avg":111.53,"p95":134.7},{"name":"Running GMV window (org appointments)","avg":100.33,"p95":129.99},{"name":"Salon dashboard snapshot (multi-aggregate)","avg":99.5,"p95":116.21},{"name":"Invoice + line items + payment join","avg":99.42,"p95":100.83},{"name":"Appointment + service + specialist join","avg":98.56,"p95":101.23}]};
+const DATA = {"labels":["GET organization by slug (unique)","GET appointment by booking_number (unique)","GET EUT by transaction_ref (unique)","GET employee by org + employee_number","List appointments for branch (30-day window)","Filter appointments by status + org","Attendance for employee (date range)","EUT success list for org (recent)","Appointment + service + specialist join","EUT + appointment + branch join","Branch services with specialist count","Invoice + line items + payment join","Org revenue rollup (EUT sum/count by day)","Platform-wide appointment status histogram","Top 20 branches by completed booking GMV","Specialist utilization (appt hours / specialist)","Attendance present-rate by branch (window)","Running GMV window (org appointments)","Cross-schema merchant payable vs appointments","INSERT appointment (single row)","UPDATE appointment status BOOKED→CONFIRMED","INSERT attendance row","UPDATE org merchant balances","DELETE bench appointments (cleanup slice)","Salon dashboard snapshot (multi-aggregate)","End-user booking history by end_user_ref"],"avg":[103.95,122.72,115.14,107.93,115.24,119.78,111.81,114.1,118.02,123.94,117.62,118.69,118.03,199.59,203.89,124.74,114.92,105.99,159.99,119.29,118.37,125.97,112.08,113.38,103.64,132.96],"p50":[100.4,120.66,119.29,102.01,115.62,120.77,109.99,110.35,110.72,121.98,111.87,123.47,119.11,200.77,199.54,121.45,108.94,104.61,139.48,119.59,126.92,122.63,114.64,110.07,99.91,125.37],"p95":[114.34,133.57,135.2,132.17,141.05,130.28,130.5,139.99,130.76,138.22,134.37,126.65,129.71,205.91,277.58,140.78,140.24,113.06,249.55,128.46,133.68,136.44,120.09,125.05,120.36,164.91],"grades":{"EXCELLENT":7,"GOOD":5,"ACCEPTABLE":14,"SLOW":0},"categories":["Point lookup","Range scan","Join","Analytics","Write","Mixed"],"categoryAvg":[112.44,115.23,119.57,146.74,117.82,118.3],"categoryP95":[128.82,135.46,132.5,179.55,128.74,142.63],"comparison":[],"topWins":[],"storage":[{"schema":"appointments","mb":175},{"schema":"employee","mb":124},{"schema":"rms","mb":87},{"schema":"services","mb":27},{"schema":"tickets","mb":18},{"schema":"review","mb":11},{"schema":"public","mb":5},{"schema":"admin_org","mb":4},{"schema":"cms","mb":1},{"schema":"subscription","mb":0}],"inventory":{"db_size":{"bytes":"485605376","pretty":"463 MB"},"schemas":[{"schema":"appointments","tables":4,"bytes":"183296000"},{"schema":"employee","tables":9,"bytes":"129810432"},{"schema":"rms","tables":18,"bytes":"90988544"},{"schema":"services","tables":4,"bytes":"28286976"},{"schema":"tickets","tables":9,"bytes":"18849792"},{"schema":"review","tables":7,"bytes":"11075584"},{"schema":"public","tables":8,"bytes":"5636096"},{"schema":"admin_org","tables":3,"bytes":"4505600"},{"schema":"cms","tables":4,"bytes":"638976"},{"schema":"subscription","tables":2,"bytes":"262144"}],"hottest_tables":[{"relation":"appointments.appointments","live_rows":"170003","bytes":"148111360","size":"141 MB"},{"relation":"employee.attendance_records","live_rows":"272002","bytes":"79527936","size":"76 MB"},{"relation":"rms.end_user_transactions","live_rows":"63761","bytes":"45285376","size":"43 MB"},{"relation":"appointments.appointment_status_events","live_rows":"170006","bytes":"35143680","size":"34 MB"},{"relation":"employee.leave_balances","live_rows":"102006","bytes":"22765568","size":"22 MB"},{"relation":"rms.merchant_ledger_entries","live_rows":"63763","bytes":"20357120","size":"19 MB"},{"relation":"employee.employees","live_rows":"34002","bytes":"14745600","size":"14 MB"},{"relation":"services.branch_services","live_rows":"42512","bytes":"14712832","size":"14 MB"},{"relation":"services.branch_service_specialists","live_rows":"85001","bytes":"13328384","size":"13 MB"},{"relation":"tickets.support_tickets","live_rows":"17002","bytes":"10452992","size":"10208 kB"},{"relation":"review.reviews","live_rows":"17003","bytes":"10420224","size":"10176 kB"},{"relation":"rms.salon_payout_items","live_rows":"34014","bytes":"8265728","size":"8072 kB"},{"relation":"tickets.support_ticket_messages","live_rows":"34003","bytes":"7708672","size":"7528 kB"},{"relation":"employee.leave_requests","live_rows":"17001","bytes":"7602176","size":"7424 kB"},{"relation":"public.branches","live_rows":"4261","bytes":"4333568","size":"4232 kB"},{"relation":"rms.invoices","live_rows":"10202","bytes":"4218880","size":"4120 kB"},{"relation":"employee.branch_leave_policies","live_rows":"12756","bytes":"4210688","size":"4112 kB"},{"relation":"rms.payments","live_rows":"10201","bytes":"3653632","size":"3568 kB"},{"relation":"rms.invoice_line_items","live_rows":"10202","bytes":"3080192","size":"3008 kB"},{"relation":"rms.invoice_payments","live_rows":"10201","bytes":"2523136","size":"2464 kB"},{"relation":"admin_org.sub_admin_modules","live_rows":"13615","bytes":"2187264","size":"2136 kB"},{"relation":"rms.salon_payouts","live_rows":"5103","bytes":"1867776","size":"1824 kB"},{"relation":"admin_org.sub_admin_branches","live_rows":"5955","bytes":"1359872","size":"1328 kB"},{"relation":"admin_org.sub_admins","live_rows":"1704","bytes":"958464","size":"936 kB"},{"relation":"employee.leave_types","live_rows":"2553","bytes":"745472","size":"728 kB"}],"perf_counts":{"perf_orgs":850,"perf_branches":4250,"perf_appointments":170000,"perf_status_events":170000,"perf_eut":63750,"perf_attendance":272000,"perf_employees":34000,"perf_services":42500,"perf_row_sum":757350},"approx_live_rows":1211629},"slowest":[{"name":"Top 20 branches by completed booking GMV","avg":203.89,"p95":277.58},{"name":"Platform-wide appointment status histogram","avg":199.59,"p95":205.91},{"name":"Cross-schema merchant payable vs appointments","avg":159.99,"p95":249.55},{"name":"End-user booking history by end_user_ref","avg":132.96,"p95":164.91},{"name":"INSERT attendance row","avg":125.97,"p95":136.44},{"name":"Specialist utilization (appt hours / specialist)","avg":124.74,"p95":140.78},{"name":"EUT + appointment + branch join","avg":123.94,"p95":138.22},{"name":"GET appointment by booking_number (unique)","avg":122.72,"p95":133.57}]};
 const hasCompare = DATA.comparison && DATA.comparison.length > 0;
 const teal = '#0f766e';
 const tealSoft = 'rgba(20,184,166,0.75)';

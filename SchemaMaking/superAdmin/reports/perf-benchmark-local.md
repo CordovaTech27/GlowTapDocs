@@ -1,40 +1,76 @@
 # GlowTap — Database Performance
 
-**Generated:** 4/8/2026, 2:31:52 am IST
+**Generated:** 4/8/2026, 3:11:58 am IST
 **Engine:** Local PostgreSQL (GlowTap)
 **Rounds per test:** 5 (after 1 warm-up)
 **Methodology:** client-side wall clock (Node `perf_hooks`) + `EXPLAIN (ANALYZE, BUFFERS)`
 
 ---
 
-## 1. Executive summary
+## 1. Test environment
+
+### Host machine (Postgres + benchmark client)
+
+| Metric | Value |
+|--------|-------|
+| Hostname | LAPTOP-0VLFL1GO |
+| OS | Windows_NT 10.0.19045 (x64) |
+| CPU | Intel(R) Core(TM) i5-9300H CPU @ 2.40GHz |
+| Logical cores | 8 |
+| CPU clock (avg) | 2400 MHz |
+| RAM | 7.9 GB total / 1.8 GB free |
+| Node.js | v24.15.0 |
+
+### PostgreSQL settings
+
+| Metric | Value |
+|--------|-------|
+| Target | local |
+| Database | GlowTap |
+| Version | 18.4 |
+| shared_buffers | 128 MB |
+| work_mem | 64 MB |
+| effective_cache_size | 4096 MB |
+| max_parallel_workers | 8 |
+| max_parallel_workers_per_gather | 4 |
+| max_connections | 100 |
+
+> Local Postgres — CPU/RAM below are from this machine (client and DB host).
+
+---
+
+## 2. Dataset under test
 
 | Metric | Value |
 |--------|------:|
 | Database size | 5472 MB |
+| Approx. live rows (tracked schemas) | 1,11,58,912 |
+| PERF seed row sum (listed below) | 86,02,500 |
 | Perf organizations | 2,500 |
 | Perf branches | 12,500 |
 | Perf appointments | 25,00,000 |
+| Perf status events | 25,00,000 |
 | Perf EUT | 8,62,500 |
 | Perf attendance rows | 25,00,000 |
 | Perf employees | 1,00,000 |
+| Perf branch services | 1,25,000 |
 | Benchmark tests | 26 |
 | EXPLAIN ANALYZE profiles | 4 |
-| Grade mix | EXCELLENT: 24 · GOOD: 2 |
+| Grade mix | EXCELLENT: 25 · GOOD: 1 |
 
 ### Slowest operations (by avg latency)
 
 | Rank | Operation | Category | Avg (ms) | P95 (ms) | Grade |
 |-----:|-----------|----------|--------:|---------:|-------|
-| 1 | Platform-wide appointment status histogram | analytics | 611.7 | 743.91 | GOOD |
-| 2 | Top 20 branches by completed booking GMV | analytics | 251.9 | 317.03 | GOOD |
-| 3 | Cross-schema merchant payable vs appointments | analytics | 114.29 | 180.56 | EXCELLENT |
-| 4 | EUT + appointment + branch join | join | 2.32 | 3.12 | EXCELLENT |
-| 5 | Appointment + service + specialist join | join | 2.17 | 3.42 | EXCELLENT |
+| 1 | Platform-wide appointment status histogram | analytics | 504.36 | 558.17 | GOOD |
+| 2 | Top 20 branches by completed booking GMV | analytics | 188.4 | 269.82 | EXCELLENT |
+| 3 | Cross-schema merchant payable vs appointments | analytics | 100.66 | 101.48 | EXCELLENT |
+| 4 | Specialist utilization (appt hours / specialist) | analytics | 5.22 | 6.34 | EXCELLENT |
+| 5 | Attendance present-rate by branch (window) | analytics | 3.64 | 5.18 | EXCELLENT |
 
 ---
 
-## 2. Storage & schema footprint
+## 3. Storage & schema footprint
 
 | Schema | Tables | Size |
 |--------|-------:|------|
@@ -81,14 +117,14 @@
 
 ---
 
-## 3. Point lookups (GET by key / unique)
+## 4. Point lookups (GET by key / unique)
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| GET organization by slug (unique) | 1 | 0.77 | **1.43** | 0.94 | 3.47 | 3.47 | 3.47 | EXCELLENT |
-| GET appointment by booking_number (unique) | 1 | 0.59 | **0.89** | 0.86 | 1.48 | 1.48 | 1.48 | EXCELLENT |
-| GET EUT by transaction_ref (unique) | 1 | 0.54 | **0.97** | 1.02 | 1.57 | 1.57 | 1.57 | EXCELLENT |
-| GET employee by org + employee_number | 0 | 0.35 | **0.41** | 0.39 | 0.5 | 0.5 | 0.5 | EXCELLENT |
+| GET organization by slug (unique) | 1 | 0.92 | **1.12** | 1.03 | 1.63 | 1.63 | 1.63 | EXCELLENT |
+| GET appointment by booking_number (unique) | 1 | 1.34 | **1.73** | 1.44 | 2.39 | 2.39 | 2.39 | EXCELLENT |
+| GET EUT by transaction_ref (unique) | 1 | 0.91 | **1.07** | 1.06 | 1.29 | 1.29 | 1.29 | EXCELLENT |
+| GET employee by org + employee_number | 0 | 0.92 | **1.3** | 1.27 | 1.97 | 1.97 | 1.97 | EXCELLENT |
 
 <details><summary>SQL samples</summary>
 
@@ -120,14 +156,14 @@ SELECT id, full_name, status FROM employee.employees WHERE organization_id = $1 
 
 ---
 
-## 4. Range / filter scans
+## 5. Range / filter scans
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| List appointments for branch (30-day window) | 0 | 0.99 | **1.19** | 1.02 | 1.6 | 1.6 | 1.6 | EXCELLENT |
-| Filter appointments by status + org | 0 | 0.44 | **0.65** | 0.58 | 0.96 | 0.96 | 0.96 | EXCELLENT |
-| Attendance for employee (date range) | 0 | 0.42 | **0.66** | 0.71 | 0.83 | 0.83 | 0.83 | EXCELLENT |
-| EUT success list for org (recent) | 0 | 0.79 | **1.04** | 0.82 | 1.47 | 1.47 | 1.47 | EXCELLENT |
+| List appointments for branch (30-day window) | 0 | 1.09 | **1.42** | 1.22 | 1.87 | 1.87 | 1.87 | EXCELLENT |
+| Filter appointments by status + org | 0 | 1.15 | **1.33** | 1.19 | 1.63 | 1.63 | 1.63 | EXCELLENT |
+| Attendance for employee (date range) | 0 | 0.89 | **1.28** | 1.49 | 1.55 | 1.55 | 1.55 | EXCELLENT |
+| EUT success list for org (recent) | 0 | 1.07 | **1.49** | 1.3 | 2.01 | 2.01 | 2.01 | EXCELLENT |
 
 <details><summary>SQL samples</summary>
 
@@ -159,14 +195,14 @@ SELECT transaction_ref, gross_amount, net_to_salon, occurred_at FROM rms.end_use
 
 ---
 
-## 5. Multi-table joins
+## 6. Multi-table joins
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| Appointment + service + specialist join | 0 | 1.59 | **2.17** | 1.94 | 3.42 | 3.42 | 3.42 | EXCELLENT |
-| EUT + appointment + branch join | 0 | 1.8 | **2.32** | 2.07 | 3.12 | 3.12 | 3.12 | EXCELLENT |
-| Branch services with specialist count | 1 | 0.84 | **1.27** | 1.27 | 1.57 | 1.57 | 1.57 | EXCELLENT |
-| Invoice + line items + payment join | 0 | 1.01 | **1.15** | 1.19 | 1.28 | 1.28 | 1.28 | EXCELLENT |
+| Appointment + service + specialist join | 0 | 1.81 | **2.7** | 2.64 | 3.73 | 3.73 | 3.73 | EXCELLENT |
+| EUT + appointment + branch join | 0 | 1.66 | **1.78** | 1.82 | 1.89 | 1.89 | 1.89 | EXCELLENT |
+| Branch services with specialist count | 1 | 0.53 | **0.73** | 0.71 | 0.91 | 0.91 | 0.91 | EXCELLENT |
+| Invoice + line items + payment join | 0 | 0.54 | **0.67** | 0.6 | 1 | 1 | 1 | EXCELLENT |
 
 <details><summary>SQL samples</summary>
 
@@ -198,17 +234,17 @@ SELECT i.invoice_number, i.total_amount, i.status, COUNT(ili.id)::int AS lines, 
 
 ---
 
-## 6. Aggregations & expensive analytics
+## 7. Aggregations & expensive analytics
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| Org revenue rollup (EUT sum/count by day) | 0 | 0.71 | **1.06** | 1.02 | 1.46 | 1.46 | 1.46 | EXCELLENT |
-| Platform-wide appointment status histogram | 5 | 517.65 | **611.7** | 583.66 | 743.91 | 743.91 | 743.91 | GOOD |
-| Top 20 branches by completed booking GMV | 20 | 218.41 | **251.9** | 232.13 | 317.03 | 317.03 | 317.03 | GOOD |
-| Specialist utilization (appt hours / specialist) | 0 | 0.48 | **0.59** | 0.5 | 0.91 | 0.91 | 0.91 | EXCELLENT |
-| Attendance present-rate by branch (window) | 0 | 0.78 | **0.98** | 0.85 | 1.58 | 1.58 | 1.58 | EXCELLENT |
-| Running GMV window (org appointments) | 0 | 0.31 | **0.37** | 0.35 | 0.46 | 0.46 | 0.46 | EXCELLENT |
-| Cross-schema merchant payable vs appointments | 50 | 88.23 | **114.29** | 93.27 | 180.56 | 180.56 | 180.56 | EXCELLENT |
+| Org revenue rollup (EUT sum/count by day) | 0 | 0.29 | **0.34** | 0.33 | 0.39 | 0.39 | 0.39 | EXCELLENT |
+| Platform-wide appointment status histogram | 5 | 472.8 | **504.36** | 493.48 | 558.17 | 558.17 | 558.17 | GOOD |
+| Top 20 branches by completed booking GMV | 20 | 158.44 | **188.4** | 170 | 269.82 | 269.82 | 269.82 | EXCELLENT |
+| Specialist utilization (appt hours / specialist) | 0 | 3.51 | **5.22** | 5.18 | 6.34 | 6.34 | 6.34 | EXCELLENT |
+| Attendance present-rate by branch (window) | 0 | 2.47 | **3.64** | 3.38 | 5.18 | 5.18 | 5.18 | EXCELLENT |
+| Running GMV window (org appointments) | 0 | 0.68 | **1.55** | 1.41 | 2.71 | 2.71 | 2.71 | EXCELLENT |
+| Cross-schema merchant payable vs appointments | 50 | 99.78 | **100.66** | 100.53 | 101.48 | 101.48 | 101.48 | EXCELLENT |
 
 <details><summary>SQL samples</summary>
 
@@ -258,15 +294,15 @@ SELECT o.slug, COALESCE(ap.appts, 0)::int AS appts, COALESCE(eu.euts, 0)::int AS
 
 ---
 
-## 7. Write path (INSERT / UPDATE / DELETE)
+## 8. Write path (INSERT / UPDATE / DELETE)
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| INSERT appointment (single row) | 1 | 1.29 | **1.47** | 1.4 | 1.64 | 1.64 | 1.64 | EXCELLENT |
-| UPDATE appointment status BOOKED→CONFIRMED | 0 | 0.43 | **0.91** | 0.94 | 1.41 | 1.41 | 1.41 | EXCELLENT |
-| INSERT attendance row | 1 | 0.5 | **1.13** | 1.09 | 1.6 | 1.6 | 1.6 | EXCELLENT |
-| UPDATE org merchant balances | 1 | 0.39 | **0.7** | 0.85 | 0.98 | 0.98 | 0.98 | EXCELLENT |
-| DELETE bench appointments (cleanup slice) | 0 | 0.25 | **0.31** | 0.28 | 0.45 | 0.45 | 0.45 | EXCELLENT |
+| INSERT appointment (single row) | 1 | 1.88 | **2.48** | 2.31 | 3.67 | 3.67 | 3.67 | EXCELLENT |
+| UPDATE appointment status BOOKED→CONFIRMED | 0 | 0.34 | **0.53** | 0.43 | 1.06 | 1.06 | 1.06 | EXCELLENT |
+| INSERT attendance row | 1 | 0.66 | **2.65** | 2.54 | 4.29 | 4.29 | 4.29 | EXCELLENT |
+| UPDATE org merchant balances | 1 | 0.42 | **0.46** | 0.45 | 0.54 | 0.54 | 0.54 | EXCELLENT |
+| DELETE bench appointments (cleanup slice) | 0 | 0.33 | **0.41** | 0.37 | 0.57 | 0.57 | 0.57 | EXCELLENT |
 
 <details><summary>SQL samples</summary>
 
@@ -304,12 +340,12 @@ DELETE FROM appointments.appointments WHERE organization_id = $1 AND booking_num
 
 ---
 
-## 8. Mixed / application-style workloads
+## 9. Mixed / application-style workloads
 
 | Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
 |------|-----:|----:|----:|----:|----:|----:|----:|-------|
-| Salon dashboard snapshot (multi-aggregate) | 1 | 0.84 | **1.45** | 1.46 | 2.02 | 2.02 | 2.02 | EXCELLENT |
-| End-user booking history by end_user_ref | 20 | 0.41 | **0.55** | 0.51 | 0.76 | 0.76 | 0.76 | EXCELLENT |
+| Salon dashboard snapshot (multi-aggregate) | 1 | 1.03 | **2.05** | 2.28 | 2.49 | 2.49 | 2.49 | EXCELLENT |
+| End-user booking history by end_user_ref | 20 | 0.51 | **0.59** | 0.55 | 0.73 | 0.73 | 0.73 | EXCELLENT |
 
 <details><summary>SQL samples</summary>
 
@@ -329,20 +365,20 @@ SELECT booking_number, service_name, starts_at, status, gross_amount, payment_st
 
 ---
 
-## 9. EXPLAIN ANALYZE profiles
+## 10. EXPLAIN ANALYZE profiles
 
 Postgres planner cost + actual runtime (includes buffer hits). Useful for index / join tuning.
 
 | Query | Planning (ms) | Execution (ms) | Total cost | Actual rows | Top node |
 |-------|-------------:|---------------:|-----------:|------------:|----------|
-| Branch appointments 45d | 0.166 | **0.032** | 203.44 | 0 | Limit |
-| Org EUT daily rollup | 0.135 | **0.067** | 1306.03 | 0 | Sort |
-| Top branches by GMV | 1.58 | **1478.755** | 80928.37 | 20 | Limit |
-| Appointment+service+specialist | 0.601 | **0.072** | 812.77 | 0 | Limit |
+| Branch appointments 45d | 0.298 | **0.054** | 203.44 | 0 | Limit |
+| Org EUT daily rollup | 0.624 | **0.134** | 1306.03 | 0 | Sort |
+| Top branches by GMV | 0.821 | **267.941** | 43725.77 | 20 | Sort |
+| Appointment+service+specialist | 2.127 | **0.103** | 812.77 | 0 | Limit |
 
 ---
 
-## 10. Grading rubric
+## 11. Grading rubric
 
 | Grade | Point / range / join (avg) | Writes (avg) | Analytics (avg) |
 |-------|---------------------------:|-------------:|----------------:|
@@ -355,7 +391,7 @@ Postgres planner cost + actual runtime (includes buffer hits). Useful for index 
 
 ---
 
-## 11. Recommendations
+## 12. Recommendations
 
 - **Applied (Round 3):** covering / composite indexes in `076_performance_indexes_round3.sql` (full on local; lite subset `076b` on Neon due to 512 MB cap).
 - **Applied:** analytics SQL rewritten — prefix range predicates (`>= … AND < …`) + `LATERAL` aggregates for cross-schema rollups (avoids cartesian LEFT JOIN blow-up).

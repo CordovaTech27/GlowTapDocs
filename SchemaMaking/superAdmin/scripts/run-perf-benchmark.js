@@ -12,6 +12,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 const { performance } = require('perf_hooks');
 
 const args = Object.fromEntries(
@@ -170,16 +171,225 @@ async function inventory(client) {
       (SELECT COUNT(*)::int FROM organizations WHERE slug LIKE 'perf-%') AS perf_orgs,
       (SELECT COUNT(*)::int FROM branches b JOIN organizations o ON o.id=b.organization_id WHERE o.slug LIKE 'perf-%') AS perf_branches,
       (SELECT COUNT(*)::int FROM appointments.appointments WHERE booking_number LIKE 'PERF-APT-%') AS perf_appointments,
+      (SELECT COUNT(*)::int FROM appointments.appointment_status_events e
+         JOIN appointments.appointments a ON a.id = e.appointment_id
+         WHERE a.booking_number LIKE 'PERF-APT-%') AS perf_status_events,
       (SELECT COUNT(*)::int FROM rms.end_user_transactions WHERE transaction_ref LIKE 'PERF-EUT-%') AS perf_eut,
       (SELECT COUNT(*)::int FROM employee.attendance_records WHERE marked_by_ref='bulk-seed') AS perf_attendance,
       (SELECT COUNT(*)::int FROM employee.employees e JOIN organizations o ON o.id=e.organization_id WHERE o.slug LIKE 'perf-%') AS perf_employees,
       (SELECT COUNT(*)::int FROM services.branch_services s JOIN organizations o ON o.id=s.organization_id WHERE o.slug LIKE 'perf-%') AS perf_services
   `);
+  const totals = await client.query(`
+    SELECT COALESCE(SUM(n_live_tup), 0)::bigint AS approx_live_rows
+    FROM pg_stat_user_tables
+    WHERE schemaname IN ('public','rms','subscription','admin_org','cms','review','tickets','services','employee','appointments')
+  `);
+  const pc = counts.rows[0];
+  const perfRowSum =
+    Number(pc.perf_orgs) +
+    Number(pc.perf_branches) +
+    Number(pc.perf_appointments) +
+    Number(pc.perf_status_events) +
+    Number(pc.perf_eut) +
+    Number(pc.perf_attendance) +
+    Number(pc.perf_employees) +
+    Number(pc.perf_services);
   return {
     db_size: size.rows[0],
     schemas: schemas.rows,
     hottest_tables: hot.rows,
-    perf_counts: counts.rows[0],
+    perf_counts: { ...pc, perf_row_sum: perfRowSum },
+    approx_live_rows: Number(totals.rows[0].approx_live_rows),
+  };
+}
+
+function collectClientEnv() {
+  const cpus = os.cpus() || [];
+  const cpuModel = cpus[0]?.model?.replace(/\s+/g, ' ').trim() || 'unknown';
+  const speeds = cpus.map((c) => c.speed).filter(Boolean);
+  const avgMhz = speeds.length ? Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length) : null;
+  const totalMemGb = +(os.totalmem() / 1024 ** 3).toFixed(1);
+  const freeMemGb = +(os.freemem() / 1024 ** 3).toFixed(1);
+  return {
+    role: 'benchmark_client',
+    hostname: os.hostname(),
+    os: `${os.type()} ${os.release()}`,
+    platform: os.platform(),
+    arch: os.arch(),
+    cpu_model: cpuModel,
+    cpu_cores_logical: cpus.length,
+    cpu_avg_mhz: avgMhz,
+    ram_total_gb: totalMemGb,
+    ram_free_gb: freeMemGb,
+    node: process.version,
+  };
+}
+
+function parseSizeToMb(prettyOrRaw) {
+  if (prettyOrRaw == null) return null;
+  const s = String(prettyOrRaw).trim();
+  const m = s.match(/^([\d.]+)\s*(bytes|kB|KB|MB|GB|TB)?$/i);
+  if (!m) return null;
+  const n = Number(m[1]);
+  const u = (m[2] || 'MB').toUpperCase();
+  if (u === 'BYTES') return n / (1024 * 1024);
+  if (u === 'KB' || u === 'KB') return n / 1024;
+  if (u === 'MB') return n;
+  if (u === 'GB') return n * 1024;
+  if (u === 'TB') return n * 1024 * 1024;
+  return n;
+}
+
+function estimateNeonComputeSize({ maxConnections, sharedBuffersPretty }) {
+  // Neon public CU → RAM / LFC mapping
+  const table = [
+    { cu: 0.25, ram_gb: 1, max_conn: 104, lfc_gb: 0.75, sb_mb_max: 280 },
+    { cu: 0.5, ram_gb: 2, max_conn: 209, lfc_gb: 1.5, sb_mb_max: 450 },
+    { cu: 1, ram_gb: 4, max_conn: 419, lfc_gb: 3, sb_mb_max: 900 },
+    { cu: 2, ram_gb: 8, max_conn: 839, lfc_gb: 6, sb_mb_max: 1800 },
+    { cu: 3, ram_gb: 12, max_conn: 1258, lfc_gb: 9, sb_mb_max: 2700 },
+    { cu: 4, ram_gb: 16, max_conn: 1678, lfc_gb: 12, sb_mb_max: 3600 },
+  ];
+
+  // Prefer shared_buffers — max_connections on Neon free/pooler can diverge from CU table
+  const sbMb = parseSizeToMb(sharedBuffersPretty);
+  if (sbMb != null) {
+    for (const row of table) {
+      if (sbMb <= row.sb_mb_max) {
+        return { ...row, basis: `shared_buffers ≈ ${sharedBuffersPretty}` };
+      }
+    }
+    return { ...table[table.length - 1], basis: `shared_buffers ≈ ${sharedBuffersPretty}` };
+  }
+
+  const mc = Number(maxConnections) || 0;
+  let best = table[0];
+  let bestDiff = Infinity;
+  for (const row of table) {
+    const d = Math.abs(row.max_conn - mc);
+    if (d < bestDiff) {
+      best = row;
+      bestDiff = d;
+    }
+  }
+  return { ...best, basis: `closest CU by max_connections=${mc} (ref ${best.max_conn})` };
+}
+
+function parseNeonRegion(hostname) {
+  const m = String(hostname || '').match(/\.([a-z0-9-]+)\.aws\.neon\.tech$/i);
+  return m ? m[1] : null;
+}
+
+async function collectPostgresEnv(client) {
+  const meta = await client.query(`
+    SELECT current_database() AS database,
+           current_setting('server_version') AS server_version,
+           current_setting('shared_buffers') AS shared_buffers,
+           current_setting('work_mem') AS work_mem,
+           current_setting('effective_cache_size') AS effective_cache_size,
+           current_setting('max_parallel_workers') AS max_parallel_workers,
+           current_setting('max_parallel_workers_per_gather') AS max_parallel_workers_per_gather,
+           current_setting('max_connections') AS max_connections,
+           inet_server_addr()::text AS server_addr,
+           inet_server_port() AS server_port
+  `);
+  const sizes = await client.query(`
+    SELECT name,
+           CASE
+             WHEN unit = '8kB' THEN pg_size_pretty(setting::bigint * 8192)
+             WHEN unit = 'kB' THEN pg_size_pretty(setting::bigint * 1024)
+             ELSE setting || COALESCE(unit, '')
+           END AS pretty
+    FROM pg_settings
+    WHERE name IN ('shared_buffers', 'effective_cache_size', 'work_mem')
+  `);
+  const prettyMap = Object.fromEntries(sizes.rows.map((r) => [r.name, r.pretty]));
+  const row = meta.rows[0];
+  let hostHint = 'unknown';
+  try {
+    const u = new URL(process.env.DATABASE_URL);
+    hostHint = u.hostname;
+  } catch (_) {}
+
+  const base = {
+    role: 'postgres_server',
+    target: IS_LOCAL ? 'local' : 'neon',
+    host: hostHint,
+    database: row.database,
+    server_version: row.server_version,
+    shared_buffers: row.shared_buffers,
+    shared_buffers_pretty: prettyMap.shared_buffers || row.shared_buffers,
+    work_mem: prettyMap.work_mem || row.work_mem,
+    effective_cache_size: row.effective_cache_size,
+    effective_cache_size_pretty: prettyMap.effective_cache_size || row.effective_cache_size,
+    max_parallel_workers: row.max_parallel_workers,
+    max_parallel_workers_per_gather: row.max_parallel_workers_per_gather,
+    max_connections: row.max_connections,
+    server_addr: row.server_addr,
+    server_port: row.server_port,
+  };
+
+  if (IS_LOCAL) {
+    const clientEnv = collectClientEnv();
+    return {
+      ...base,
+      // Local: server hardware ≈ client machine
+      cpu_model: clientEnv.cpu_model,
+      cpu_cores_logical: clientEnv.cpu_cores_logical,
+      cpu_avg_mhz: clientEnv.cpu_avg_mhz,
+      ram_total_gb: clientEnv.ram_total_gb,
+      ram_free_gb: clientEnv.ram_free_gb,
+      os: clientEnv.os,
+      arch: clientEnv.arch,
+      hostname: clientEnv.hostname,
+      note: 'Local Postgres — CPU/RAM below are from this machine (client and DB host).',
+    };
+  }
+
+  // Neon: pull compute identity + num_cpus from the server, not the laptop
+  let projectId = null;
+  let endpointId = null;
+  try {
+    const ids = await client.query(`
+      SELECT current_setting('neon.project_id', true) AS project_id,
+             current_setting('neon.endpoint_id', true) AS endpoint_id
+    `);
+    projectId = ids.rows[0]?.project_id || null;
+    endpointId = ids.rows[0]?.endpoint_id || null;
+  } catch (_) {}
+
+  let numCpus = null;
+  try {
+    await client.query('CREATE EXTENSION IF NOT EXISTS neon_utils');
+    const cpus = await client.query('SELECT num_cpus() AS num_cpus');
+    numCpus = Number(cpus.rows[0]?.num_cpus);
+  } catch (_) {}
+
+  const est = estimateNeonComputeSize({
+    maxConnections: row.max_connections,
+    sharedBuffersPretty: prettyMap.shared_buffers || row.shared_buffers,
+  });
+  const region = parseNeonRegion(hostHint);
+
+  return {
+    ...base,
+    provider: 'Neon Postgres (serverless)',
+    region: region || 'unknown',
+    project_id: projectId,
+    endpoint_id: endpointId,
+    allocated_cpus: numCpus,
+    estimated_cu: est.cu,
+    estimated_ram_gb: est.ram_gb,
+    estimated_lfc_gb: est.lfc_gb,
+    compute_estimate_basis: est.basis,
+    // Fields used by report "hardware" panel (Neon, not laptop)
+    cpu_model: `Neon compute (~${est.cu} CU)`,
+    cpu_cores_logical: numCpus,
+    ram_total_gb: est.ram_gb,
+    note:
+      'Hardware metrics are Neon compute (not the laptop that ran Node). ' +
+      `num_cpus()=${numCpus ?? 'n/a'} (fractional CUs may round up). ` +
+      'Wall-clock timings still include client↔Neon WAN RTT.',
   };
 }
 
@@ -290,19 +500,93 @@ function renderMarkdown(report) {
   lines.push('');
   lines.push(`---`);
   lines.push('');
-  lines.push(`## 1. Executive summary`);
+  lines.push(`## 1. Test environment`);
+  lines.push('');
+  const rt = report.runtime || {};
+  const clientEnv = rt.client || {};
+  const pgEnv = rt.postgres || {};
+  if (IS_LOCAL) {
+    lines.push(`### Host machine (Postgres + benchmark client)`);
+    lines.push('');
+    lines.push(`| Metric | Value |`);
+    lines.push(`|--------|-------|`);
+    lines.push(`| Hostname | ${pgEnv.hostname || clientEnv.hostname || '—'} |`);
+    lines.push(`| OS | ${pgEnv.os || clientEnv.os || '—'} (${clientEnv.arch || '—'}) |`);
+    lines.push(`| CPU | ${pgEnv.cpu_model || clientEnv.cpu_model || '—'} |`);
+    lines.push(`| Logical cores | ${pgEnv.cpu_cores_logical ?? clientEnv.cpu_cores_logical ?? '—'} |`);
+    lines.push(
+      `| CPU clock (avg) | ${clientEnv.cpu_avg_mhz != null ? clientEnv.cpu_avg_mhz + ' MHz' : '—'} |`
+    );
+    lines.push(
+      `| RAM | ${pgEnv.ram_total_gb != null ? pgEnv.ram_total_gb + ' GB total / ' + (pgEnv.ram_free_gb ?? clientEnv.ram_free_gb) + ' GB free' : '—'} |`
+    );
+    lines.push(`| Node.js | ${clientEnv.node || '—'} |`);
+  } else {
+    lines.push(`### Neon compute (database host)`);
+    lines.push('');
+    lines.push(`| Metric | Value |`);
+    lines.push(`|--------|-------|`);
+    lines.push(`| Provider | ${pgEnv.provider || 'Neon Postgres (serverless)'} |`);
+    lines.push(`| Region | ${pgEnv.region || '—'} |`);
+    lines.push(`| Project ID | ${pgEnv.project_id || '—'} |`);
+    lines.push(`| Endpoint ID | ${pgEnv.endpoint_id || '—'} |`);
+    lines.push(`| Host | ${pgEnv.host || '—'} |`);
+    lines.push(`| Estimated compute | ~${pgEnv.estimated_cu ?? '—'} CU |`);
+    lines.push(`| Estimated RAM | ~${pgEnv.estimated_ram_gb ?? '—'} GB |`);
+    lines.push(`| Local file cache (LFC) | ~${pgEnv.estimated_lfc_gb ?? '—'} GB |`);
+    lines.push(`| Allocated CPUs (num_cpus) | ${pgEnv.allocated_cpus ?? '—'} |`);
+    lines.push(`| Estimate basis | ${pgEnv.compute_estimate_basis || '—'} |`);
+    lines.push('');
+    lines.push(`> Laptop/client CPU is **not** listed — timings are Neon compute + WAN RTT from the runner.`);
+  }
+  lines.push('');
+  lines.push(`### PostgreSQL settings`);
+  lines.push('');
+  lines.push(`| Metric | Value |`);
+  lines.push(`|--------|-------|`);
+  lines.push(`| Target | ${pgEnv.target || (IS_LOCAL ? 'local' : 'neon')} |`);
+  lines.push(`| Database | ${pgEnv.database || '—'} |`);
+  lines.push(`| Version | ${pgEnv.server_version || '—'} |`);
+  lines.push(
+    `| shared_buffers | ${pgEnv.shared_buffers_pretty || pgEnv.shared_buffers || '—'} |`
+  );
+  lines.push(`| work_mem | ${pgEnv.work_mem || '—'} |`);
+  lines.push(
+    `| effective_cache_size | ${pgEnv.effective_cache_size_pretty || pgEnv.effective_cache_size || '—'} |`
+  );
+  lines.push(`| max_parallel_workers | ${pgEnv.max_parallel_workers || '—'} |`);
+  lines.push(`| max_parallel_workers_per_gather | ${pgEnv.max_parallel_workers_per_gather || '—'} |`);
+  lines.push(`| max_connections | ${pgEnv.max_connections || '—'} |`);
+  if (pgEnv.note) {
+    lines.push('');
+    lines.push(`> ${pgEnv.note}`);
+  }
+  lines.push('');
+  lines.push(`---`);
+  lines.push('');
+  lines.push(`## 2. Dataset under test`);
   lines.push('');
   lines.push(`| Metric | Value |`);
   lines.push(`|--------|------:|`);
   lines.push(
-    `| Database size | ${inv.db_size.pretty}${IS_LOCAL ? '' : ' / 512 MB'} |`
+    `| Database size | ${inv.db_size.pretty}${IS_LOCAL ? '' : ' / 512 MB free-tier cap'} |`
+  );
+  lines.push(
+    `| Approx. live rows (tracked schemas) | ${(inv.approx_live_rows || 0).toLocaleString('en-IN')} |`
+  );
+  lines.push(
+    `| PERF seed row sum (listed below) | ${(inv.perf_counts.perf_row_sum || 0).toLocaleString('en-IN')} |`
   );
   lines.push(`| Perf organizations | ${inv.perf_counts.perf_orgs.toLocaleString('en-IN')} |`);
   lines.push(`| Perf branches | ${inv.perf_counts.perf_branches.toLocaleString('en-IN')} |`);
   lines.push(`| Perf appointments | ${inv.perf_counts.perf_appointments.toLocaleString('en-IN')} |`);
+  lines.push(
+    `| Perf status events | ${(inv.perf_counts.perf_status_events || 0).toLocaleString('en-IN')} |`
+  );
   lines.push(`| Perf EUT | ${inv.perf_counts.perf_eut.toLocaleString('en-IN')} |`);
   lines.push(`| Perf attendance rows | ${inv.perf_counts.perf_attendance.toLocaleString('en-IN')} |`);
   lines.push(`| Perf employees | ${inv.perf_counts.perf_employees.toLocaleString('en-IN')} |`);
+  lines.push(`| Perf branch services | ${inv.perf_counts.perf_services.toLocaleString('en-IN')} |`);
   lines.push(`| Benchmark tests | ${report.benchmarks.length} |`);
   lines.push(`| EXPLAIN ANALYZE profiles | ${report.explains.length} |`);
 
@@ -330,7 +614,7 @@ function renderMarkdown(report) {
 
   lines.push(`---`);
   lines.push('');
-  lines.push(`## 2. Storage & schema footprint`);
+  lines.push(`## 3. Storage & schema footprint`);
   lines.push('');
   lines.push(`| Schema | Tables | Size |`);
   lines.push(`|--------|-------:|------|`);
@@ -352,12 +636,12 @@ function renderMarkdown(report) {
 
   const cats = ['point_lookup', 'range_scan', 'join', 'analytics', 'write', 'mixed'];
   const catTitles = {
-    point_lookup: '3. Point lookups (GET by key / unique)',
-    range_scan: '4. Range / filter scans',
-    join: '5. Multi-table joins',
-    analytics: '6. Aggregations & expensive analytics',
-    write: '7. Write path (INSERT / UPDATE / DELETE)',
-    mixed: '8. Mixed / application-style workloads',
+    point_lookup: '4. Point lookups (GET by key / unique)',
+    range_scan: '5. Range / filter scans',
+    join: '6. Multi-table joins',
+    analytics: '7. Aggregations & expensive analytics',
+    write: '8. Write path (INSERT / UPDATE / DELETE)',
+    mixed: '9. Mixed / application-style workloads',
   };
 
   for (const cat of cats) {
@@ -374,7 +658,7 @@ function renderMarkdown(report) {
     mixed: report.benchmarks.filter((b) => b.category === 'mixed'),
   };
 
-  let section = 3;
+  let section = 4;
   for (const [cat, title] of Object.entries(catTitles)) {
     const items = groups[cat] || [];
     if (!items.length) continue;
@@ -648,6 +932,86 @@ function renderHtml(md, report, baseline) {
   const maxScore = benches.length * 4;
   const healthPct = maxScore ? Math.round((score / maxScore) * 100) : 0;
 
+  const rt = report.runtime || {};
+  const clientEnv = rt.client || {};
+  const pgEnv = rt.postgres || {};
+  const pc = report.inventory.perf_counts || {};
+  const fmt = (n) => Number(n || 0).toLocaleString('en-IN');
+
+  let hardwareTitle;
+  let hardwareHint;
+  let hardwareRows;
+  if (IS_LOCAL) {
+    hardwareTitle = 'Host machine';
+    hardwareHint = 'CPU / RAM where Postgres + Node ran';
+    hardwareRows = [
+      ['Hostname', pgEnv.hostname || clientEnv.hostname],
+      ['OS', `${pgEnv.os || clientEnv.os || '—'} (${clientEnv.arch || '—'})`],
+      ['CPU', pgEnv.cpu_model || clientEnv.cpu_model],
+      ['Logical cores', pgEnv.cpu_cores_logical ?? clientEnv.cpu_cores_logical],
+      ['CPU clock (avg)', clientEnv.cpu_avg_mhz != null ? `${clientEnv.cpu_avg_mhz} MHz` : '—'],
+      [
+        'RAM',
+        pgEnv.ram_total_gb != null
+          ? `${pgEnv.ram_total_gb} GB total · ${pgEnv.ram_free_gb ?? clientEnv.ram_free_gb} GB free`
+          : '—',
+      ],
+      ['Node.js', clientEnv.node],
+    ];
+  } else {
+    hardwareTitle = 'Neon compute';
+    hardwareHint = 'Database host resources (not the laptop runner)';
+    hardwareRows = [
+      ['Provider', pgEnv.provider || 'Neon Postgres (serverless)'],
+      ['Region', pgEnv.region],
+      ['Project ID', pgEnv.project_id],
+      ['Endpoint ID', pgEnv.endpoint_id],
+      ['Host', pgEnv.host],
+      ['Estimated CU', pgEnv.estimated_cu != null ? `~${pgEnv.estimated_cu} CU` : '—'],
+      ['Estimated RAM', pgEnv.estimated_ram_gb != null ? `~${pgEnv.estimated_ram_gb} GB` : '—'],
+      ['Local file cache', pgEnv.estimated_lfc_gb != null ? `~${pgEnv.estimated_lfc_gb} GB` : '—'],
+      ['Allocated CPUs (num_cpus)', pgEnv.allocated_cpus],
+      ['Estimate basis', pgEnv.compute_estimate_basis],
+    ];
+  }
+
+  const envHardwareRows = hardwareRows
+    .map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(String(v ?? '—'))}</td></tr>`)
+    .join('');
+
+  const envPgRows = [
+    ['Database', pgEnv.database],
+    ['Version', pgEnv.server_version],
+    ['shared_buffers', pgEnv.shared_buffers_pretty || pgEnv.shared_buffers],
+    ['work_mem', pgEnv.work_mem],
+    ['effective_cache_size', pgEnv.effective_cache_size_pretty || pgEnv.effective_cache_size],
+    ['max_parallel_workers', pgEnv.max_parallel_workers],
+    ['max_parallel_workers_per_gather', pgEnv.max_parallel_workers_per_gather],
+    ['max_connections', pgEnv.max_connections],
+  ]
+    .map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(String(v ?? '—'))}</td></tr>`)
+    .join('');
+
+  const datasetRows = [
+    ['Database size', report.inventory.db_size.pretty],
+    ['Approx. live rows', fmt(report.inventory.approx_live_rows)],
+    ['PERF seed row sum', fmt(pc.perf_row_sum)],
+    ['Organizations', fmt(pc.perf_orgs)],
+    ['Branches', fmt(pc.perf_branches)],
+    ['Appointments', fmt(pc.perf_appointments)],
+    ['Status events', fmt(pc.perf_status_events)],
+    ['End-user transactions', fmt(pc.perf_eut)],
+    ['Attendance rows', fmt(pc.perf_attendance)],
+    ['Employees', fmt(pc.perf_employees)],
+    ['Branch services', fmt(pc.perf_services)],
+  ]
+    .map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(String(v))}</td></tr>`)
+    .join('');
+
+  const cpuKpi = IS_LOCAL
+    ? `<div class="kpi"><div class="label">CPU cores</div><div class="value">${pgEnv.cpu_cores_logical || clientEnv.cpu_cores_logical || '—'}</div><div class="sub">logical</div></div>`
+    : `<div class="kpi"><div class="label">Neon CU</div><div class="value" style="font-size:1.25rem">~${pgEnv.estimated_cu ?? '—'}</div><div class="sub">~${pgEnv.estimated_ram_gb ?? '—'} GB RAM · ${pgEnv.allocated_cpus ?? '—'} CPU</div></div>`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -847,12 +1211,38 @@ function renderHtml(md, report, baseline) {
     <div class="kpi"><div class="label">Acceptable</div><div class="value" style="color:var(--amber)">${gradeCounts.ACCEPTABLE}</div></div>
     <div class="kpi"><div class="label">Slow</div><div class="value" style="color:var(--rose)">${gradeCounts.SLOW}</div></div>
     <div class="kpi"><div class="label">DB size</div><div class="value" style="font-size:1.25rem">${escapeHtml(report.inventory.db_size.pretty)}</div></div>
-    ${
-      avgImprovement != null
-        ? `<div class="kpi"><div class="label">Avg gain</div><div class="value" style="color:var(--emerald)">${avgImprovement}%</div><div class="sub">${improved} faster · ${slowed} slower</div></div>`
-        : ''
-    }
+    <div class="kpi"><div class="label">Live rows</div><div class="value" style="font-size:1.15rem">${fmt(report.inventory.approx_live_rows)}</div><div class="sub">approx · all schemas</div></div>
+    ${cpuKpi}
   </section>
+
+  <div class="grid3" style="margin-bottom:14px">
+    <div class="card">
+      <h2>${escapeHtml(hardwareTitle)}</h2>
+      <p class="hint">${escapeHtml(hardwareHint)}</p>
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody>${envHardwareRows}</tbody>
+      </table>
+      ${pgEnv.note && !IS_LOCAL ? `<p class="muted" style="margin:12px 0 0;font-size:0.82rem">${escapeHtml(pgEnv.note)}</p>` : ''}
+    </div>
+    <div class="card">
+      <h2>PostgreSQL settings</h2>
+      <p class="hint">${IS_LOCAL ? 'Local GlowTap instance' : 'Neon serverless Postgres knobs'}</p>
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody>${envPgRows}</tbody>
+      </table>
+      ${pgEnv.note && IS_LOCAL ? `<p class="muted" style="margin:12px 0 0;font-size:0.82rem">${escapeHtml(pgEnv.note)}</p>` : ''}
+    </div>
+    <div class="card">
+      <h2>Dataset under test</h2>
+      <p class="hint">PERF seed + tracked live rows</p>
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody>${datasetRows}</tbody>
+      </table>
+    </div>
+  </div>
 
   ${
     topWins.length
@@ -1152,6 +1542,7 @@ async function main() {
   const report = {
     generatedAt: new Date().toISOString(),
     rounds: ROUNDS,
+    runtime: null,
     inventory: null,
     benchmarks: [],
     explains: [],
@@ -1164,7 +1555,11 @@ async function main() {
       await client.query('SET work_mem = \'64MB\'');
       await client.query('SET enable_partitionwise_aggregate = on');
     }
-    console.log('Collecting inventory...');
+    console.log('Collecting runtime + inventory...');
+    report.runtime = {
+      client: collectClientEnv(),
+      postgres: await collectPostgresEnv(client),
+    };
     report.inventory = await inventory(client);
 
     console.log('Preparing isolated DML fixtures...');
