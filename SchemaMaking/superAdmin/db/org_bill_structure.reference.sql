@@ -1,6 +1,6 @@
 -- Per-organization billing terms (post migration 016)
 
-CREATE TABLE org_bill_structure (
+CREATE TABLE rms.org_bill_structure (
   id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id       UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   subscription_plan_id  UUID NOT NULL REFERENCES subscription_plans(id),

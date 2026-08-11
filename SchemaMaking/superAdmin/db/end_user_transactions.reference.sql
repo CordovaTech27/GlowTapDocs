@@ -1,4 +1,4 @@
-CREATE TABLE end_user_transactions (
+CREATE TABLE rms.end_user_transactions (
   id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   transaction_ref       VARCHAR(50) NOT NULL UNIQUE,
   organization_id       UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,

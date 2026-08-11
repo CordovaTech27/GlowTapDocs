@@ -1,0 +1,16 @@
+-- RMS (Revenue Management System) schema overview
+-- Tables live in schema `rms`; FKs reference public / subscription / etc.
+-- See individual *.reference.sql files.
+
+-- Tables in rms:
+--   billing_cycles, billing_discount_configs, state_tax_configs
+--   org_bill_structure
+--   invoices, invoice_line_items, invoice_tax_lines
+--   payments, invoice_payments, credit_notes, credit_note_line_items, refunds
+--   commission_rate_history
+--   org_merchant_balances, end_user_transactions
+--   salon_payouts, salon_payout_items, merchant_ledger_entries
+--
+-- Moved out:
+--   subscription.subscription_plans, subscription.org_subscription_changes
+--   public.platform_commission_config

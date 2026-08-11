@@ -1,6 +1,6 @@
 -- Salon → GlowTap subscription invoices
 
-CREATE TABLE invoices (
+CREATE TABLE rms.invoices (
   id                         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id            UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   org_bill_structure_id      UUID REFERENCES org_bill_structure(id) ON DELETE SET NULL,

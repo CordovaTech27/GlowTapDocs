@@ -1,4 +1,4 @@
-CREATE TABLE merchant_ledger_entries (
+CREATE TABLE rms.merchant_ledger_entries (
   id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id         UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   balance_bucket          VARCHAR(20) NOT NULL,

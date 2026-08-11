@@ -1,0 +1,18 @@
+-- Schema employee — salon staff HR (Admin Spec §4.7–4.9)
+-- FKs → public.organizations / public.branches
+--
+-- Tables:
+--   employees                  onboard / edit / deactivate (org + branch tagged)
+--   branch_holidays            branch holidays — ALL employees must follow
+--   branch_leave_policies      leave_type_id, days/month, CF allowed/%/max, year-end month
+--   leave_types                org catalog (SICK / CASUAL / PAID)
+--   leave_balances             annual entitlement (SaaS standard)
+--   leave_requests             apply / approve / cancel leave
+--   attendance_records         mark in/out + status
+--   attendance_audit_actions   edit audit
+--   employee_actions           lifecycle audit
+--
+-- Weekly offs: public.branches.weekly_off_days (SMALLINT[] 0=Sun…6=Sat).
+-- Empty = no weekly off until admin configures. All emp at branch follow.
+--
+-- See migrations 062–070.

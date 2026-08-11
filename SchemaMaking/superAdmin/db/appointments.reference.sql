@@ -1,0 +1,14 @@
+-- Schema appointments — bookings (Admin Spec §4.11–4.12)
+-- Free slots are auto-calculated from:
+--   services.branch_services.duration_minutes
+--   branch operating hours / weekly offs
+--   existing appointments + holds + specialist availability
+-- No branch_slot_configs table — duration lives on the service.
+--
+-- Tables:
+--   appointment_holds            short checkout TTL holds
+--   appointments                 bookings (status, payment, service snapshot)
+--   appointment_status_events    immutable status audit
+--   appointment_reschedules      prior → new slot history
+--
+-- See migrations 073_appointments_schema.sql, 075_drop_branch_slot_configs.sql

@@ -1,4 +1,4 @@
-CREATE TABLE credit_notes (
+CREATE TABLE rms.credit_notes (
   id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id           UUID NOT NULL REFERENCES invoices(id) ON DELETE RESTRICT,
   credit_note_number   VARCHAR(50) NOT NULL UNIQUE,

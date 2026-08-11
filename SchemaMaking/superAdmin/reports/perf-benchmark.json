@@ -1,0 +1,679 @@
+{
+  "generatedAt": "2026-08-03T21:26:17.962Z",
+  "rounds": 5,
+  "inventory": {
+    "db_size": {
+      "bytes": "485572608",
+      "pretty": "463 MB"
+    },
+    "schemas": [
+      {
+        "schema": "appointments",
+        "tables": 4,
+        "bytes": "183271424"
+      },
+      {
+        "schema": "employee",
+        "tables": 9,
+        "bytes": "129802240"
+      },
+      {
+        "schema": "rms",
+        "tables": 18,
+        "bytes": "90988544"
+      },
+      {
+        "schema": "services",
+        "tables": 4,
+        "bytes": "28286976"
+      },
+      {
+        "schema": "tickets",
+        "tables": 9,
+        "bytes": "18849792"
+      },
+      {
+        "schema": "review",
+        "tables": 7,
+        "bytes": "11075584"
+      },
+      {
+        "schema": "public",
+        "tables": 8,
+        "bytes": "5636096"
+      },
+      {
+        "schema": "admin_org",
+        "tables": 3,
+        "bytes": "4505600"
+      },
+      {
+        "schema": "cms",
+        "tables": 4,
+        "bytes": "638976"
+      },
+      {
+        "schema": "subscription",
+        "tables": 2,
+        "bytes": "262144"
+      }
+    ],
+    "hottest_tables": [
+      {
+        "relation": "appointments.appointments",
+        "live_rows": "170003",
+        "bytes": "148086784",
+        "size": "141 MB"
+      },
+      {
+        "relation": "employee.attendance_records",
+        "live_rows": "272002",
+        "bytes": "79519744",
+        "size": "76 MB"
+      },
+      {
+        "relation": "rms.end_user_transactions",
+        "live_rows": "63761",
+        "bytes": "45285376",
+        "size": "43 MB"
+      },
+      {
+        "relation": "appointments.appointment_status_events",
+        "live_rows": "170006",
+        "bytes": "35143680",
+        "size": "34 MB"
+      },
+      {
+        "relation": "employee.leave_balances",
+        "live_rows": "102006",
+        "bytes": "22765568",
+        "size": "22 MB"
+      },
+      {
+        "relation": "rms.merchant_ledger_entries",
+        "live_rows": "63763",
+        "bytes": "20357120",
+        "size": "19 MB"
+      },
+      {
+        "relation": "employee.employees",
+        "live_rows": "34002",
+        "bytes": "14745600",
+        "size": "14 MB"
+      },
+      {
+        "relation": "services.branch_services",
+        "live_rows": "42512",
+        "bytes": "14712832",
+        "size": "14 MB"
+      },
+      {
+        "relation": "services.branch_service_specialists",
+        "live_rows": "85001",
+        "bytes": "13328384",
+        "size": "13 MB"
+      },
+      {
+        "relation": "tickets.support_tickets",
+        "live_rows": "17002",
+        "bytes": "10452992",
+        "size": "10208 kB"
+      },
+      {
+        "relation": "review.reviews",
+        "live_rows": "17003",
+        "bytes": "10420224",
+        "size": "10176 kB"
+      },
+      {
+        "relation": "rms.salon_payout_items",
+        "live_rows": "34014",
+        "bytes": "8265728",
+        "size": "8072 kB"
+      },
+      {
+        "relation": "tickets.support_ticket_messages",
+        "live_rows": "34003",
+        "bytes": "7708672",
+        "size": "7528 kB"
+      },
+      {
+        "relation": "employee.leave_requests",
+        "live_rows": "17001",
+        "bytes": "7602176",
+        "size": "7424 kB"
+      },
+      {
+        "relation": "public.branches",
+        "live_rows": "4261",
+        "bytes": "4333568",
+        "size": "4232 kB"
+      },
+      {
+        "relation": "rms.invoices",
+        "live_rows": "10202",
+        "bytes": "4218880",
+        "size": "4120 kB"
+      },
+      {
+        "relation": "employee.branch_leave_policies",
+        "live_rows": "12756",
+        "bytes": "4210688",
+        "size": "4112 kB"
+      },
+      {
+        "relation": "rms.payments",
+        "live_rows": "10201",
+        "bytes": "3653632",
+        "size": "3568 kB"
+      },
+      {
+        "relation": "rms.invoice_line_items",
+        "live_rows": "10202",
+        "bytes": "3080192",
+        "size": "3008 kB"
+      },
+      {
+        "relation": "rms.invoice_payments",
+        "live_rows": "10201",
+        "bytes": "2523136",
+        "size": "2464 kB"
+      },
+      {
+        "relation": "admin_org.sub_admin_modules",
+        "live_rows": "13615",
+        "bytes": "2187264",
+        "size": "2136 kB"
+      },
+      {
+        "relation": "rms.salon_payouts",
+        "live_rows": "5103",
+        "bytes": "1867776",
+        "size": "1824 kB"
+      },
+      {
+        "relation": "admin_org.sub_admin_branches",
+        "live_rows": "5955",
+        "bytes": "1359872",
+        "size": "1328 kB"
+      },
+      {
+        "relation": "admin_org.sub_admins",
+        "live_rows": "1704",
+        "bytes": "958464",
+        "size": "936 kB"
+      },
+      {
+        "relation": "employee.leave_types",
+        "live_rows": "2553",
+        "bytes": "745472",
+        "size": "728 kB"
+      }
+    ],
+    "perf_counts": {
+      "perf_orgs": 850,
+      "perf_branches": 4250,
+      "perf_appointments": 170000,
+      "perf_eut": 63750,
+      "perf_attendance": 272000,
+      "perf_employees": 34000,
+      "perf_services": 42500
+    }
+  },
+  "benchmarks": [
+    {
+      "name": "GET organization by slug (unique)",
+      "category": "point_lookup",
+      "sql": "SELECT id, name, status, owner_email FROM organizations WHERE slug = $1",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 83.37,
+        "avg_ms": 89.22,
+        "p50_ms": 86.27,
+        "p95_ms": 97,
+        "p99_ms": 97,
+        "max_ms": 97
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "GET appointment by booking_number (unique)",
+      "category": "point_lookup",
+      "sql": "SELECT id, status, starts_at, gross_amount FROM appointments.appointments WHERE booking_number = $1",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 90.16,
+        "avg_ms": 97.34,
+        "p50_ms": 94.37,
+        "p95_ms": 110.71,
+        "p99_ms": 110.71,
+        "max_ms": 110.71
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "GET EUT by transaction_ref (unique)",
+      "category": "point_lookup",
+      "sql": "SELECT id, gross_amount, status, net_to_salon FROM rms.end_user_transactions WHERE transaction_ref = $1",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 85.8,
+        "avg_ms": 111.53,
+        "p50_ms": 121.2,
+        "p95_ms": 134.7,
+        "p99_ms": 134.7,
+        "max_ms": 134.7
+      },
+      "grade": "ACCEPTABLE"
+    },
+    {
+      "name": "GET employee by org + employee_number",
+      "category": "point_lookup",
+      "sql": "SELECT id, full_name, status FROM employee.employees WHERE organization_id = $1 AND employee_number = $2",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 89.55,
+        "avg_ms": 93.49,
+        "p50_ms": 94.48,
+        "p95_ms": 95.36,
+        "p99_ms": 95.36,
+        "max_ms": 95.36
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "List appointments for branch (30-day window)",
+      "category": "range_scan",
+      "sql": "SELECT id, booking_number, status, starts_at, gross_amount FROM appointments.appointments WHERE branch_id = $1 AND starts_at >= NOW() - INTERVAL '45 days' ORDER BY starts_at DESC LIMIT 50",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 93.41,
+        "avg_ms": 94.51,
+        "p50_ms": 94.36,
+        "p95_ms": 95.28,
+        "p99_ms": 95.28,
+        "max_ms": 95.28
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Filter appointments by status + org",
+      "category": "range_scan",
+      "sql": "SELECT id, booking_number, starts_at FROM appointments.appointments WHERE organization_id = $1 AND status = 'COMPLETED' ORDER BY starts_at DESC LIMIT 100",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 87.35,
+        "avg_ms": 93.6,
+        "p50_ms": 94.42,
+        "p95_ms": 100.69,
+        "p99_ms": 100.69,
+        "max_ms": 100.69
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Attendance for employee (date range)",
+      "category": "range_scan",
+      "sql": "SELECT attendance_date, status, check_in_at, check_out_at FROM employee.attendance_records WHERE employee_id = $1 ORDER BY attendance_date DESC LIMIT 30",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 85.75,
+        "avg_ms": 92.81,
+        "p50_ms": 93.97,
+        "p95_ms": 95.71,
+        "p99_ms": 95.71,
+        "max_ms": 95.71
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "EUT success list for org (recent)",
+      "category": "range_scan",
+      "sql": "SELECT transaction_ref, gross_amount, net_to_salon, occurred_at FROM rms.end_user_transactions WHERE organization_id = $1 AND status = 'SUCCESS' ORDER BY occurred_at DESC LIMIT 100",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 94.23,
+        "avg_ms": 95.01,
+        "p50_ms": 95.15,
+        "p95_ms": 95.41,
+        "p99_ms": 95.41,
+        "max_ms": 95.41
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Appointment + service + specialist join",
+      "category": "join",
+      "sql": "SELECT a.booking_number, a.status, a.starts_at, s.name AS service, e.full_name AS specialist, a.gross_amount FROM appointments.appointments a JOIN services.branch_services s ON s.id = a.branch_service_id LEFT JOIN employee.employees e ON e.id = a.specialist_id WHERE a.organization_id = $1 ORDER BY a.starts_at DESC LIMIT 50",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 93.73,
+        "avg_ms": 98.56,
+        "p50_ms": 98.89,
+        "p95_ms": 101.23,
+        "p99_ms": 101.23,
+        "max_ms": 101.23
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "EUT + appointment + branch join",
+      "category": "join",
+      "sql": "SELECT e.transaction_ref, e.gross_amount, e.commission_amount, a.booking_number, b.name AS branch FROM rms.end_user_transactions e LEFT JOIN appointments.appointments a ON a.booking_number = e.booking_ref JOIN branches b ON b.id = e.branch_id WHERE e.organization_id = $1 ORDER BY e.occurred_at DESC LIMIT 50",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 91.87,
+        "avg_ms": 96.2,
+        "p50_ms": 94.2,
+        "p95_ms": 102.67,
+        "p99_ms": 102.67,
+        "max_ms": 102.67
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Branch services with specialist count",
+      "category": "join",
+      "sql": "SELECT s.name, s.price, s.duration_minutes, COUNT(ss.employee_id)::int AS specialists FROM services.branch_services s LEFT JOIN services.branch_service_specialists ss ON ss.branch_service_id = s.id WHERE s.branch_id = $1 AND s.status = 'ACTIVE' GROUP BY s.id, s.name, s.price, s.duration_minutes ORDER BY s.sort_order",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 91.1,
+        "avg_ms": 95.52,
+        "p50_ms": 94.9,
+        "p95_ms": 99.69,
+        "p99_ms": 99.69,
+        "max_ms": 99.69
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Invoice + line items + payment join",
+      "category": "join",
+      "sql": "SELECT i.invoice_number, i.total_amount, i.status, COUNT(ili.id)::int AS lines, COALESCE(SUM(ip.amount_applied),0) AS paid FROM rms.invoices i LEFT JOIN rms.invoice_line_items ili ON ili.invoice_id = i.id LEFT JOIN rms.invoice_payments ip ON ip.invoice_id = i.id WHERE i.organization_id = $1 GROUP BY i.id ORDER BY i.issue_date DESC",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 97.04,
+        "avg_ms": 99.42,
+        "p50_ms": 99.88,
+        "p95_ms": 100.83,
+        "p99_ms": 100.83,
+        "max_ms": 100.83
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Org revenue rollup (EUT sum/count by day)",
+      "category": "analytics",
+      "sql": "SELECT date_trunc('day', occurred_at) AS day, COUNT(*)::int AS txns, SUM(gross_amount) AS gross, SUM(commission_amount) AS commission, SUM(net_to_salon) AS net FROM rms.end_user_transactions WHERE organization_id = $1 AND status = 'SUCCESS' GROUP BY 1 ORDER BY 1 DESC",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 88.04,
+        "avg_ms": 94.59,
+        "p50_ms": 95.86,
+        "p95_ms": 98.51,
+        "p99_ms": 98.51,
+        "max_ms": 98.51
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "Platform-wide appointment status histogram",
+      "category": "analytics",
+      "sql": "SELECT status, COUNT(*)::int AS n, ROUND(AVG(gross_amount)::numeric, 2) AS avg_gross FROM appointments.appointments WHERE booking_number >= 'PERF-APT-' AND booking_number < 'PERF-APT.' GROUP BY status ORDER BY n DESC",
+      "rowCount": 5,
+      "stats": {
+        "n": 5,
+        "min_ms": 189.54,
+        "avg_ms": 250.44,
+        "p50_ms": 199.14,
+        "p95_ms": 401,
+        "p99_ms": 401,
+        "max_ms": 401
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "Top 20 branches by completed booking GMV",
+      "category": "analytics",
+      "sql": "SELECT b.name, o.slug AS org, x.completed, x.gmv FROM ( SELECT branch_id, COUNT(*)::int AS completed, SUM(gross_amount) AS gmv FROM appointments.appointments WHERE status = 'COMPLETED' AND booking_number >= 'PERF-APT-' AND booking_number < 'PERF-APT.' GROUP BY branch_id ORDER BY gmv DESC NULLS LAST LIMIT 20 ) x JOIN branches b ON b.id = x.branch_id JOIN organizations o ON o.id = b.organization_id ORDER BY x.gmv DESC",
+      "rowCount": 20,
+      "stats": {
+        "n": 5,
+        "min_ms": 169.02,
+        "avg_ms": 186.08,
+        "p50_ms": 171.56,
+        "p95_ms": 246.86,
+        "p99_ms": 246.86,
+        "max_ms": 246.86
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "Specialist utilization (appt hours / specialist)",
+      "category": "analytics",
+      "sql": "SELECT e.full_name, e.employee_number, COUNT(*)::int AS bookings, SUM(a.service_duration_min)::int AS minutes, ROUND(AVG(a.gross_amount)::numeric, 2) AS avg_ticket FROM appointments.appointments a JOIN employee.employees e ON e.id = a.specialist_id WHERE a.organization_id = $1 AND a.status IN ('COMPLETED','CONFIRMED','NO_SHOW') GROUP BY e.id ORDER BY minutes DESC",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 89.31,
+        "avg_ms": 94.75,
+        "p50_ms": 95.11,
+        "p95_ms": 99.71,
+        "p99_ms": 99.71,
+        "max_ms": 99.71
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "Attendance present-rate by branch (window)",
+      "category": "analytics",
+      "sql": "SELECT b.name, COUNT(*)::int AS records, COUNT(*) FILTER (WHERE ar.status = 'PRESENT')::int AS present, ROUND(100.0 * COUNT(*) FILTER (WHERE ar.status = 'PRESENT') / NULLIF(COUNT(*),0), 1) AS present_pct FROM employee.attendance_records ar JOIN branches b ON b.id = ar.branch_id WHERE ar.organization_id = $1 GROUP BY b.id, b.name ORDER BY present_pct DESC",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 89.65,
+        "avg_ms": 94.69,
+        "p50_ms": 90.21,
+        "p95_ms": 104.09,
+        "p99_ms": 104.09,
+        "max_ms": 104.09
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "Running GMV window (org appointments)",
+      "category": "analytics",
+      "sql": "SELECT booking_number, starts_at, gross_amount, SUM(gross_amount) OVER (ORDER BY starts_at ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_gmv FROM appointments.appointments WHERE organization_id = $1 AND status = 'COMPLETED' ORDER BY starts_at LIMIT 200",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 86.77,
+        "avg_ms": 100.33,
+        "p50_ms": 94.38,
+        "p95_ms": 129.99,
+        "p99_ms": 129.99,
+        "max_ms": 129.99
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "Cross-schema merchant payable vs appointments",
+      "category": "analytics",
+      "sql": "SELECT o.slug, COALESCE(ap.appts, 0)::int AS appts, COALESCE(eu.euts, 0)::int AS euts, COALESCE(eu.payable_accrued, 0) AS payable_accrued FROM organizations o LEFT JOIN LATERAL ( SELECT COUNT(*)::bigint AS appts FROM appointments.appointments a WHERE a.organization_id = o.id AND a.booking_number >= 'PERF-APT-' AND a.booking_number < 'PERF-APT.' ) ap ON TRUE LEFT JOIN LATERAL ( SELECT COUNT(*)::bigint AS euts, COALESCE(SUM(e.net_to_salon), 0) AS payable_accrued FROM rms.end_user_transactions e WH",
+      "rowCount": 50,
+      "stats": {
+        "n": 5,
+        "min_ms": 110.56,
+        "avg_ms": 133.74,
+        "p50_ms": 112.88,
+        "p95_ms": 219.95,
+        "p99_ms": 219.95,
+        "max_ms": 219.95
+      },
+      "grade": "EXCELLENT"
+    },
+    {
+      "name": "INSERT appointment (single row)",
+      "category": "write",
+      "sql": "INSERT INTO appointments.appointments ( booking_number, organization_id, branch_id, branch_service_id, specialist_id, end_user_ref, end_user_name, service_name, service_duration_min, starts_at, ends_at, status, source, list_price, discount_amount, gross_amount, payment_method, payment_status ) VALUES ( $1, $2, $3, $4, $5, 'EU-BENCH', 'Bench User', 'Bench Cut', 30, NOW() + ($6 || ' minutes')::interval, NOW() + (($6)::int + 30 || ' minutes')::interval, 'BOOKED', 'CONSUMER_APP', 499, 0, 499, 'ONLIN",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 89.95,
+        "avg_ms": 95.47,
+        "p50_ms": 95.54,
+        "p95_ms": 101.6,
+        "p99_ms": 101.6,
+        "max_ms": 101.6
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "UPDATE appointment status BOOKED→CONFIRMED",
+      "category": "write",
+      "sql": "UPDATE appointments.appointments SET status = 'CONFIRMED', confirmed_at = NOW(), updated_at = NOW(), payment_status = 'PAID' WHERE organization_id = $1 AND booking_number LIKE 'PERF-BENCH-APT-%' AND status = 'BOOKED' RETURNING id",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 89.71,
+        "avg_ms": 94.05,
+        "p50_ms": 95.11,
+        "p95_ms": 95.23,
+        "p99_ms": 95.23,
+        "max_ms": 95.23
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "INSERT attendance row",
+      "category": "write",
+      "sql": "INSERT INTO employee.attendance_records ( organization_id, branch_id, employee_id, attendance_date, check_in_at, check_out_at, status, source, marked_by_ref ) VALUES ( $1, $2, $3, CURRENT_DATE + ($4 || ' days')::interval, NOW(), NOW() + INTERVAL '8 hours', 'PRESENT', 'SYSTEM', 'perf-bench' ) ON CONFLICT (employee_id, attendance_date) DO UPDATE SET status = EXCLUDED.status, updated_at = NOW() RETURNING id",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 88.18,
+        "avg_ms": 91.87,
+        "p50_ms": 90.92,
+        "p95_ms": 96.6,
+        "p99_ms": 96.6,
+        "max_ms": 96.6
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "UPDATE org merchant balances",
+      "category": "write",
+      "sql": "UPDATE rms.org_merchant_balances SET outstanding_amount = outstanding_amount + 10, pending_payout_amount = pending_payout_amount + 25, updated_at = NOW() WHERE organization_id = $1 RETURNING outstanding_amount, pending_payout_amount",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 89.64,
+        "avg_ms": 94.27,
+        "p50_ms": 92.76,
+        "p95_ms": 99.33,
+        "p99_ms": 99.33,
+        "max_ms": 99.33
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "DELETE bench appointments (cleanup slice)",
+      "category": "write",
+      "sql": "DELETE FROM appointments.appointments WHERE organization_id = $1 AND booking_number LIKE 'PERF-BENCH-APT-%' AND status = 'CONFIRMED' RETURNING id",
+      "rowCount": 0,
+      "stats": {
+        "n": 5,
+        "min_ms": 93.17,
+        "avg_ms": 95.07,
+        "p50_ms": 95.51,
+        "p95_ms": 96.58,
+        "p99_ms": 96.58,
+        "max_ms": 96.58
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "Salon dashboard snapshot (multi-aggregate)",
+      "category": "mixed",
+      "sql": "SELECT (SELECT COUNT(*) FROM appointments.appointments WHERE organization_id = $1 AND starts_at::date = CURRENT_DATE) AS todays_appts, (SELECT COUNT(*) FROM appointments.appointments WHERE organization_id = $1 AND status = 'COMPLETED') AS completed, (SELECT COALESCE(SUM(gross_amount),0) FROM rms.end_user_transactions WHERE organization_id = $1 AND status = 'SUCCESS') AS eut_gross, (SELECT COUNT(*) FROM employee.employees WHERE organization_id = $1 AND status = 'ACTIVE') AS active_staff, (SELECT ",
+      "rowCount": 1,
+      "stats": {
+        "n": 5,
+        "min_ms": 91.38,
+        "avg_ms": 99.5,
+        "p50_ms": 96.91,
+        "p95_ms": 116.21,
+        "p99_ms": 116.21,
+        "max_ms": 116.21
+      },
+      "grade": "GOOD"
+    },
+    {
+      "name": "End-user booking history by end_user_ref",
+      "category": "mixed",
+      "sql": "SELECT booking_number, service_name, starts_at, status, gross_amount, payment_status FROM appointments.appointments WHERE end_user_ref = $1 ORDER BY starts_at DESC LIMIT 20",
+      "rowCount": 17,
+      "stats": {
+        "n": 5,
+        "min_ms": 87.85,
+        "avg_ms": 94.61,
+        "p50_ms": 94.98,
+        "p95_ms": 100.35,
+        "p99_ms": 100.35,
+        "max_ms": 100.35
+      },
+      "grade": "GOOD"
+    }
+  ],
+  "explains": [
+    {
+      "name": "Branch appointments 45d",
+      "planning_ms": 0.136,
+      "execution_ms": 0.042,
+      "total_cost": 158.15,
+      "actual_rows": 0,
+      "node": "Limit",
+      "wall_ms": 96.48
+    },
+    {
+      "name": "Org EUT daily rollup",
+      "planning_ms": 0.12,
+      "execution_ms": 0.04,
+      "total_cost": 275.23,
+      "actual_rows": 0,
+      "node": "Aggregate",
+      "wall_ms": 94.02
+    },
+    {
+      "name": "Top branches by GMV",
+      "planning_ms": 15.869,
+      "execution_ms": 65.641,
+      "total_cost": 11826.75,
+      "actual_rows": 20,
+      "node": "Sort",
+      "wall_ms": 188.61
+    },
+    {
+      "name": "Appointment+service+specialist",
+      "planning_ms": 5.645,
+      "execution_ms": 0.05,
+      "total_cost": 854.59,
+      "actual_rows": 0,
+      "node": "Limit",
+      "wall_ms": 103.13
+    }
+  ]
+}

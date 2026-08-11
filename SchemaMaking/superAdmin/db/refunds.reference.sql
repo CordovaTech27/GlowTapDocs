@@ -1,4 +1,4 @@
-CREATE TABLE refunds (
+CREATE TABLE rms.refunds (
   id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   payment_id        UUID NOT NULL REFERENCES payments(id) ON DELETE RESTRICT,
   credit_note_id    UUID REFERENCES credit_notes(id) ON DELETE SET NULL,

@@ -1,6 +1,6 @@
 -- Per-state tax configuration — Super Admin managed
 
-CREATE TABLE state_tax_configs (
+CREATE TABLE rms.state_tax_configs (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   state_id        UUID NOT NULL REFERENCES states(id) ON DELETE CASCADE,
   tax_code        VARCHAR(30) NOT NULL,

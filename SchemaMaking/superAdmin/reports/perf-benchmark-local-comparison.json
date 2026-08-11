@@ -1,0 +1,240 @@
+{
+  "generatedAt": "2026-08-03T21:01:52.588Z",
+  "baselineAt": "2026-08-03T20:41:50.764Z",
+  "comparison": [
+    {
+      "name": "GET organization by slug (unique)",
+      "before_avg_ms": 1.43,
+      "after_avg_ms": 1.43,
+      "delta_ms": 0,
+      "improvement_pct": 0,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "GET appointment by booking_number (unique)",
+      "before_avg_ms": 0.48,
+      "after_avg_ms": 0.89,
+      "delta_ms": 0.41,
+      "improvement_pct": -85.4,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "GET EUT by transaction_ref (unique)",
+      "before_avg_ms": 0.8,
+      "after_avg_ms": 0.97,
+      "delta_ms": 0.17,
+      "improvement_pct": -21.2,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "GET employee by org + employee_number",
+      "before_avg_ms": 0.44,
+      "after_avg_ms": 0.41,
+      "delta_ms": -0.03,
+      "improvement_pct": 6.8,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "List appointments for branch (30-day window)",
+      "before_avg_ms": 0.35,
+      "after_avg_ms": 1.19,
+      "delta_ms": 0.84,
+      "improvement_pct": -240,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Filter appointments by status + org",
+      "before_avg_ms": 0.3,
+      "after_avg_ms": 0.65,
+      "delta_ms": 0.35,
+      "improvement_pct": -116.7,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Attendance for employee (date range)",
+      "before_avg_ms": 0.81,
+      "after_avg_ms": 0.66,
+      "delta_ms": -0.15,
+      "improvement_pct": 18.5,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "EUT success list for org (recent)",
+      "before_avg_ms": 0.51,
+      "after_avg_ms": 1.04,
+      "delta_ms": 0.53,
+      "improvement_pct": -103.9,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Appointment + service + specialist join",
+      "before_avg_ms": 140.6,
+      "after_avg_ms": 2.17,
+      "delta_ms": -138.43,
+      "improvement_pct": 98.5,
+      "grade_before": "ACCEPTABLE",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "EUT + appointment + branch join",
+      "before_avg_ms": 1.07,
+      "after_avg_ms": 2.32,
+      "delta_ms": 1.25,
+      "improvement_pct": -116.8,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Branch services with specialist count",
+      "before_avg_ms": 0.95,
+      "after_avg_ms": 1.27,
+      "delta_ms": 0.32,
+      "improvement_pct": -33.7,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Invoice + line items + payment join",
+      "before_avg_ms": 0.8,
+      "after_avg_ms": 1.15,
+      "delta_ms": 0.35,
+      "improvement_pct": -43.7,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Org revenue rollup (EUT sum/count by day)",
+      "before_avg_ms": 0.45,
+      "after_avg_ms": 1.06,
+      "delta_ms": 0.61,
+      "improvement_pct": -135.6,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Platform-wide appointment status histogram",
+      "before_avg_ms": 2800.09,
+      "after_avg_ms": 611.7,
+      "delta_ms": -2188.39,
+      "improvement_pct": 78.2,
+      "grade_before": "ACCEPTABLE",
+      "grade_after": "GOOD"
+    },
+    {
+      "name": "Top 20 branches by completed booking GMV",
+      "before_avg_ms": 1642.87,
+      "after_avg_ms": 251.9,
+      "delta_ms": -1390.97,
+      "improvement_pct": 84.7,
+      "grade_before": "ACCEPTABLE",
+      "grade_after": "GOOD"
+    },
+    {
+      "name": "Specialist utilization (appt hours / specialist)",
+      "before_avg_ms": 0.45,
+      "after_avg_ms": 0.59,
+      "delta_ms": 0.14,
+      "improvement_pct": -31.1,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Attendance present-rate by branch (window)",
+      "before_avg_ms": 0.8,
+      "after_avg_ms": 0.98,
+      "delta_ms": 0.18,
+      "improvement_pct": -22.5,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Running GMV window (org appointments)",
+      "before_avg_ms": 0.24,
+      "after_avg_ms": 0.37,
+      "delta_ms": 0.13,
+      "improvement_pct": -54.2,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Cross-schema merchant payable vs appointments",
+      "before_avg_ms": 40444.84,
+      "after_avg_ms": 114.29,
+      "delta_ms": -40330.55,
+      "improvement_pct": 99.7,
+      "grade_before": "SLOW",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "INSERT appointment (single row)",
+      "before_avg_ms": 2.52,
+      "after_avg_ms": 1.47,
+      "delta_ms": -1.05,
+      "improvement_pct": 41.7,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "UPDATE appointment status BOOKED→CONFIRMED",
+      "before_avg_ms": 0.46,
+      "after_avg_ms": 0.91,
+      "delta_ms": 0.45,
+      "improvement_pct": -97.8,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "INSERT attendance row",
+      "before_avg_ms": 1.72,
+      "after_avg_ms": 1.13,
+      "delta_ms": -0.59,
+      "improvement_pct": 34.3,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "UPDATE org merchant balances",
+      "before_avg_ms": 0.51,
+      "after_avg_ms": 0.7,
+      "delta_ms": 0.19,
+      "improvement_pct": -37.3,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "DELETE bench appointments (cleanup slice)",
+      "before_avg_ms": 0.32,
+      "after_avg_ms": 0.31,
+      "delta_ms": -0.01,
+      "improvement_pct": 3.1,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "Salon dashboard snapshot (multi-aggregate)",
+      "before_avg_ms": 1.39,
+      "after_avg_ms": 1.45,
+      "delta_ms": 0.06,
+      "improvement_pct": -4.3,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    },
+    {
+      "name": "End-user booking history by end_user_ref",
+      "before_avg_ms": 0.46,
+      "after_avg_ms": 0.55,
+      "delta_ms": 0.09,
+      "improvement_pct": -19.6,
+      "grade_before": "EXCELLENT",
+      "grade_after": "EXCELLENT"
+    }
+  ]
+}

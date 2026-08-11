@@ -1,6 +1,6 @@
 -- Discount rules by plan and/or billing cycle (post migration 021)
 
-CREATE TABLE billing_discount_configs (
+CREATE TABLE rms.billing_discount_configs (
   id                      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name                    VARCHAR(100) NOT NULL,
   subscription_plan_id    UUID REFERENCES subscription_plans(id) ON DELETE CASCADE,

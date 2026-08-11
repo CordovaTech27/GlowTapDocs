@@ -1,0 +1,10 @@
+-- Schema services — platform taxonomy + branch-offered services
+--
+-- Platform (Super Admin):
+--   service_categories / service_subcategories
+--
+-- Branch (Salon Admin):
+--   branch_services              admin picks category + subcategory, sets name/price/duration
+--   branch_service_specialists   employees tagged to perform a service
+--
+-- See migrations 052, 060, 071.

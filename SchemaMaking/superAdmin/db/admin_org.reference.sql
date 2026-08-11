@@ -1,0 +1,4 @@
+-- Schema admin_org — Salon Admin / Sub Admin access control
+-- Tables: sub_admins, sub_admin_branches, sub_admin_modules
+-- user_access_actions stays in public (shared audit)
+-- See sub_admins.reference.sql

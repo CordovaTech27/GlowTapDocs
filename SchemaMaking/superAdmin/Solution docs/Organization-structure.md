@@ -877,9 +877,37 @@ The Super Admin portal shows org-level metrics (total branches, commission %, pl
 | `042_eut_is_paid_out.sql` | *(superseded)* added `is_paid_out` |
 | `043_drop_eut_is_paid_out.sql` | Dropped redundant `is_paid_out` (use `salon_payout_id` + payout status) |
 | `044_seed_outstanding_mocks.sql` | Open outstanding mocks: Glamour ₹325, Naturals ₹640 |
-| `045_sub_admins_access_control.sql` | Sub admins + branch/module access; org owner portal status; audit |
+| `054_move_revenue_to_rms_schema.sql` | Move billing/invoices/payments/marketplace settlement tables into schema `rms` |
+| `055_move_admin_access_to_admin_org.sql` | Move sub-admins + branch/module access + audit into schema `admin_org` |
+| `056_move_cms_to_cms_schema.sql` | Move CMS media/pages/posts + portal banners into schema `cms` |
+| `057_user_access_actions_to_public.sql` | Move `user_access_actions` back to `public` (shared audit) |
+| `058_move_reviews_to_review_schema.sql` | Move reviews/images/replies + moderation into schema `review` |
+| `059_move_support_to_tickets_schema.sql` | Move support tickets + CTS/SLA into schema `tickets` |
+| `060_move_service_catalog_to_services_schema.sql` | Move service categories/subcategories into schema `services` |
+| `061_subscription_schema_and_commission_to_public.sql` | `subscription_plans` + `org_subscription_changes` → `subscription`; `platform_commission_config` → `public` |
+| `062_employee_management_schema.sql` | Employee schema — staff, weekly offs, leave, holidays, attendance |
+| `063_branch_only_weekly_offs_and_holidays.sql` | Branch-only weekly offs (drop emp override); seed holidays for all branches |
+| `064_no_default_sunday_weekly_off.sql` | No default Sunday off — admin must configure branch weekly offs |
+| `065_branch_leave_policy_config.sql` | Branch leave year-end (Mar), carry-forward %, monthly accrual rules |
+| `066_seed_branch_weekly_offs_demo.sql` | Seed demo Wednesday weekly off per branch (editable by admin) |
+| `067_leave_type_carry_forward_flag.sql` | Per leave type carry_forward_allowed on branch accrual rules |
+| `068_branch_leave_policies_have_leave_type.sql` | Policies per leave_type_id; year settings → branch_leave_year_configs |
+| `069_leave_cf_on_policies_drop_year_config.sql` | CF %/max + year-end on policies; drop branch_leave_year_configs |
+| `070_weekly_offs_on_branches_drop_table.sql` | Move weekly offs to `branches.weekly_off_days`; drop `employee.branch_weekly_offs` |
+| `071_branch_services.sql` | Branch services (category/subcategory) + specialist tags |
+| `072_branch_services_discount.sql` | Add discount_amount / discount_percent / discount_description |
+| `073_appointments_schema.sql` | Appointments schema — holds, bookings, status/reschedule audit |
+| `074_appointments_seed_fix.sql` | Idempotent demo seed (sample Classic Hair Cut bookings) |
+| `075_drop_branch_slot_configs.sql` | Drop branch_slot_configs — slot length from branch_services.duration_minutes |
+| Perf seed | `scripts/bulk-seed-perf.js` — interconnected PERF-* load (Neon 512 MB capped; use `--orgs=1000` after storage upgrade). Cleanup: `scripts/cleanup-perf-seed.js` |
 | `046_drop_redundant_disabled_reason.sql` | Drop denormalized disable reasons (keep on `user_access_actions`) |
 | `047_cms_and_portal_banners.sql` | CMS media/pages/posts + Salon Admin `portal_banners` |
+| `048_review_moderation.sql` | Review moderation settings, abuse rules, reviews queue, reports, audit |
+| `049_seed_review_moderation_actions.sql` | Sample AUTO_APPROVE + HIDE rows in `review_moderation_actions` |
+| `050_review_action_auto_approve.sql` | Add `AUTO_APPROVE` action (system auto-publish vs human `APPROVE`) |
+| `051_support_ticketing.sql` | Support CTS + SLA + tickets (salon & customer) |
+| `052_service_catalog_taxonomy.sql` | Platform service Category → Subcategory masters |
+| `053_performance_indexes_round2.sql` | Missing FK + hot-path indexes; ANALYZE all major tables |
 
 ---
 
@@ -940,19 +968,80 @@ Public site serves only `PUBLISHED` with `publish_at <= now()`. Preview uses `pr
 
 ---
 
-## 16. Next Steps (Future Docs)
+## 16. Reviews & Ratings Moderation (§4.14)
+
+Super Admin moderation only (rule-based; no ML). Image standards: **max size / count / mime** — no width/height.
+
+| Table | Purpose |
+|-------|---------|
+| `review_moderation_settings` | Platform defaults: max image MB, auto-publish, queue toggles |
+| `review_abuse_rules` | Configurable regex/threshold rules → `QUEUE` / `AUTO_HIDE` / `REJECT_UPLOAD` |
+| `reviews` | Consumer reviews; status `PENDING` / `PUBLISHED` / `HIDDEN` / `REJECTED` |
+| `review_images` | Optional images (`file_size_bytes` only) |
+| `review_replies` | Salon public reply; Super Admin can hide |
+| `review_reports` | Flags from end user / salon / system |
+| `review_moderation_actions` | Audit: `AUTO_APPROVE` / `APPROVE` / hide / reject / restore (**reason here**) |
+
+`booking_ref` / `end_user_ref` soft until booking/end-user modules exist.
+
+---
+
+## 17. Support & Ticketing (§4.11)
+
+SaaS-style helpdesk (Freshdesk/Zendesk pattern). **Two personas:** `SALON` + `END_USER` (also `SUPER_ADMIN` / `SYSTEM`).
+
+### CTS (configurable)
+
+| Level | Table | Notes |
+|-------|--------|------|
+| **C**ategory | `support_ticket_categories` | `audience` = `SALON` / `END_USER` / `BOTH` |
+| **T**ype | `support_ticket_types` | Under category |
+| **S**ubtype | `support_ticket_subtypes` | Under type; `default_priority` |
+
+### Runtime
+
+| Table | Purpose |
+|-------|---------|
+| `support_sla_policies` | First-response + resolve minutes per priority |
+| `support_tickets` | Ticket header, CTS FKs, SLA due dates, CSAT |
+| `support_ticket_messages` | Public conversation |
+| `support_ticket_internal_notes` | Ops-only |
+| `support_ticket_attachments` | Files |
+| `support_ticket_events` | Status / assign audit |
+
+**Mocks:** `GT-TKT-2026-00001` (Looks salon billing), `GT-TKT-2026-00002` (customer refund).
+
+---
+
+## 18. Service Catalog Taxonomy (§4.15)
+
+Super Admin platform masters only (salon product names later).
+
+| Table | Purpose |
+|-------|---------|
+| `service_categories` | Level 1 — e.g. Hair Cut, Spa |
+| `service_subcategories` | Level 2 — e.g. Men's / Women's; or mirror of category name |
+
+**Single-level rule:** `is_single_level = true` → one subcategory with same `name`, `mirrors_category = true`, **different `id`**.
+
+**Later:** Salon Admin creates products under `(category_id, subcategory_id)` e.g. "Baba Hair Cut".
+
+---
+
+## 19. Next Steps (Future Docs)
 
 This document covers **Phase 1 hierarchy + compliance documents**. Subsequent solution docs will add:
 
 - `organization_subscriptions` (billing lifecycle / invoice history)
 - `organization_bank_accounts` (payout settlement bank details)
 - End-user accounts (replace soft `booking_ref` / `end_user_ref`); login history detail table
-- Services catalog & `branch_services`
+- Salon products / `branch_services` under `service_subcategories`
 - DPDP consent & data deletion workflows
 - REST API contracts for org/branch CRUD and approval workflows
-- REJECT / TICKET categories on `reason_codes` (lead reject, support tickets)
+- REJECT categories on `reason_codes` (lead reject — org lifecycle only; tickets use CTS)
 - B2C refund/dispute workflows against `end_user_transactions`
 - Banner rule evaluator service + Redis cache
+- Rating-distribution analytics / `branch_rating_stats`
 ---
 
 *Confidential — GlowTap Internal*

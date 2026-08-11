@@ -42,7 +42,8 @@ Dashboard
 ├── CMS & Banners            (website content, salon-admin promotional banners)
 ├── Platform Analytics       (KPIs, trends, usage)
 ├── Support & Ticketing      (platform and salon-raised tickets)
-├── Master Configuration     (reason codes, notifications, tax settings)
+├── Master Configuration     (reason codes, notifications, tax settings, service taxonomy)
+├── Reviews & Ratings        (moderation queue, flags, settings)
 └── Audit Log                (who did what, when)
 ```
 
@@ -416,44 +417,57 @@ Filters: date range, plan tier, region, salon segment.
 
 ### 4.11 Support & Ticketing
 
-Central helpdesk for platform-level and salon-raised issues.
+Central helpdesk for **two requester personas** (plus ops):
 
-**Ticket Creation:**
-- Select **Reason** (from configured master list)
-- Select **Sub-Reason** (dependent on reason)
-- Description (free text)
-- Attach files (screenshots, documents)
-- Link to salon/branch/user (optional)
-- Priority: Low, Medium, High, Critical
+| Source | Who | Where raised |
+|--------|-----|--------------|
+| `SALON` | Salon Admin / Sub Admin | Salon Admin portal |
+| `END_USER` | Customer | Consumer app (often booking-linked) |
+| `SUPER_ADMIN` | Ops creating on behalf | Super Admin portal |
+| `SYSTEM` | Auto (failed payment, etc.) | Platform jobs |
 
-**Ticket Sources:**
-- Created by Super Admin/Ops team
-- Escalated from salon admin portal
-- Auto-created from failed payments, approval bottlenecks (configurable)
+Modeled like Freshdesk / Zendesk: **CTS masters**, **SLA by priority**, conversation thread, internal notes, attachments, audit events.
 
-**Ticket Status Flow:**
+#### 4.11.1 CTS configuration (Category → Type → Subtype)
+
+Super Admin configures masters under Master Config / Support:
+
+1. **Category** — e.g. Billing, Technical (salon) / Booking, Payments (customer)  
+2. **Type** — under a category  
+3. **Subtype** — under a type; can set **default priority**
+
+Each category has `audience`: `SALON` | `END_USER` | `BOTH` so portals only show relevant CTS trees.
+
+#### 4.11.2 Ticket fields
+
+- Ticket number (e.g. `GT-TKT-2026-00001`)
+- CTS selection + subject + description
+- Priority: Low / Medium / High / Critical
+- Optional links: organization, branch, `booking_ref`, `end_user_ref`
+- Attachments (screenshots)
+- Assign to Super Admin / Ops agent
+
+#### 4.11.3 Status flow
 
 ```
-Created → In Progress → On Hold → Awaiting User Confirmation → Resolved
-                ↑              ↓
-                └──────────────┘
+CREATED → IN_PROGRESS → ON_HOLD → AWAITING_USER → RESOLVED → CLOSED
+                ↑                                      │
+                └──────────── REOPENED ────────────────┘
 ```
 
-| Status | Meaning |
-|--------|---------|
-| **Created** | New ticket, not yet assigned |
-| **In Progress** | Assigned agent working on it |
-| **On Hold** | Waiting on internal dependency |
-| **Awaiting User Confirmation** | Solution proposed; waiting for salon/user response |
-| **Resolved** | Closed with resolution notes |
+#### 4.11.4 SLA
 
-**Features:**
-- Assign to team member
-- Internal notes (not visible to salon)
-- SLA timers based on priority
-- Ticket history and audit trail
-- Reopen resolved tickets
-- Dashboard: open count, avg resolution time, overdue tickets
+Per priority (`support_sla_policies`): first-response minutes + resolve minutes.  
+Ticket stores `first_response_due_at` / `resolve_due_at`; overdue shown on dashboard.
+
+#### 4.11.5 Collaboration
+
+| Channel | Visibility |
+|---------|------------|
+| `support_ticket_messages` | Requester + agent (public thread) |
+| `support_ticket_internal_notes` | Super Admin / Ops only |
+| `support_ticket_events` | Status / assign / reopen audit |
+| CSAT | Optional score after resolve |
 
 ---
 
@@ -468,6 +482,7 @@ Centralized settings managed by Super Admin:
 - **Grace Period:** Days before a salon appears on defaulter report
 - **Feature Entitlements Matrix:** Which features each plan includes
 - **Payment Gateway Settings:** Active gateways, retry rules
+- **Service catalog taxonomy:** Category → Subcategory (platform masters; salons add products later)
 
 ---
 
@@ -480,9 +495,60 @@ Immutable log of all Super Admin actions:
 - When (timestamp)
 - IP address and session ID
 
-**Tracked Actions:** Approvals, suspensions, plan changes, discount applications, user disables, configuration changes, ticket updates.
+**Tracked Actions:** Approvals, suspensions, plan changes, discount applications, user disables, configuration changes, ticket updates, review moderation.
 
 Retention: configurable (recommended minimum 2 years).
+
+---
+
+### 4.14 Reviews & Ratings Moderation
+
+Moderate consumer booking reviews (Customer §4.6.6). **Rule-based only** (no ML). Salons cannot edit consumer reviews; Super Admin can approve, hide, reject, or restore.
+
+**Moderation settings (platform):**
+- Max image file size (e.g. **5 MB**)
+- Max images per review (e.g. 3)
+- Allowed mime types (JPEG / PNG / WebP)
+- Edit window days (default 7)
+- Auto-publish rules (e.g. rating ≥ 4, no text, no image → publish)
+- Queue toggles: has image, URL/phone in text
+- Max reviews per user per day
+
+**Abuse / spam rules:** Configurable regex / threshold rules (`QUEUE`, `AUTO_HIDE`, `REJECT_UPLOAD`) — no ML scoring.
+
+**Queue & flagged management:**
+- Review moderation queue (`PENDING`, open reports)
+- Flagged reviews from end user / salon / system
+- Actions: **AUTO_APPROVE** (system rule), Approve, Reject, Hide, Restore (text); Hide/Restore image or salon reply
+- All actions audited with reason
+
+**Salon replies:** View and hide inappropriate public replies.
+
+**Out of v1:** image width/height validation, ML toxicity/NSFW, rating-distribution dashboards (can add later from `PUBLISHED` reviews).
+
+---
+
+### 4.15 Service Catalog Taxonomy (Product inventory masters)
+
+Super Admin maintains the **platform service tree** used later when salons create named products/services.
+
+**Hierarchy (always 2 levels in DB):**
+
+```
+Category  →  Subcategory  →  (later) Salon product e.g. "Baba Hair Cut"
+```
+
+| Example | Category | Subcategories |
+|---------|----------|---------------|
+| Two-level | Hair Cut | Men's, Women's |
+| Two-level | Hair Color | Men's, Women's |
+| One-level | Spa | Spa *(same name, **different id**)* |
+| One-level | Beard Grooming | Beard Grooming *(mirrored)* |
+
+**Rules:**
+- Every category has ≥1 subcategory (UI always picks category + subcategory)
+- Single hierarchy: set `is_single_level` on category; create one subcategory with same display name, `mirrors_category = true`, **new UUID**
+- Salon Admin product names under a subcategory = future module (not Super Admin)
 
 ---
 
@@ -532,6 +598,7 @@ Retention: configurable (recommended minimum 2 years).
 | Account suspended/resumed | Salon admin | Email + in-app |
 | Ticket status update | Ticket raiser | Email + in-app |
 | Sub-admin disabled | Salon admin | Email |
+| Review hidden / rejected | End user (optional) | In-app |
 
 ---
 

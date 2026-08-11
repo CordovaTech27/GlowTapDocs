@@ -1,4 +1,4 @@
-CREATE TABLE invoice_line_items (
+CREATE TABLE rms.invoice_line_items (
   id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id           UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
   line_type            VARCHAR(20) NOT NULL,

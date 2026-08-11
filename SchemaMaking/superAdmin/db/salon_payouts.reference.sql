@@ -1,4 +1,4 @@
-CREATE TABLE salon_payouts (
+CREATE TABLE rms.salon_payouts (
   id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   payout_number         VARCHAR(50) NOT NULL UNIQUE,
   organization_id       UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,

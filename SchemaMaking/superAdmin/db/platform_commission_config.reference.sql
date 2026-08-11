@@ -1,6 +1,6 @@
--- Platform marketplace commission defaults
+-- Platform marketplace commission defaults (public)
 
-CREATE TABLE platform_commission_config (
+CREATE TABLE public.platform_commission_config (
   id                            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   default_pct                   DECIMAL(5, 2) NOT NULL DEFAULT 5.00,
   min_pct                       DECIMAL(5, 2) NOT NULL DEFAULT 1.00,
@@ -12,7 +12,7 @@ CREATE TABLE platform_commission_config (
   auto_recover_from_payouts     BOOLEAN NOT NULL DEFAULT TRUE,
   currency                      VARCHAR(3) NOT NULL DEFAULT 'INR',
   notes                         TEXT,
-  updated_by                    UUID REFERENCES super_admin_users(id),
+  updated_by                    UUID REFERENCES public.super_admin_users(id),
   created_at                    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at                    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

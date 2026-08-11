@@ -9,6 +9,7 @@ CREATE TABLE branches (
   contact_phone     VARCHAR(20),
   contact_email     VARCHAR(255),
   operating_hours   JSONB,
+  weekly_off_days   SMALLINT[] NOT NULL DEFAULT '{}', -- 0=Sun … 6=Sat; empty = none set
   latitude          DECIMAL(10,7),
   longitude         DECIMAL(10,7),
   status            VARCHAR(20) NOT NULL DEFAULT 'PENDING',

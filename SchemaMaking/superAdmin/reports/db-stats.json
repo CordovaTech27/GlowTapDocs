@@ -1,0 +1,542 @@
+{
+  "generated_at": "2026-07-29T16:55:41.601Z",
+  "summary": {
+    "tables": 53,
+    "indexes": 261,
+    "foreign_keys": 132,
+    "live_rows": 269,
+    "dead_tuples": 0
+  },
+  "tables": [
+    {
+      "table": "branches",
+      "rows": 11,
+      "dead_tuples": 0,
+      "total_size": "296 kB",
+      "index_size": "176 kB",
+      "index_pct": 59.5,
+      "index_count": 11,
+      "total_bytes": 303104
+    },
+    {
+      "table": "support_tickets",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "280 kB",
+      "index_size": "232 kB",
+      "index_pct": 82.9,
+      "index_count": 15,
+      "total_bytes": 286720
+    },
+    {
+      "table": "organizations",
+      "rows": 5,
+      "dead_tuples": 0,
+      "total_size": "240 kB",
+      "index_size": "184 kB",
+      "index_pct": 76.7,
+      "index_count": 12,
+      "total_bytes": 245760
+    },
+    {
+      "table": "org_bill_structure",
+      "rows": 5,
+      "dead_tuples": 0,
+      "total_size": "208 kB",
+      "index_size": "160 kB",
+      "index_pct": 76.9,
+      "index_count": 10,
+      "total_bytes": 212992
+    },
+    {
+      "table": "end_user_transactions",
+      "rows": 11,
+      "dead_tuples": 0,
+      "total_size": "192 kB",
+      "index_size": "144 kB",
+      "index_pct": 75,
+      "index_count": 9,
+      "total_bytes": 196608
+    },
+    {
+      "table": "org_subscription_changes",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "192 kB",
+      "index_size": "144 kB",
+      "index_pct": 75,
+      "index_count": 9,
+      "total_bytes": 196608
+    },
+    {
+      "table": "portal_banners",
+      "rows": 5,
+      "dead_tuples": 0,
+      "total_size": "184 kB",
+      "index_size": "136 kB",
+      "index_pct": 73.9,
+      "index_count": 7,
+      "total_bytes": 188416
+    },
+    {
+      "table": "cms_posts",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "176 kB",
+      "index_size": "128 kB",
+      "index_pct": 72.7,
+      "index_count": 8,
+      "total_bytes": 180224
+    },
+    {
+      "table": "cms_pages",
+      "rows": 6,
+      "dead_tuples": 0,
+      "total_size": "168 kB",
+      "index_size": "120 kB",
+      "index_pct": 71.4,
+      "index_count": 8,
+      "total_bytes": 172032
+    },
+    {
+      "table": "invoices",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "168 kB",
+      "index_size": "120 kB",
+      "index_pct": 71.4,
+      "index_count": 8,
+      "total_bytes": 172032
+    },
+    {
+      "table": "merchant_ledger_entries",
+      "rows": 13,
+      "dead_tuples": 0,
+      "total_size": "168 kB",
+      "index_size": "120 kB",
+      "index_pct": 71.4,
+      "index_count": 8,
+      "total_bytes": 172032
+    },
+    {
+      "table": "reviews",
+      "rows": 3,
+      "dead_tuples": 0,
+      "total_size": "160 kB",
+      "index_size": "112 kB",
+      "index_pct": 70,
+      "index_count": 7,
+      "total_bytes": 163840
+    },
+    {
+      "table": "billing_discount_configs",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "152 kB",
+      "index_size": "104 kB",
+      "index_pct": 68.4,
+      "index_count": 7,
+      "total_bytes": 155648
+    },
+    {
+      "table": "payments",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "144 kB",
+      "index_size": "96 kB",
+      "index_pct": 66.7,
+      "index_count": 6,
+      "total_bytes": 147456
+    },
+    {
+      "table": "credit_notes",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "136 kB",
+      "index_size": "88 kB",
+      "index_pct": 64.7,
+      "index_count": 6,
+      "total_bytes": 139264
+    },
+    {
+      "table": "state_tax_configs",
+      "rows": 15,
+      "dead_tuples": 0,
+      "total_size": "136 kB",
+      "index_size": "88 kB",
+      "index_pct": 64.7,
+      "index_count": 6,
+      "total_bytes": 139264
+    },
+    {
+      "table": "org_status_actions",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "128 kB",
+      "index_size": "80 kB",
+      "index_pct": 62.5,
+      "index_count": 5,
+      "total_bytes": 131072
+    },
+    {
+      "table": "review_moderation_actions",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "128 kB",
+      "index_size": "80 kB",
+      "index_pct": 62.5,
+      "index_count": 6,
+      "total_bytes": 131072
+    },
+    {
+      "table": "salon_payouts",
+      "rows": 3,
+      "dead_tuples": 0,
+      "total_size": "128 kB",
+      "index_size": "80 kB",
+      "index_pct": 62.5,
+      "index_count": 5,
+      "total_bytes": 131072
+    },
+    {
+      "table": "sub_admins",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "128 kB",
+      "index_size": "80 kB",
+      "index_pct": 62.5,
+      "index_count": 5,
+      "total_bytes": 131072
+    },
+    {
+      "table": "user_access_actions",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "128 kB",
+      "index_size": "80 kB",
+      "index_pct": 62.5,
+      "index_count": 5,
+      "total_bytes": 131072
+    },
+    {
+      "table": "reason_codes",
+      "rows": 14,
+      "dead_tuples": 0,
+      "total_size": "120 kB",
+      "index_size": "72 kB",
+      "index_pct": 60,
+      "index_count": 5,
+      "total_bytes": 122880
+    },
+    {
+      "table": "review_abuse_rules",
+      "rows": 3,
+      "dead_tuples": 0,
+      "total_size": "120 kB",
+      "index_size": "72 kB",
+      "index_pct": 60,
+      "index_count": 5,
+      "total_bytes": 122880
+    },
+    {
+      "table": "review_reports",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "120 kB",
+      "index_size": "72 kB",
+      "index_pct": 60,
+      "index_count": 5,
+      "total_bytes": 122880
+    },
+    {
+      "table": "service_categories",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "120 kB",
+      "index_size": "72 kB",
+      "index_pct": 60,
+      "index_count": 5,
+      "total_bytes": 122880
+    },
+    {
+      "table": "service_subcategories",
+      "rows": 6,
+      "dead_tuples": 0,
+      "total_size": "120 kB",
+      "index_size": "72 kB",
+      "index_pct": 60,
+      "index_count": 5,
+      "total_bytes": 122880
+    },
+    {
+      "table": "refunds",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "112 kB",
+      "index_size": "64 kB",
+      "index_pct": 57.1,
+      "index_count": 4,
+      "total_bytes": 114688
+    },
+    {
+      "table": "review_replies",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "112 kB",
+      "index_size": "64 kB",
+      "index_pct": 57.1,
+      "index_count": 4,
+      "total_bytes": 114688
+    },
+    {
+      "table": "support_ticket_categories",
+      "rows": 7,
+      "dead_tuples": 0,
+      "total_size": "112 kB",
+      "index_size": "64 kB",
+      "index_pct": 57.1,
+      "index_count": 5,
+      "total_bytes": 114688
+    },
+    {
+      "table": "invoice_line_items",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "104 kB",
+      "index_size": "64 kB",
+      "index_pct": 61.5,
+      "index_count": 4,
+      "total_bytes": 106496
+    },
+    {
+      "table": "cms_media",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "commission_rate_history",
+      "rows": 3,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "support_ticket_attachments",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "support_ticket_events",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "support_ticket_internal_notes",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "support_ticket_subtypes",
+      "rows": 9,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "support_ticket_types",
+      "rows": 12,
+      "dead_tuples": 0,
+      "total_size": "96 kB",
+      "index_size": "48 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 98304
+    },
+    {
+      "table": "credit_note_line_items",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "88 kB",
+      "index_size": "48 kB",
+      "index_pct": 54.5,
+      "index_count": 3,
+      "total_bytes": 90112
+    },
+    {
+      "table": "invoice_payments",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "88 kB",
+      "index_size": "48 kB",
+      "index_pct": 54.5,
+      "index_count": 3,
+      "total_bytes": 90112
+    },
+    {
+      "table": "invoice_tax_lines",
+      "rows": 2,
+      "dead_tuples": 0,
+      "total_size": "88 kB",
+      "index_size": "48 kB",
+      "index_pct": 54.5,
+      "index_count": 3,
+      "total_bytes": 90112
+    },
+    {
+      "table": "salon_payout_items",
+      "rows": 14,
+      "dead_tuples": 0,
+      "total_size": "88 kB",
+      "index_size": "48 kB",
+      "index_pct": 54.5,
+      "index_count": 3,
+      "total_bytes": 90112
+    },
+    {
+      "table": "support_ticket_messages",
+      "rows": 3,
+      "dead_tuples": 0,
+      "total_size": "88 kB",
+      "index_size": "40 kB",
+      "index_pct": 45.5,
+      "index_count": 3,
+      "total_bytes": 90112
+    },
+    {
+      "table": "billing_cycles",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "80 kB",
+      "index_size": "32 kB",
+      "index_pct": 40,
+      "index_count": 2,
+      "total_bytes": 81920
+    },
+    {
+      "table": "platform_commission_config",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "80 kB",
+      "index_size": "32 kB",
+      "index_pct": 40,
+      "index_count": 2,
+      "total_bytes": 81920
+    },
+    {
+      "table": "review_images",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "80 kB",
+      "index_size": "32 kB",
+      "index_pct": 40,
+      "index_count": 2,
+      "total_bytes": 81920
+    },
+    {
+      "table": "review_moderation_settings",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "80 kB",
+      "index_size": "32 kB",
+      "index_pct": 40,
+      "index_count": 2,
+      "total_bytes": 81920
+    },
+    {
+      "table": "super_admin_users",
+      "rows": 1,
+      "dead_tuples": 0,
+      "total_size": "80 kB",
+      "index_size": "32 kB",
+      "index_pct": 40,
+      "index_count": 2,
+      "total_bytes": 81920
+    },
+    {
+      "table": "support_sla_policies",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "80 kB",
+      "index_size": "40 kB",
+      "index_pct": 50,
+      "index_count": 3,
+      "total_bytes": 81920
+    },
+    {
+      "table": "states",
+      "rows": 36,
+      "dead_tuples": 0,
+      "total_size": "72 kB",
+      "index_size": "32 kB",
+      "index_pct": 44.4,
+      "index_count": 2,
+      "total_bytes": 73728
+    },
+    {
+      "table": "sub_admin_branches",
+      "rows": 5,
+      "dead_tuples": 0,
+      "total_size": "72 kB",
+      "index_size": "32 kB",
+      "index_pct": 44.4,
+      "index_count": 2,
+      "total_bytes": 73728
+    },
+    {
+      "table": "subscription_plans",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "64 kB",
+      "index_size": "16 kB",
+      "index_pct": 25,
+      "index_count": 1,
+      "total_bytes": 65536
+    },
+    {
+      "table": "org_merchant_balances",
+      "rows": 4,
+      "dead_tuples": 0,
+      "total_size": "56 kB",
+      "index_size": "16 kB",
+      "index_pct": 28.6,
+      "index_count": 1,
+      "total_bytes": 57344
+    },
+    {
+      "table": "sub_admin_modules",
+      "rows": 15,
+      "dead_tuples": 0,
+      "total_size": "56 kB",
+      "index_size": "16 kB",
+      "index_pct": 28.6,
+      "index_count": 1,
+      "total_bytes": 57344
+    }
+  ]
+}

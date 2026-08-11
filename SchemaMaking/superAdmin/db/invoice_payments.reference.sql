@@ -1,4 +1,4 @@
-CREATE TABLE invoice_payments (
+CREATE TABLE rms.invoice_payments (
   id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invoice_id     UUID NOT NULL REFERENCES invoices(id) ON DELETE CASCADE,
   payment_id     UUID NOT NULL REFERENCES payments(id) ON DELETE CASCADE,

@@ -1,6 +1,6 @@
 -- Billing cycle options (post migration 015)
 
-CREATE TABLE billing_cycles (
+CREATE TABLE rms.billing_cycles (
   id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code              VARCHAR(30) NOT NULL UNIQUE,
   name              VARCHAR(50) NOT NULL,

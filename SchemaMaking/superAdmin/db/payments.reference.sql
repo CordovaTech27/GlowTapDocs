@@ -1,4 +1,4 @@
-CREATE TABLE payments (
+CREATE TABLE rms.payments (
   id                 UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   organization_id    UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
   payment_number     VARCHAR(50) NOT NULL UNIQUE,

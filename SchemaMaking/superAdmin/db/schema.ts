@@ -1,4 +1,5 @@
 import {
+  pgSchema,
   pgTable,
   uuid,
   varchar,
@@ -14,6 +15,33 @@ import {
   date,
 } from 'drizzle-orm/pg-core';
 
+/** Revenue Management System — billing, invoices, payments, marketplace settlement */
+export const rms = pgSchema('rms');
+
+/** Salon Admin org portal — sub-admins, branch/module access (not Super Admin) */
+export const adminOrg = pgSchema('admin_org');
+
+/** CMS & portal banners — website content + salon portal promos */
+export const cms = pgSchema('cms');
+
+/** Reviews & ratings moderation */
+export const review = pgSchema('review');
+
+/** Support ticketing — CTS, SLA, tickets thread */
+export const tickets = pgSchema('tickets');
+
+/** Platform service catalog — Category → Subcategory */
+export const services = pgSchema('services');
+
+/** SaaS subscription plans + org plan-change history */
+export const subscription = pgSchema('subscription');
+
+/** Salon staff — employees, offs, leave, holidays, attendance */
+export const employee = pgSchema('employee');
+
+/** Bookings — holds, appointments, audit (slots from service duration) */
+export const appointments = pgSchema('appointments');
+
 export const superAdminUsers = pgTable('super_admin_users', {
   id: uuid('id').primaryKey().defaultRandom(),
   fullName: varchar('full_name', { length: 255 }).notNull(),
@@ -27,7 +55,7 @@ export const superAdminUsers = pgTable('super_admin_users', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const subscriptionPlans = pgTable('subscription_plans', {
+export const subscriptionPlans = subscription.table('subscription_plans', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 100 }).notNull(),
   description: text('description'),
@@ -37,7 +65,7 @@ export const subscriptionPlans = pgTable('subscription_plans', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const billingCycles = pgTable('billing_cycles', {
+export const billingCycles = rms.table('billing_cycles', {
   id: uuid('id').primaryKey().defaultRandom(),
   code: varchar('code', { length: 30 }).notNull().unique(),
   name: varchar('name', { length: 50 }).notNull(),
@@ -48,7 +76,7 @@ export const billingCycles = pgTable('billing_cycles', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const billingDiscountConfigs = pgTable('billing_discount_configs', {
+export const billingDiscountConfigs = rms.table('billing_discount_configs', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 100 }).notNull(),
   subscriptionPlanId: uuid('subscription_plan_id').references(() => subscriptionPlans.id, {
@@ -82,7 +110,7 @@ export const states = pgTable('states', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const stateTaxConfigs = pgTable(
+export const stateTaxConfigs = rms.table(
   'state_tax_configs',
   {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -187,6 +215,7 @@ export const branches = pgTable(
     contactPhone: varchar('contact_phone', { length: 20 }),
     contactEmail: varchar('contact_email', { length: 255 }),
     operatingHours: jsonb('operating_hours'),
+    weeklyOffDays: integer('weekly_off_days').array().notNull().default([]),
     latitude: numeric('latitude', { precision: 10, scale: 7 }),
     longitude: numeric('longitude', { precision: 10, scale: 7 }),
     status: varchar('status', { length: 20 }).notNull().default('PENDING'),
@@ -214,7 +243,7 @@ export const branches = pgTable(
 );
 
 /** §4.8.2 Sub Admins — created by Salon Admin; Super Admin view + disable only */
-export const subAdmins = pgTable('sub_admins', {
+export const subAdmins = adminOrg.table('sub_admins', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -231,7 +260,7 @@ export const subAdmins = pgTable('sub_admins', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const subAdminBranches = pgTable(
+export const subAdminBranches = adminOrg.table(
   'sub_admin_branches',
   {
     subAdminId: uuid('sub_admin_id')
@@ -245,7 +274,7 @@ export const subAdminBranches = pgTable(
   (table) => [primaryKey({ columns: [table.subAdminId, table.branchId] })]
 );
 
-export const subAdminModules = pgTable(
+export const subAdminModules = adminOrg.table(
   'sub_admin_modules',
   {
     subAdminId: uuid('sub_admin_id')
@@ -285,7 +314,7 @@ export const orgStatusActions = pgTable('org_status_actions', {
   performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const orgBillStructure = pgTable('org_bill_structure', {
+export const orgBillStructure = rms.table('org_bill_structure', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -315,7 +344,7 @@ export const orgBillStructure = pgTable('org_bill_structure', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const orgSubscriptionChanges = pgTable('org_subscription_changes', {
+export const orgSubscriptionChanges = subscription.table('org_subscription_changes', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -339,7 +368,7 @@ export const orgSubscriptionChanges = pgTable('org_subscription_changes', {
 });
 
 /** Salon → GlowTap subscription invoices (Stripe/Chargebee-style + GST lines) */
-export const invoices = pgTable('invoices', {
+export const invoices = rms.table('invoices', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -374,7 +403,7 @@ export const invoices = pgTable('invoices', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const invoiceLineItems = pgTable('invoice_line_items', {
+export const invoiceLineItems = rms.table('invoice_line_items', {
   id: uuid('id').primaryKey().defaultRandom(),
   invoiceId: uuid('invoice_id')
     .notNull()
@@ -392,7 +421,7 @@ export const invoiceLineItems = pgTable('invoice_line_items', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const invoiceTaxLines = pgTable('invoice_tax_lines', {
+export const invoiceTaxLines = rms.table('invoice_tax_lines', {
   id: uuid('id').primaryKey().defaultRandom(),
   invoiceLineItemId: uuid('invoice_line_item_id')
     .notNull()
@@ -405,7 +434,7 @@ export const invoiceTaxLines = pgTable('invoice_tax_lines', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const payments = pgTable('payments', {
+export const payments = rms.table('payments', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -429,7 +458,7 @@ export const payments = pgTable('payments', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const invoicePayments = pgTable(
+export const invoicePayments = rms.table(
   'invoice_payments',
   {
     id: uuid('id').primaryKey().defaultRandom(),
@@ -445,7 +474,7 @@ export const invoicePayments = pgTable(
   (table) => [unique().on(table.invoiceId, table.paymentId)]
 );
 
-export const creditNotes = pgTable('credit_notes', {
+export const creditNotes = rms.table('credit_notes', {
   id: uuid('id').primaryKey().defaultRandom(),
   invoiceId: uuid('invoice_id')
     .notNull()
@@ -468,7 +497,7 @@ export const creditNotes = pgTable('credit_notes', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const creditNoteLineItems = pgTable('credit_note_line_items', {
+export const creditNoteLineItems = rms.table('credit_note_line_items', {
   id: uuid('id').primaryKey().defaultRandom(),
   creditNoteId: uuid('credit_note_id')
     .notNull()
@@ -483,7 +512,7 @@ export const creditNoteLineItems = pgTable('credit_note_line_items', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const refunds = pgTable('refunds', {
+export const refunds = rms.table('refunds', {
   id: uuid('id').primaryKey().defaultRandom(),
   paymentId: uuid('payment_id')
     .notNull()
@@ -523,7 +552,7 @@ export const platformCommissionConfig = pgTable('platform_commission_config', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const commissionRateHistory = pgTable('commission_rate_history', {
+export const commissionRateHistory = rms.table('commission_rate_history', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -536,7 +565,7 @@ export const commissionRateHistory = pgTable('commission_rate_history', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const orgMerchantBalances = pgTable('org_merchant_balances', {
+export const orgMerchantBalances = rms.table('org_merchant_balances', {
   organizationId: uuid('organization_id')
     .primaryKey()
     .references(() => organizations.id, { onDelete: 'cascade' }),
@@ -550,7 +579,7 @@ export const orgMerchantBalances = pgTable('org_merchant_balances', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const salonPayouts = pgTable('salon_payouts', {
+export const salonPayouts = rms.table('salon_payouts', {
   id: uuid('id').primaryKey().defaultRandom(),
   payoutNumber: varchar('payout_number', { length: 50 }).notNull().unique(),
   organizationId: uuid('organization_id')
@@ -582,7 +611,7 @@ export const salonPayouts = pgTable('salon_payouts', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const endUserTransactions = pgTable('end_user_transactions', {
+export const endUserTransactions = rms.table('end_user_transactions', {
   id: uuid('id').primaryKey().defaultRandom(),
   transactionRef: varchar('transaction_ref', { length: 50 }).notNull().unique(),
   organizationId: uuid('organization_id')
@@ -619,7 +648,7 @@ export const endUserTransactions = pgTable('end_user_transactions', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const salonPayoutItems = pgTable('salon_payout_items', {
+export const salonPayoutItems = rms.table('salon_payout_items', {
   id: uuid('id').primaryKey().defaultRandom(),
   payoutId: uuid('payout_id')
     .notNull()
@@ -634,7 +663,7 @@ export const salonPayoutItems = pgTable('salon_payout_items', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const merchantLedgerEntries = pgTable('merchant_ledger_entries', {
+export const merchantLedgerEntries = rms.table('merchant_ledger_entries', {
   id: uuid('id').primaryKey().defaultRandom(),
   organizationId: uuid('organization_id')
     .notNull()
@@ -658,7 +687,7 @@ export const merchantLedgerEntries = pgTable('merchant_ledger_entries', {
 });
 
 /** §4.9 CMS & Banner Management */
-export const cmsMedia = pgTable('cms_media', {
+export const cmsMedia = cms.table('cms_media', {
   id: uuid('id').primaryKey().defaultRandom(),
   fileName: varchar('file_name', { length: 255 }).notNull(),
   storageUrl: text('storage_url').notNull(),
@@ -674,7 +703,7 @@ export const cmsMedia = pgTable('cms_media', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const cmsPages = pgTable('cms_pages', {
+export const cmsPages = cms.table('cms_pages', {
   id: uuid('id').primaryKey().defaultRandom(),
   slug: varchar('slug', { length: 100 }).notNull().unique(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -694,7 +723,7 @@ export const cmsPages = pgTable('cms_pages', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const cmsPosts = pgTable('cms_posts', {
+export const cmsPosts = cms.table('cms_posts', {
   id: uuid('id').primaryKey().defaultRandom(),
   slug: varchar('slug', { length: 150 }).notNull().unique(),
   title: varchar('title', { length: 255 }).notNull(),
@@ -715,7 +744,7 @@ export const cmsPosts = pgTable('cms_posts', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export const portalBanners = pgTable('portal_banners', {
+export const portalBanners = cms.table('portal_banners', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 255 }).notNull(),
   bodyText: text('body_text'),
@@ -733,4 +762,629 @@ export const portalBanners = pgTable('portal_banners', {
   updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** §4.12 Reviews & Ratings Moderation (Super Admin) — rule-based, no ML */
+export const reviewModerationSettings = review.table('review_moderation_settings', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  maxImageSizeMb: numeric('max_image_size_mb', { precision: 6, scale: 2 }).notNull().default('5.00'),
+  maxImagesPerReview: integer('max_images_per_review').notNull().default(3),
+  allowedMimeTypes: text('allowed_mime_types')
+    .array()
+    .notNull()
+    .default(['image/jpeg', 'image/png', 'image/webp']),
+  editWindowDays: integer('edit_window_days').notNull().default(7),
+  autoPublishHighRating: boolean('auto_publish_high_rating').notNull().default(true),
+  autoPublishMinRating: integer('auto_publish_min_rating').notNull().default(4),
+  autoPublishRequiresNoText: boolean('auto_publish_requires_no_text').notNull().default(true),
+  autoPublishRequiresNoImage: boolean('auto_publish_requires_no_image').notNull().default(true),
+  queueIfHasImage: boolean('queue_if_has_image').notNull().default(true),
+  queueIfHasUrlOrPhone: boolean('queue_if_has_url_or_phone').notNull().default(true),
+  maxReviewsPerUserPerDay: integer('max_reviews_per_user_per_day').notNull().default(10),
+  isActive: boolean('is_active').notNull().default(true),
+  updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reviewAbuseRules = review.table('review_abuse_rules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  label: varchar('label', { length: 255 }).notNull(),
+  description: text('description'),
+  condition: jsonb('condition').notNull().default({}),
+  action: varchar('action', { length: 20 }).notNull().default('QUEUE'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdBy: uuid('created_by').references(() => superAdminUsers.id),
+  updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reviews = review.table('reviews', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'cascade' }),
+  bookingRef: varchar('booking_ref', { length: 50 }).notNull().unique(),
+  endUserRef: varchar('end_user_ref', { length: 50 }).notNull(),
+  specialistRef: varchar('specialist_ref', { length: 50 }),
+  overallRating: integer('overall_rating').notNull(),
+  ratingService: integer('rating_service'),
+  ratingSpecialist: integer('rating_specialist'),
+  ratingCleanliness: integer('rating_cleanliness'),
+  ratingValue: integer('rating_value'),
+  body: text('body'),
+  status: varchar('status', { length: 20 }).notNull().default('PENDING'),
+  matchedRuleCodes: text('matched_rule_codes').array().notNull().default([]),
+  submittedAt: timestamp('submitted_at', { withTimezone: true }).notNull().defaultNow(),
+  editedAt: timestamp('edited_at', { withTimezone: true }),
+  editDeadlineAt: timestamp('edit_deadline_at', { withTimezone: true }),
+  publishedAt: timestamp('published_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reviewImages = review.table('review_images', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  reviewId: uuid('review_id')
+    .notNull()
+    .references(() => reviews.id, { onDelete: 'cascade' }),
+  storageUrl: text('storage_url').notNull(),
+  fileName: varchar('file_name', { length: 255 }),
+  mimeType: varchar('mime_type', { length: 100 }).notNull(),
+  fileSizeBytes: bigint('file_size_bytes', { mode: 'number' }).notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('ACTIVE'),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reviewReplies = review.table('review_replies', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  reviewId: uuid('review_id')
+    .notNull()
+    .unique()
+    .references(() => reviews.id, { onDelete: 'cascade' }),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  body: text('body').notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('PUBLISHED'),
+  repliedByRef: varchar('replied_by_ref', { length: 100 }),
+  repliedAt: timestamp('replied_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reviewReports = review.table('review_reports', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  reviewId: uuid('review_id')
+    .notNull()
+    .references(() => reviews.id, { onDelete: 'cascade' }),
+  replyId: uuid('reply_id').references(() => reviewReplies.id, { onDelete: 'set null' }),
+  reporterType: varchar('reporter_type', { length: 20 }).notNull(),
+  reporterRef: varchar('reporter_ref', { length: 100 }),
+  reasonCode: varchar('reason_code', { length: 40 }).notNull(),
+  notes: text('notes'),
+  status: varchar('status', { length: 20 }).notNull().default('OPEN'),
+  resolvedBy: uuid('resolved_by').references(() => superAdminUsers.id),
+  resolvedAt: timestamp('resolved_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const reviewModerationActions = review.table('review_moderation_actions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  reviewId: uuid('review_id')
+    .notNull()
+    .references(() => reviews.id, { onDelete: 'cascade' }),
+  replyId: uuid('reply_id').references(() => reviewReplies.id, { onDelete: 'set null' }),
+  imageId: uuid('image_id').references(() => reviewImages.id, { onDelete: 'set null' }),
+  action: varchar('action', { length: 30 }).notNull(),
+  reason: text('reason'),
+  metadata: jsonb('metadata'),
+  performedBy: uuid('performed_by').references(() => superAdminUsers.id),
+  performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** §4.11 Support & Ticketing — SaaS CTS + SLA (salon + customer) */
+export const supportTicketCategories = tickets.table('support_ticket_categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  label: varchar('label', { length: 255 }).notNull(),
+  description: text('description'),
+  audience: varchar('audience', { length: 20 }).notNull().default('BOTH'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdBy: uuid('created_by').references(() => superAdminUsers.id),
+  updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTicketTypes = tickets.table('support_ticket_types', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  categoryId: uuid('category_id')
+    .notNull()
+    .references(() => supportTicketCategories.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  label: varchar('label', { length: 255 }).notNull(),
+  description: text('description'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTicketSubtypes = tickets.table('support_ticket_subtypes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  typeId: uuid('type_id')
+    .notNull()
+    .references(() => supportTicketTypes.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  label: varchar('label', { length: 255 }).notNull(),
+  description: text('description'),
+  defaultPriority: varchar('default_priority', { length: 20 }).notNull().default('MEDIUM'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportSlaPolicies = tickets.table('support_sla_policies', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  priority: varchar('priority', { length: 20 }).notNull().unique(),
+  firstResponseMinutes: integer('first_response_minutes').notNull(),
+  resolveMinutes: integer('resolve_minutes').notNull(),
+  businessHoursOnly: boolean('business_hours_only').notNull().default(false),
+  isActive: boolean('is_active').notNull().default(true),
+  updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTickets = tickets.table('support_tickets', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ticketNumber: varchar('ticket_number', { length: 30 }).notNull().unique(),
+  source: varchar('source', { length: 20 }).notNull(),
+  organizationId: uuid('organization_id').references(() => organizations.id, {
+    onDelete: 'set null',
+  }),
+  branchId: uuid('branch_id').references(() => branches.id, { onDelete: 'set null' }),
+  endUserRef: varchar('end_user_ref', { length: 50 }),
+  bookingRef: varchar('booking_ref', { length: 50 }),
+  requesterName: varchar('requester_name', { length: 255 }),
+  requesterEmail: varchar('requester_email', { length: 255 }),
+  requesterPhone: varchar('requester_phone', { length: 20 }),
+  categoryId: uuid('category_id')
+    .notNull()
+    .references(() => supportTicketCategories.id),
+  typeId: uuid('type_id')
+    .notNull()
+    .references(() => supportTicketTypes.id),
+  subtypeId: uuid('subtype_id').references(() => supportTicketSubtypes.id),
+  subject: varchar('subject', { length: 255 }).notNull(),
+  description: text('description').notNull(),
+  priority: varchar('priority', { length: 20 }).notNull().default('MEDIUM'),
+  status: varchar('status', { length: 30 }).notNull().default('CREATED'),
+  assignedTo: uuid('assigned_to').references(() => superAdminUsers.id),
+  slaPolicyId: uuid('sla_policy_id').references(() => supportSlaPolicies.id),
+  firstResponseDueAt: timestamp('first_response_due_at', { withTimezone: true }),
+  resolveDueAt: timestamp('resolve_due_at', { withTimezone: true }),
+  firstRespondedAt: timestamp('first_responded_at', { withTimezone: true }),
+  resolvedAt: timestamp('resolved_at', { withTimezone: true }),
+  closedAt: timestamp('closed_at', { withTimezone: true }),
+  resolutionNotes: text('resolution_notes'),
+  csatScore: integer('csat_score'),
+  csatComment: text('csat_comment'),
+  createdBySuperAdminId: uuid('created_by_super_admin_id').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTicketMessages = tickets.table('support_ticket_messages', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ticketId: uuid('ticket_id')
+    .notNull()
+    .references(() => supportTickets.id, { onDelete: 'cascade' }),
+  authorType: varchar('author_type', { length: 20 }).notNull(),
+  authorRef: varchar('author_ref', { length: 100 }),
+  authorSuperAdminId: uuid('author_super_admin_id').references(() => superAdminUsers.id),
+  body: text('body').notNull(),
+  isFirstResponse: boolean('is_first_response').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTicketInternalNotes = tickets.table('support_ticket_internal_notes', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ticketId: uuid('ticket_id')
+    .notNull()
+    .references(() => supportTickets.id, { onDelete: 'cascade' }),
+  body: text('body').notNull(),
+  createdBy: uuid('created_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTicketAttachments = tickets.table('support_ticket_attachments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ticketId: uuid('ticket_id')
+    .notNull()
+    .references(() => supportTickets.id, { onDelete: 'cascade' }),
+  messageId: uuid('message_id').references(() => supportTicketMessages.id, {
+    onDelete: 'set null',
+  }),
+  fileName: varchar('file_name', { length: 255 }).notNull(),
+  storageUrl: text('storage_url').notNull(),
+  mimeType: varchar('mime_type', { length: 100 }),
+  fileSizeBytes: bigint('file_size_bytes', { mode: 'number' }),
+  uploadedByType: varchar('uploaded_by_type', { length: 20 }).notNull(),
+  uploadedByRef: varchar('uploaded_by_ref', { length: 100 }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const supportTicketEvents = tickets.table('support_ticket_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  ticketId: uuid('ticket_id')
+    .notNull()
+    .references(() => supportTickets.id, { onDelete: 'cascade' }),
+  eventType: varchar('event_type', { length: 30 }).notNull(),
+  fromValue: varchar('from_value', { length: 100 }),
+  toValue: varchar('to_value', { length: 100 }),
+  note: text('note'),
+  performedBy: uuid('performed_by').references(() => superAdminUsers.id),
+  performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Super Admin platform service catalog — Category → Subcategory */
+export const serviceCategories = services.table('service_categories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 50 }).notNull().unique(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  iconUrl: text('icon_url'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  isSingleLevel: boolean('is_single_level').notNull().default(false),
+  createdBy: uuid('created_by').references(() => superAdminUsers.id),
+  updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const serviceSubcategories = services.table('service_subcategories', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  categoryId: uuid('category_id')
+    .notNull()
+    .references(() => serviceCategories.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 50 }).notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  iconUrl: text('icon_url'),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  mirrorsCategory: boolean('mirrors_category').notNull().default(false),
+  createdBy: uuid('created_by').references(() => superAdminUsers.id),
+  updatedBy: uuid('updated_by').references(() => superAdminUsers.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** §4.7–4.9 Employee management — staff, offs, leave, holidays, attendance */
+export const employees = employee.table('employees', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'restrict' }),
+  employeeNumber: varchar('employee_number', { length: 30 }).notNull(),
+  fullName: varchar('full_name', { length: 255 }).notNull(),
+  email: varchar('email', { length: 255 }),
+  phone: varchar('phone', { length: 20 }),
+  designation: varchar('designation', { length: 100 }),
+  photoUrl: text('photo_url'),
+  dateOfJoining: date('date_of_joining').notNull(),
+  dateOfExit: date('date_of_exit'),
+  status: varchar('status', { length: 20 }).notNull().default('ACTIVE'),
+  notes: text('notes'),
+  deactivatedAt: timestamp('deactivated_at', { withTimezone: true }),
+  deactivatedReason: text('deactivated_reason'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const branchHolidays = employee.table('branch_holidays', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'cascade' }),
+  holidayDate: date('holiday_date').notNull(),
+  name: varchar('name', { length: 255 }).notNull(),
+  isRecurringAnnual: boolean('is_recurring_annual').notNull().default(false),
+  notes: text('notes'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const leaveTypes = employee.table('leave_types', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  code: varchar('code', { length: 30 }).notNull(),
+  name: varchar('name', { length: 100 }).notNull(),
+  description: text('description'),
+  isPaid: boolean('is_paid').notNull().default(true),
+  isActive: boolean('is_active').notNull().default(true),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Per branch + leave type: accrual, CF allowed, CF % / max, year-end month */
+export const branchLeavePolicies = employee.table('branch_leave_policies', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'cascade' }),
+  leaveTypeId: uuid('leave_type_id')
+    .notNull()
+    .references(() => leaveTypes.id, { onDelete: 'cascade' }),
+  daysPerMonth: numeric('days_per_month', { precision: 6, scale: 2 }).notNull().default('0'),
+  carryForwardAllowed: boolean('carry_forward_allowed').notNull().default(false),
+  carryForwardPct: numeric('carry_forward_pct', { precision: 5, scale: 2 }).notNull().default('0'),
+  carryForwardMaxDays: numeric('carry_forward_max_days', { precision: 6, scale: 2 }),
+  leaveYearEndMonth: integer('leave_year_end_month').notNull().default(3),
+  leaveYearEndDay: integer('leave_year_end_day').notNull().default(31),
+  isActive: boolean('is_active').notNull().default(true),
+  notes: text('notes'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const leaveBalances = employee.table('leave_balances', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  employeeId: uuid('employee_id')
+    .notNull()
+    .references(() => employees.id, { onDelete: 'cascade' }),
+  leaveTypeId: uuid('leave_type_id')
+    .notNull()
+    .references(() => leaveTypes.id, { onDelete: 'cascade' }),
+  year: integer('year').notNull(),
+  entitledDays: numeric('entitled_days', { precision: 6, scale: 2 }).notNull().default('0'),
+  usedDays: numeric('used_days', { precision: 6, scale: 2 }).notNull().default('0'),
+  carriedForward: numeric('carried_forward', { precision: 6, scale: 2 }).notNull().default('0'),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const leaveRequests = employee.table('leave_requests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'restrict' }),
+  employeeId: uuid('employee_id')
+    .notNull()
+    .references(() => employees.id, { onDelete: 'cascade' }),
+  leaveTypeId: uuid('leave_type_id')
+    .notNull()
+    .references(() => leaveTypes.id),
+  startDate: date('start_date').notNull(),
+  endDate: date('end_date').notNull(),
+  totalDays: numeric('total_days', { precision: 6, scale: 2 }).notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('PENDING'),
+  reason: text('reason'),
+  adminNote: text('admin_note'),
+  decidedByRef: varchar('decided_by_ref', { length: 100 }),
+  decidedAt: timestamp('decided_at', { withTimezone: true }),
+  cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const attendanceRecords = employee.table('attendance_records', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'restrict' }),
+  employeeId: uuid('employee_id')
+    .notNull()
+    .references(() => employees.id, { onDelete: 'cascade' }),
+  attendanceDate: date('attendance_date').notNull(),
+  checkInAt: timestamp('check_in_at', { withTimezone: true }),
+  checkOutAt: timestamp('check_out_at', { withTimezone: true }),
+  status: varchar('status', { length: 20 }).notNull().default('PRESENT'),
+  source: varchar('source', { length: 20 }).notNull().default('MANUAL'),
+  notes: text('notes'),
+  markedByRef: varchar('marked_by_ref', { length: 100 }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const attendanceAuditActions = employee.table('attendance_audit_actions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  attendanceId: uuid('attendance_id')
+    .notNull()
+    .references(() => attendanceRecords.id, { onDelete: 'cascade' }),
+  action: varchar('action', { length: 30 }).notNull(),
+  beforeData: jsonb('before_data'),
+  afterData: jsonb('after_data'),
+  reason: text('reason'),
+  performedByRef: varchar('performed_by_ref', { length: 100 }),
+  performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const employeeActions = employee.table('employee_actions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  employeeId: uuid('employee_id')
+    .notNull()
+    .references(() => employees.id, { onDelete: 'cascade' }),
+  action: varchar('action', { length: 30 }).notNull(),
+  reason: text('reason'),
+  metadata: jsonb('metadata'),
+  performedByRef: varchar('performed_by_ref', { length: 100 }),
+  performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Branch-offered services — Admin selects category/subcategory from platform catalog */
+export const branchServices = services.table('branch_services', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'cascade' }),
+  categoryId: uuid('category_id')
+    .notNull()
+    .references(() => serviceCategories.id, { onDelete: 'restrict' }),
+  subcategoryId: uuid('subcategory_id')
+    .notNull()
+    .references(() => serviceSubcategories.id, { onDelete: 'restrict' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  price: numeric('price', { precision: 12, scale: 2 }).notNull(),
+  currency: varchar('currency', { length: 3 }).notNull().default('INR'),
+  durationMinutes: integer('duration_minutes').notNull(),
+  photoUrl: text('photo_url'),
+  discountAmount: numeric('discount_amount', { precision: 12, scale: 2 }),
+  discountPercent: numeric('discount_percent', { precision: 5, scale: 2 }),
+  discountDescription: text('discount_description'),
+  offlinePaymentAllowed: boolean('offline_payment_allowed').notNull().default(true),
+  status: varchar('status', { length: 20 }).notNull().default('ACTIVE'),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const branchServiceSpecialists = services.table(
+  'branch_service_specialists',
+  {
+    branchServiceId: uuid('branch_service_id')
+      .notNull()
+      .references(() => branchServices.id, { onDelete: 'cascade' }),
+    employeeId: uuid('employee_id')
+      .notNull()
+      .references(() => employees.id, { onDelete: 'cascade' }),
+    isPrimary: boolean('is_primary').notNull().default(false),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.branchServiceId, table.employeeId] })]
+);
+
+/** §4.11–4.12 Appointments — bookings only (slots from service duration) */
+export const appointmentHolds = appointments.table('appointment_holds', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'cascade' }),
+  branchServiceId: uuid('branch_service_id')
+    .notNull()
+    .references(() => branchServices.id, { onDelete: 'cascade' }),
+  specialistId: uuid('specialist_id').references(() => employees.id, { onDelete: 'set null' }),
+  endUserRef: varchar('end_user_ref', { length: 50 }),
+  startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+  endsAt: timestamp('ends_at', { withTimezone: true }).notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('ACTIVE'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const appointmentsTable = appointments.table('appointments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  bookingNumber: varchar('booking_number', { length: 40 }).notNull().unique(),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.id, { onDelete: 'cascade' }),
+  branchId: uuid('branch_id')
+    .notNull()
+    .references(() => branches.id, { onDelete: 'restrict' }),
+  branchServiceId: uuid('branch_service_id')
+    .notNull()
+    .references(() => branchServices.id, { onDelete: 'restrict' }),
+  specialistId: uuid('specialist_id').references(() => employees.id, { onDelete: 'set null' }),
+  endUserRef: varchar('end_user_ref', { length: 50 }).notNull(),
+  endUserName: varchar('end_user_name', { length: 255 }),
+  endUserPhone: varchar('end_user_phone', { length: 20 }),
+  endUserEmail: varchar('end_user_email', { length: 255 }),
+  serviceName: varchar('service_name', { length: 255 }).notNull(),
+  serviceDurationMin: integer('service_duration_min').notNull(),
+  startsAt: timestamp('starts_at', { withTimezone: true }).notNull(),
+  endsAt: timestamp('ends_at', { withTimezone: true }).notNull(),
+  status: varchar('status', { length: 30 }).notNull().default('BOOKED'),
+  source: varchar('source', { length: 30 }).notNull().default('CONSUMER_APP'),
+  customerNote: text('customer_note'),
+  currency: varchar('currency', { length: 3 }).notNull().default('INR'),
+  listPrice: numeric('list_price', { precision: 12, scale: 2 }).notNull().default('0'),
+  discountAmount: numeric('discount_amount', { precision: 12, scale: 2 }).notNull().default('0'),
+  grossAmount: numeric('gross_amount', { precision: 12, scale: 2 }).notNull().default('0'),
+  paymentMethod: varchar('payment_method', { length: 20 }).notNull().default('ONLINE'),
+  paymentStatus: varchar('payment_status', { length: 20 }).notNull().default('PENDING'),
+  eutTransactionId: uuid('eut_transaction_id').references(() => endUserTransactions.id, {
+    onDelete: 'set null',
+  }),
+  holdId: uuid('hold_id').references(() => appointmentHolds.id, { onDelete: 'set null' }),
+  cancelReason: text('cancel_reason'),
+  cancelledAt: timestamp('cancelled_at', { withTimezone: true }),
+  confirmedAt: timestamp('confirmed_at', { withTimezone: true }),
+  completedAt: timestamp('completed_at', { withTimezone: true }),
+  noShowAt: timestamp('no_show_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const appointmentStatusEvents = appointments.table('appointment_status_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  appointmentId: uuid('appointment_id')
+    .notNull()
+    .references(() => appointmentsTable.id, { onDelete: 'cascade' }),
+  fromStatus: varchar('from_status', { length: 30 }),
+  toStatus: varchar('to_status', { length: 30 }).notNull(),
+  reason: text('reason'),
+  performedByType: varchar('performed_by_type', { length: 20 }).notNull().default('SYSTEM'),
+  performedByRef: varchar('performed_by_ref', { length: 100 }),
+  metadata: jsonb('metadata'),
+  performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const appointmentReschedules = appointments.table('appointment_reschedules', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  appointmentId: uuid('appointment_id')
+    .notNull()
+    .references(() => appointmentsTable.id, { onDelete: 'cascade' }),
+  previousStartsAt: timestamp('previous_starts_at', { withTimezone: true }).notNull(),
+  previousEndsAt: timestamp('previous_ends_at', { withTimezone: true }).notNull(),
+  previousSpecialistId: uuid('previous_specialist_id').references(() => employees.id, {
+    onDelete: 'set null',
+  }),
+  newStartsAt: timestamp('new_starts_at', { withTimezone: true }).notNull(),
+  newEndsAt: timestamp('new_ends_at', { withTimezone: true }).notNull(),
+  newSpecialistId: uuid('new_specialist_id').references(() => employees.id, {
+    onDelete: 'set null',
+  }),
+  reason: text('reason'),
+  performedByType: varchar('performed_by_type', { length: 20 }).notNull().default('END_USER'),
+  performedByRef: varchar('performed_by_ref', { length: 100 }),
+  performedAt: timestamp('performed_at', { withTimezone: true }).notNull().defaultNow(),
 });

@@ -1,0 +1,3 @@
+-- Schema subscription
+-- Tables: subscription_plans, org_subscription_changes
+-- See subscription_plans.reference.sql / org_subscription_changes.reference.sql

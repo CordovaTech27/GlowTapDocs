@@ -1,6 +1,6 @@
--- Live subscription_plans table (migration 008)
+-- Schema subscription — SaaS plans + org plan-change history
 
-CREATE TABLE subscription_plans (
+CREATE TABLE subscription.subscription_plans (
   id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name            VARCHAR(100) NOT NULL,
   description     TEXT,

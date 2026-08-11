@@ -1,4 +1,4 @@
-CREATE TABLE credit_note_line_items (
+CREATE TABLE rms.credit_note_line_items (
   id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   credit_note_id       UUID NOT NULL REFERENCES credit_notes(id) ON DELETE CASCADE,
   invoice_line_item_id UUID REFERENCES invoice_line_items(id) ON DELETE SET NULL,

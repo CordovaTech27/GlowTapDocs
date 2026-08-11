@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>GlowTap — Database Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --ink: #12201c;
+    --muted: #5c726a;
+    --line: #d7e3dc;
+    --panel: #ffffff;
+    --panel-soft: #f3f8f5;
+    --teal: #0f766e;
+    --teal-bright: #14b8a6;
+    --amber: #d97706;
+    --rose: #e11d48;
+    --emerald: #059669;
+    --sky: #0284c7;
+    --shadow: 0 12px 40px rgba(18, 32, 28, 0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(20,184,166,0.16), transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, rgba(2,132,199,0.10), transparent 50%),
+      linear-gradient(180deg, #eef6f2 0%, #f7faf8 40%, #eef2f0 100%);
+    min-height: 100vh;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 28px 20px 72px; }
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 36px 40px;
+    margin-bottom: 22px;
+    color: #f4fffb;
+    background:
+      linear-gradient(135deg, #0b3d38 0%, #0f766e 48%, #0e7490 100%);
+    box-shadow: var(--shadow);
+  }
+  .hero::after {
+    content: "";
+    position: absolute; right: -80px; top: -60px; width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+    pointer-events: none;
+  }
+  .brand {
+    font-family: Sora, sans-serif;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; opacity: 0.85; margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-family: Sora, sans-serif;
+    margin: 0 0 10px; font-size: clamp(1.8rem, 3vw, 2.55rem);
+    font-weight: 700; letter-spacing: -0.03em; max-width: 16ch;
+  }
+  .hero .meta { opacity: 0.88; font-size: 0.98rem; max-width: 62ch; }
+  .hero-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    background: rgba(255,255,255,0.14); backdrop-filter: blur(6px);
+    font-size: 0.82rem; font-weight: 500;
+  }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px; margin-bottom: 18px;
+  }
+  .kpi {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 18px; padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .kpi .label {
+    font-family: Sora, sans-serif; font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+  }
+  .kpi .value {
+    font-family: Sora, sans-serif; font-size: 1.7rem; font-weight: 700;
+    margin-top: 6px; letter-spacing: -0.03em;
+  }
+  .kpi .sub { color: var(--muted); font-size: 0.8rem; margin-top: 2px; }
+  .grid2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .grid-wins { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 14px; }
+  @media (max-width: 1100px) {
+    .grid2, .grid3 { grid-template-columns: 1fr; }
+    .grid-wins { grid-template-columns: 1fr 1fr; }
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 20px; padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-family: Sora, sans-serif; margin: 0 0 4px;
+    font-size: 1.02rem; font-weight: 600; letter-spacing: -0.01em;
+  }
+  .card .hint { color: var(--muted); font-size: 0.82rem; margin: 0 0 14px; }
+  .chart-box { position: relative; height: 300px; }
+  .chart-box.tall { height: 460px; }
+  .chart-box.med { height: 280px; }
+  .win {
+    background: linear-gradient(180deg, #ffffff, #f2fbf8);
+    border: 1px solid var(--line); border-radius: 16px; padding: 14px;
+  }
+  .win-pct {
+    font-family: Sora, sans-serif; font-size: 1.35rem; font-weight: 700;
+    color: var(--emerald); letter-spacing: -0.02em;
+  }
+  .win-name { font-size: 0.82rem; font-weight: 600; margin-top: 6px; line-height: 1.3; }
+  .win-meta { color: var(--muted); font-size: 0.75rem; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  th, td { padding: 10px 10px; border-bottom: 1px solid var(--line); text-align: left; }
+  th {
+    font-family: Sora, sans-serif; color: var(--muted); font-weight: 600;
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.05em;
+    background: var(--panel-soft); position: sticky; top: 0;
+  }
+  td:nth-child(n+3), th:nth-child(n+3) { text-align: right; font-variant-numeric: tabular-nums; }
+  td.name { font-weight: 500; }
+  tbody tr:hover { background: #f7fcfa; }
+  .pill {
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 600; background: #e8f2ee; color: #34584f;
+  }
+  .grade-chip {
+    display: inline-block; padding: 3px 9px; border-radius: 999px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+  }
+  .g-EXCELLENT { background: #d1fae5; color: #047857; }
+  .g-GOOD { background: #ccfbf1; color: #0f766e; }
+  .g-ACCEPTABLE { background: #fef3c7; color: #b45309; }
+  .g-SLOW { background: #ffe4e6; color: #be123c; }
+  .delta-down { color: var(--emerald); font-weight: 700; }
+  .delta-up { color: var(--rose); font-weight: 700; }
+  .delta-flat { color: var(--muted); }
+  .muted { color: var(--muted); }
+  .scroll { overflow: auto; max-height: 520px; border-radius: 12px; border: 1px solid var(--line); }
+  .health {
+    display: flex; align-items: center; gap: 18px; margin-top: 8px;
+  }
+  .ring {
+    --p: 80;
+    width: 88px; height: 88px; border-radius: 50%;
+    background: conic-gradient(var(--teal-bright) calc(var(--p) * 1%), #dbe7e2 0);
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .ring > span {
+    width: 66px; height: 66px; border-radius: 50%; background: #fff;
+    display: grid; place-items: center;
+    font-family: Sora, sans-serif; font-weight: 700; font-size: 1.05rem;
+  }
+  details { margin-top: 16px; }
+  details summary {
+    cursor: pointer; color: var(--teal); font-weight: 600;
+    font-family: Sora, sans-serif; font-size: 0.92rem;
+  }
+  pre {
+    background: #10241f; color: #d7ebe4; border-radius: 14px;
+    padding: 16px; overflow: auto; font-size: 0.75rem; max-height: 420px;
+  }
+  footer {
+    margin-top: 28px; text-align: center; color: var(--muted);
+    font-size: 0.8rem;
+  }
+  code { font-size: 0.85em; background: #e7f2ee; padding: 1px 6px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="brand">GlowTap</div>
+    <h1>Database Performance</h1>
+    <p class="meta">Neon Postgres · 4/8/2026, 2:56:17 am IST · 5 measured rounds · DB 463 MB</p>
+    <div class="hero-row">
+      <span class="chip">26 workloads</span>
+      <span class="chip">7 excellent</span>
+      <span class="chip">Latency suite</span>
+      <span class="chip">Health score 80%</span>
+    </div>
+  </header>
+
+  <section class="kpis">
+    <div class="kpi"><div class="label">Tests</div><div class="value">26</div><div class="sub">timed queries</div></div>
+    <div class="kpi"><div class="label">Excellent</div><div class="value" style="color:var(--emerald)">7</div></div>
+    <div class="kpi"><div class="label">Good</div><div class="value" style="color:var(--teal)">18</div></div>
+    <div class="kpi"><div class="label">Acceptable</div><div class="value" style="color:var(--amber)">1</div></div>
+    <div class="kpi"><div class="label">Slow</div><div class="value" style="color:var(--rose)">0</div></div>
+    <div class="kpi"><div class="label">DB size</div><div class="value" style="font-size:1.25rem">463 MB</div></div>
+    
+  </section>
+
+  
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Latency spectrum</h2>
+      <p class="hint">Avg vs p95 across every benchmark (log scale)</p>
+      <div class="chart-box tall"><canvas id="chartLatency"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Grade mix</h2>
+      <p class="hint">Share of results under local SLO bands</p>
+      <div class="chart-box med"><canvas id="chartGrades"></canvas></div>
+      <div class="health">
+        <div class="ring"><span>80%</span></div>
+        <div>
+          <strong style="font-family:Sora,sans-serif">Suite health</strong>
+          <p class="muted" style="margin:4px 0 0;font-size:0.88rem">Weighted from grades (Excellent=4 … Slow=0). Target: keep analytics under 1s at this scale.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <h2>By category</h2>
+      <p class="hint">Average latency</p>
+      <div class="chart-box"><canvas id="chartCategory"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Category radar</h2>
+      <p class="hint">Avg vs p95 profile</p>
+      <div class="chart-box"><canvas id="chartRadar"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Storage by schema</h2>
+      <p class="hint">Disk footprint (MB)</p>
+      <div class="chart-box"><canvas id="chartStorage"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Slowest queries</h2>
+      <p class="hint">Highest avg ms after warm-up</p>
+      <div class="chart-box tall"><canvas id="chartCompare"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Largest tables</h2>
+      <p class="hint">Live rows × size</p>
+      <div class="chart-box tall"><canvas id="chartWins"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h2>Results matrix</h2>
+    <p class="hint">All timings in milliseconds · sticky header for scanning</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Test</th><th>Category</th><th>Rows</th><th>Avg</th><th>P50</th><th>P95</th><th>Max</th>
+            <th></th>
+            <th>Grade</th>
+          </tr>
+        </thead>
+        <tbody><tr>
+        <td class="name">GET organization by slug (unique)</td>
+        <td><span class="pill cat-point_lookup">Point lookup</span></td>
+        <td>1</td>
+        <td>89.22</td>
+        <td>86.27</td>
+        <td>97</td>
+        <td>97</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">GET appointment by booking_number (unique)</td>
+        <td><span class="pill cat-point_lookup">Point lookup</span></td>
+        <td>1</td>
+        <td>97.34</td>
+        <td>94.37</td>
+        <td>110.71</td>
+        <td>110.71</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">GET EUT by transaction_ref (unique)</td>
+        <td><span class="pill cat-point_lookup">Point lookup</span></td>
+        <td>1</td>
+        <td>111.53</td>
+        <td>121.2</td>
+        <td>134.7</td>
+        <td>134.7</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-ACCEPTABLE">ACCEPTABLE</span></td>
+      </tr>
+<tr>
+        <td class="name">GET employee by org + employee_number</td>
+        <td><span class="pill cat-point_lookup">Point lookup</span></td>
+        <td>0</td>
+        <td>93.49</td>
+        <td>94.48</td>
+        <td>95.36</td>
+        <td>95.36</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">List appointments for branch (30-day window)</td>
+        <td><span class="pill cat-range_scan">Range scan</span></td>
+        <td>0</td>
+        <td>94.51</td>
+        <td>94.36</td>
+        <td>95.28</td>
+        <td>95.28</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Filter appointments by status + org</td>
+        <td><span class="pill cat-range_scan">Range scan</span></td>
+        <td>0</td>
+        <td>93.6</td>
+        <td>94.42</td>
+        <td>100.69</td>
+        <td>100.69</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Attendance for employee (date range)</td>
+        <td><span class="pill cat-range_scan">Range scan</span></td>
+        <td>0</td>
+        <td>92.81</td>
+        <td>93.97</td>
+        <td>95.71</td>
+        <td>95.71</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">EUT success list for org (recent)</td>
+        <td><span class="pill cat-range_scan">Range scan</span></td>
+        <td>0</td>
+        <td>95.01</td>
+        <td>95.15</td>
+        <td>95.41</td>
+        <td>95.41</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Appointment + service + specialist join</td>
+        <td><span class="pill cat-join">Join</span></td>
+        <td>0</td>
+        <td>98.56</td>
+        <td>98.89</td>
+        <td>101.23</td>
+        <td>101.23</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">EUT + appointment + branch join</td>
+        <td><span class="pill cat-join">Join</span></td>
+        <td>0</td>
+        <td>96.2</td>
+        <td>94.2</td>
+        <td>102.67</td>
+        <td>102.67</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Branch services with specialist count</td>
+        <td><span class="pill cat-join">Join</span></td>
+        <td>1</td>
+        <td>95.52</td>
+        <td>94.9</td>
+        <td>99.69</td>
+        <td>99.69</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Invoice + line items + payment join</td>
+        <td><span class="pill cat-join">Join</span></td>
+        <td>0</td>
+        <td>99.42</td>
+        <td>99.88</td>
+        <td>100.83</td>
+        <td>100.83</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Org revenue rollup (EUT sum/count by day)</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>0</td>
+        <td>94.59</td>
+        <td>95.86</td>
+        <td>98.51</td>
+        <td>98.51</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">Platform-wide appointment status histogram</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>5</td>
+        <td>250.44</td>
+        <td>199.14</td>
+        <td>401</td>
+        <td>401</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">Top 20 branches by completed booking GMV</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>20</td>
+        <td>186.08</td>
+        <td>171.56</td>
+        <td>246.86</td>
+        <td>246.86</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">Specialist utilization (appt hours / specialist)</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>0</td>
+        <td>94.75</td>
+        <td>95.11</td>
+        <td>99.71</td>
+        <td>99.71</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">Attendance present-rate by branch (window)</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>0</td>
+        <td>94.69</td>
+        <td>90.21</td>
+        <td>104.09</td>
+        <td>104.09</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">Running GMV window (org appointments)</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>0</td>
+        <td>100.33</td>
+        <td>94.38</td>
+        <td>129.99</td>
+        <td>129.99</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">Cross-schema merchant payable vs appointments</td>
+        <td><span class="pill cat-analytics">Analytics</span></td>
+        <td>50</td>
+        <td>133.74</td>
+        <td>112.88</td>
+        <td>219.95</td>
+        <td>219.95</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-EXCELLENT">EXCELLENT</span></td>
+      </tr>
+<tr>
+        <td class="name">INSERT appointment (single row)</td>
+        <td><span class="pill cat-write">Write</span></td>
+        <td>1</td>
+        <td>95.47</td>
+        <td>95.54</td>
+        <td>101.6</td>
+        <td>101.6</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">UPDATE appointment status BOOKED→CONFIRMED</td>
+        <td><span class="pill cat-write">Write</span></td>
+        <td>0</td>
+        <td>94.05</td>
+        <td>95.11</td>
+        <td>95.23</td>
+        <td>95.23</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">INSERT attendance row</td>
+        <td><span class="pill cat-write">Write</span></td>
+        <td>1</td>
+        <td>91.87</td>
+        <td>90.92</td>
+        <td>96.6</td>
+        <td>96.6</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">UPDATE org merchant balances</td>
+        <td><span class="pill cat-write">Write</span></td>
+        <td>1</td>
+        <td>94.27</td>
+        <td>92.76</td>
+        <td>99.33</td>
+        <td>99.33</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">DELETE bench appointments (cleanup slice)</td>
+        <td><span class="pill cat-write">Write</span></td>
+        <td>0</td>
+        <td>95.07</td>
+        <td>95.51</td>
+        <td>96.58</td>
+        <td>96.58</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">Salon dashboard snapshot (multi-aggregate)</td>
+        <td><span class="pill cat-mixed">Mixed</span></td>
+        <td>1</td>
+        <td>99.5</td>
+        <td>96.91</td>
+        <td>116.21</td>
+        <td>116.21</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr>
+<tr>
+        <td class="name">End-user booking history by end_user_ref</td>
+        <td><span class="pill cat-mixed">Mixed</span></td>
+        <td>17</td>
+        <td>94.61</td>
+        <td>94.98</td>
+        <td>100.35</td>
+        <td>100.35</td>
+        <td class="muted">—</td>
+        <td><span class="grade-chip g-GOOD">GOOD</span></td>
+      </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h2>Hottest relations</h2>
+      <p class="hint">Top tables by on-disk size</p>
+      <table>
+        <thead><tr><th>Relation</th><th>Live rows</th><th>Size</th></tr></thead>
+        <tbody><tr><td>appointments.appointments</td><td>1,70,003</td><td>141 MB</td></tr>
+<tr><td>employee.attendance_records</td><td>2,72,002</td><td>76 MB</td></tr>
+<tr><td>rms.end_user_transactions</td><td>63,761</td><td>43 MB</td></tr>
+<tr><td>appointments.appointment_status_events</td><td>1,70,006</td><td>34 MB</td></tr>
+<tr><td>employee.leave_balances</td><td>1,02,006</td><td>22 MB</td></tr>
+<tr><td>rms.merchant_ledger_entries</td><td>63,763</td><td>19 MB</td></tr>
+<tr><td>employee.employees</td><td>34,002</td><td>14 MB</td></tr>
+<tr><td>services.branch_services</td><td>42,512</td><td>14 MB</td></tr>
+<tr><td>services.branch_service_specialists</td><td>85,001</td><td>13 MB</td></tr>
+<tr><td>tickets.support_tickets</td><td>17,002</td><td>10208 kB</td></tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Methodology</h2>
+      <p class="muted" style="margin:0;font-size:0.92rem">
+        Client wall time via <code>perf_hooks</code> around <code>pg</code> queries.
+        One warm-up discarded; stats from 5 rounds (min / avg / p50 / p95 / p99 / max).
+        Covering + partial indexes (<code>076</code>/<code>077</code>), range predicates, and LATERAL aggregates
+        for platform analytics. Local SLO bands are tighter than Neon (no WAN RTT).
+      </p>
+    </div>
+  </div>
+
+  <details>
+    <summary>Full markdown appendix</summary>
+    <pre># GlowTap — Database Performance
+
+**Generated:** 4/8/2026, 2:56:17 am IST
+**Engine:** Neon Postgres (serverless)
+**Rounds per test:** 5 (after 1 warm-up)
+**Methodology:** client-side wall clock (Node `perf_hooks`) + `EXPLAIN (ANALYZE, BUFFERS)`
+
+---
+
+## 1. Executive summary
+
+| Metric | Value |
+|--------|------:|
+| Database size | 463 MB / 512 MB |
+| Perf organizations | 850 |
+| Perf branches | 4,250 |
+| Perf appointments | 1,70,000 |
+| Perf EUT | 63,750 |
+| Perf attendance rows | 2,72,000 |
+| Perf employees | 34,000 |
+| Benchmark tests | 26 |
+| EXPLAIN ANALYZE profiles | 4 |
+| Grade mix | GOOD: 18 · ACCEPTABLE: 1 · EXCELLENT: 7 |
+
+### Slowest operations (by avg latency)
+
+| Rank | Operation | Category | Avg (ms) | P95 (ms) | Grade |
+|-----:|-----------|----------|--------:|---------:|-------|
+| 1 | Platform-wide appointment status histogram | analytics | 250.44 | 401 | EXCELLENT |
+| 2 | Top 20 branches by completed booking GMV | analytics | 186.08 | 246.86 | EXCELLENT |
+| 3 | Cross-schema merchant payable vs appointments | analytics | 133.74 | 219.95 | EXCELLENT |
+| 4 | GET EUT by transaction_ref (unique) | point_lookup | 111.53 | 134.7 | ACCEPTABLE |
+| 5 | Running GMV window (org appointments) | analytics | 100.33 | 129.99 | EXCELLENT |
+
+---
+
+## 2. Storage &amp; schema footprint
+
+| Schema | Tables | Size |
+|--------|-------:|------|
+| `appointments` | 4 | 174.8 MB |
+| `employee` | 9 | 123.8 MB |
+| `rms` | 18 | 86.8 MB |
+| `services` | 4 | 27.0 MB |
+| `tickets` | 9 | 18.0 MB |
+| `review` | 7 | 10.6 MB |
+| `public` | 8 | 5.4 MB |
+| `admin_org` | 3 | 4.3 MB |
+| `cms` | 4 | 0.6 MB |
+| `subscription` | 2 | 0.3 MB |
+
+### Hottest relations (by total size)
+
+| Relation | Live rows (approx) | Size |
+|----------|-------------------:|------|
+| `appointments.appointments` | 1,70,003 | 141 MB |
+| `employee.attendance_records` | 2,72,002 | 76 MB |
+| `rms.end_user_transactions` | 63,761 | 43 MB |
+| `appointments.appointment_status_events` | 1,70,006 | 34 MB |
+| `employee.leave_balances` | 1,02,006 | 22 MB |
+| `rms.merchant_ledger_entries` | 63,763 | 19 MB |
+| `employee.employees` | 34,002 | 14 MB |
+| `services.branch_services` | 42,512 | 14 MB |
+| `services.branch_service_specialists` | 85,001 | 13 MB |
+| `tickets.support_tickets` | 17,002 | 10208 kB |
+| `review.reviews` | 17,003 | 10176 kB |
+| `rms.salon_payout_items` | 34,014 | 8072 kB |
+| `tickets.support_ticket_messages` | 34,003 | 7528 kB |
+| `employee.leave_requests` | 17,001 | 7424 kB |
+| `public.branches` | 4,261 | 4232 kB |
+| `rms.invoices` | 10,202 | 4120 kB |
+| `employee.branch_leave_policies` | 12,756 | 4112 kB |
+| `rms.payments` | 10,201 | 3568 kB |
+| `rms.invoice_line_items` | 10,202 | 3008 kB |
+| `rms.invoice_payments` | 10,201 | 2464 kB |
+| `admin_org.sub_admin_modules` | 13,615 | 2136 kB |
+| `rms.salon_payouts` | 5,103 | 1824 kB |
+| `admin_org.sub_admin_branches` | 5,955 | 1328 kB |
+| `admin_org.sub_admins` | 1,704 | 936 kB |
+| `employee.leave_types` | 2,553 | 728 kB |
+
+---
+
+## 3. Point lookups (GET by key / unique)
+
+| Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
+|------|-----:|----:|----:|----:|----:|----:|----:|-------|
+| GET organization by slug (unique) | 1 | 83.37 | **89.22** | 86.27 | 97 | 97 | 97 | GOOD |
+| GET appointment by booking_number (unique) | 1 | 90.16 | **97.34** | 94.37 | 110.71 | 110.71 | 110.71 | GOOD |
+| GET EUT by transaction_ref (unique) | 1 | 85.8 | **111.53** | 121.2 | 134.7 | 134.7 | 134.7 | ACCEPTABLE |
+| GET employee by org + employee_number | 0 | 89.55 | **93.49** | 94.48 | 95.36 | 95.36 | 95.36 | GOOD |
+
+&lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
+
+**GET organization by slug (unique)**
+
+```sql
+SELECT id, name, status, owner_email FROM organizations WHERE slug = $1
+```
+
+**GET appointment by booking_number (unique)**
+
+```sql
+SELECT id, status, starts_at, gross_amount FROM appointments.appointments WHERE booking_number = $1
+```
+
+**GET EUT by transaction_ref (unique)**
+
+```sql
+SELECT id, gross_amount, status, net_to_salon FROM rms.end_user_transactions WHERE transaction_ref = $1
+```
+
+**GET employee by org + employee_number**
+
+```sql
+SELECT id, full_name, status FROM employee.employees WHERE organization_id = $1 AND employee_number = $2
+```
+
+&lt;/details&gt;
+
+---
+
+## 4. Range / filter scans
+
+| Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
+|------|-----:|----:|----:|----:|----:|----:|----:|-------|
+| List appointments for branch (30-day window) | 0 | 93.41 | **94.51** | 94.36 | 95.28 | 95.28 | 95.28 | GOOD |
+| Filter appointments by status + org | 0 | 87.35 | **93.6** | 94.42 | 100.69 | 100.69 | 100.69 | GOOD |
+| Attendance for employee (date range) | 0 | 85.75 | **92.81** | 93.97 | 95.71 | 95.71 | 95.71 | GOOD |
+| EUT success list for org (recent) | 0 | 94.23 | **95.01** | 95.15 | 95.41 | 95.41 | 95.41 | GOOD |
+
+&lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
+
+**List appointments for branch (30-day window)**
+
+```sql
+SELECT id, booking_number, status, starts_at, gross_amount FROM appointments.appointments WHERE branch_id = $1 AND starts_at &gt;= NOW() - INTERVAL '45 days' ORDER BY starts_at DESC LIMIT 50
+```
+
+**Filter appointments by status + org**
+
+```sql
+SELECT id, booking_number, starts_at FROM appointments.appointments WHERE organization_id = $1 AND status = 'COMPLETED' ORDER BY starts_at DESC LIMIT 100
+```
+
+**Attendance for employee (date range)**
+
+```sql
+SELECT attendance_date, status, check_in_at, check_out_at FROM employee.attendance_records WHERE employee_id = $1 ORDER BY attendance_date DESC LIMIT 30
+```
+
+**EUT success list for org (recent)**
+
+```sql
+SELECT transaction_ref, gross_amount, net_to_salon, occurred_at FROM rms.end_user_transactions WHERE organization_id = $1 AND status = 'SUCCESS' ORDER BY occurred_at DESC LIMIT 100
+```
+
+&lt;/details&gt;
+
+---
+
+## 5. Multi-table joins
+
+| Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
+|------|-----:|----:|----:|----:|----:|----:|----:|-------|
+| Appointment + service + specialist join | 0 | 93.73 | **98.56** | 98.89 | 101.23 | 101.23 | 101.23 | GOOD |
+| EUT + appointment + branch join | 0 | 91.87 | **96.2** | 94.2 | 102.67 | 102.67 | 102.67 | GOOD |
+| Branch services with specialist count | 1 | 91.1 | **95.52** | 94.9 | 99.69 | 99.69 | 99.69 | GOOD |
+| Invoice + line items + payment join | 0 | 97.04 | **99.42** | 99.88 | 100.83 | 100.83 | 100.83 | GOOD |
+
+&lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
+
+**Appointment + service + specialist join**
+
+```sql
+SELECT a.booking_number, a.status, a.starts_at, s.name AS service, e.full_name AS specialist, a.gross_amount FROM appointments.appointments a JOIN services.branch_services s ON s.id = a.branch_service_id LEFT JOIN employee.employees e ON e.id = a.specialist_id WHERE a.organization_id = $1 ORDER BY a.starts_at DESC LIMIT 50
+```
+
+**EUT + appointment + branch join**
+
+```sql
+SELECT e.transaction_ref, e.gross_amount, e.commission_amount, a.booking_number, b.name AS branch FROM rms.end_user_transactions e LEFT JOIN appointments.appointments a ON a.booking_number = e.booking_ref JOIN branches b ON b.id = e.branch_id WHERE e.organization_id = $1 ORDER BY e.occurred_at DESC LIMIT 50
+```
+
+**Branch services with specialist count**
+
+```sql
+SELECT s.name, s.price, s.duration_minutes, COUNT(ss.employee_id)::int AS specialists FROM services.branch_services s LEFT JOIN services.branch_service_specialists ss ON ss.branch_service_id = s.id WHERE s.branch_id = $1 AND s.status = 'ACTIVE' GROUP BY s.id, s.name, s.price, s.duration_minutes ORDER BY s.sort_order
+```
+
+**Invoice + line items + payment join**
+
+```sql
+SELECT i.invoice_number, i.total_amount, i.status, COUNT(ili.id)::int AS lines, COALESCE(SUM(ip.amount_applied),0) AS paid FROM rms.invoices i LEFT JOIN rms.invoice_line_items ili ON ili.invoice_id = i.id LEFT JOIN rms.invoice_payments ip ON ip.invoice_id = i.id WHERE i.organization_id = $1 GROUP BY i.id ORDER BY i.issue_date DESC
+```
+
+&lt;/details&gt;
+
+---
+
+## 6. Aggregations &amp; expensive analytics
+
+| Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
+|------|-----:|----:|----:|----:|----:|----:|----:|-------|
+| Org revenue rollup (EUT sum/count by day) | 0 | 88.04 | **94.59** | 95.86 | 98.51 | 98.51 | 98.51 | EXCELLENT |
+| Platform-wide appointment status histogram | 5 | 189.54 | **250.44** | 199.14 | 401 | 401 | 401 | EXCELLENT |
+| Top 20 branches by completed booking GMV | 20 | 169.02 | **186.08** | 171.56 | 246.86 | 246.86 | 246.86 | EXCELLENT |
+| Specialist utilization (appt hours / specialist) | 0 | 89.31 | **94.75** | 95.11 | 99.71 | 99.71 | 99.71 | EXCELLENT |
+| Attendance present-rate by branch (window) | 0 | 89.65 | **94.69** | 90.21 | 104.09 | 104.09 | 104.09 | EXCELLENT |
+| Running GMV window (org appointments) | 0 | 86.77 | **100.33** | 94.38 | 129.99 | 129.99 | 129.99 | EXCELLENT |
+| Cross-schema merchant payable vs appointments | 50 | 110.56 | **133.74** | 112.88 | 219.95 | 219.95 | 219.95 | EXCELLENT |
+
+&lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
+
+**Org revenue rollup (EUT sum/count by day)**
+
+```sql
+SELECT date_trunc('day', occurred_at) AS day, COUNT(*)::int AS txns, SUM(gross_amount) AS gross, SUM(commission_amount) AS commission, SUM(net_to_salon) AS net FROM rms.end_user_transactions WHERE organization_id = $1 AND status = 'SUCCESS' GROUP BY 1 ORDER BY 1 DESC
+```
+
+**Platform-wide appointment status histogram**
+
+```sql
+SELECT status, COUNT(*)::int AS n, ROUND(AVG(gross_amount)::numeric, 2) AS avg_gross FROM appointments.appointments WHERE booking_number &gt;= 'PERF-APT-' AND booking_number &lt; 'PERF-APT.' GROUP BY status ORDER BY n DESC
+```
+
+**Top 20 branches by completed booking GMV**
+
+```sql
+SELECT b.name, o.slug AS org, x.completed, x.gmv FROM ( SELECT branch_id, COUNT(*)::int AS completed, SUM(gross_amount) AS gmv FROM appointments.appointments WHERE status = 'COMPLETED' AND booking_number &gt;= 'PERF-APT-' AND booking_number &lt; 'PERF-APT.' GROUP BY branch_id ORDER BY gmv DESC NULLS LAST LIMIT 20 ) x JOIN branches b ON b.id = x.branch_id JOIN organizations o ON o.id = b.organization_id ORDER BY x.gmv DESC
+```
+
+**Specialist utilization (appt hours / specialist)**
+
+```sql
+SELECT e.full_name, e.employee_number, COUNT(*)::int AS bookings, SUM(a.service_duration_min)::int AS minutes, ROUND(AVG(a.gross_amount)::numeric, 2) AS avg_ticket FROM appointments.appointments a JOIN employee.employees e ON e.id = a.specialist_id WHERE a.organization_id = $1 AND a.status IN ('COMPLETED','CONFIRMED','NO_SHOW') GROUP BY e.id ORDER BY minutes DESC
+```
+
+**Attendance present-rate by branch (window)**
+
+```sql
+SELECT b.name, COUNT(*)::int AS records, COUNT(*) FILTER (WHERE ar.status = 'PRESENT')::int AS present, ROUND(100.0 * COUNT(*) FILTER (WHERE ar.status = 'PRESENT') / NULLIF(COUNT(*),0), 1) AS present_pct FROM employee.attendance_records ar JOIN branches b ON b.id = ar.branch_id WHERE ar.organization_id = $1 GROUP BY b.id, b.name ORDER BY present_pct DESC
+```
+
+**Running GMV window (org appointments)**
+
+```sql
+SELECT booking_number, starts_at, gross_amount, SUM(gross_amount) OVER (ORDER BY starts_at ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS running_gmv FROM appointments.appointments WHERE organization_id = $1 AND status = 'COMPLETED' ORDER BY starts_at LIMIT 200
+```
+
+**Cross-schema merchant payable vs appointments**
+
+```sql
+SELECT o.slug, COALESCE(ap.appts, 0)::int AS appts, COALESCE(eu.euts, 0)::int AS euts, COALESCE(eu.payable_accrued, 0) AS payable_accrued FROM organizations o LEFT JOIN LATERAL ( SELECT COUNT(*)::bigint AS appts FROM appointments.appointments a WHERE a.organization_id = o.id AND a.booking_number &gt;= 'PERF-APT-' AND a.booking_number &lt; 'PERF-APT.' ) ap ON TRUE LEFT JOIN LATERAL ( SELECT COUNT(*)::bigint AS euts, COALESCE(SUM(e.net_to_salon), 0) AS payable_accrued FROM rms.end_user_transactions e WH
+```
+
+&lt;/details&gt;
+
+---
+
+## 7. Write path (INSERT / UPDATE / DELETE)
+
+| Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
+|------|-----:|----:|----:|----:|----:|----:|----:|-------|
+| INSERT appointment (single row) | 1 | 89.95 | **95.47** | 95.54 | 101.6 | 101.6 | 101.6 | GOOD |
+| UPDATE appointment status BOOKED→CONFIRMED | 0 | 89.71 | **94.05** | 95.11 | 95.23 | 95.23 | 95.23 | GOOD |
+| INSERT attendance row | 1 | 88.18 | **91.87** | 90.92 | 96.6 | 96.6 | 96.6 | GOOD |
+| UPDATE org merchant balances | 1 | 89.64 | **94.27** | 92.76 | 99.33 | 99.33 | 99.33 | GOOD |
+| DELETE bench appointments (cleanup slice) | 0 | 93.17 | **95.07** | 95.51 | 96.58 | 96.58 | 96.58 | GOOD |
+
+&lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
+
+**INSERT appointment (single row)**
+
+```sql
+INSERT INTO appointments.appointments ( booking_number, organization_id, branch_id, branch_service_id, specialist_id, end_user_ref, end_user_name, service_name, service_duration_min, starts_at, ends_at, status, source, list_price, discount_amount, gross_amount, payment_method, payment_status ) VALUES ( $1, $2, $3, $4, $5, 'EU-BENCH', 'Bench User', 'Bench Cut', 30, NOW() + ($6 || ' minutes')::interval, NOW() + (($6)::int + 30 || ' minutes')::interval, 'BOOKED', 'CONSUMER_APP', 499, 0, 499, 'ONLIN
+```
+
+**UPDATE appointment status BOOKED→CONFIRMED**
+
+```sql
+UPDATE appointments.appointments SET status = 'CONFIRMED', confirmed_at = NOW(), updated_at = NOW(), payment_status = 'PAID' WHERE organization_id = $1 AND booking_number LIKE 'PERF-BENCH-APT-%' AND status = 'BOOKED' RETURNING id
+```
+
+**INSERT attendance row**
+
+```sql
+INSERT INTO employee.attendance_records ( organization_id, branch_id, employee_id, attendance_date, check_in_at, check_out_at, status, source, marked_by_ref ) VALUES ( $1, $2, $3, CURRENT_DATE + ($4 || ' days')::interval, NOW(), NOW() + INTERVAL '8 hours', 'PRESENT', 'SYSTEM', 'perf-bench' ) ON CONFLICT (employee_id, attendance_date) DO UPDATE SET status = EXCLUDED.status, updated_at = NOW() RETURNING id
+```
+
+**UPDATE org merchant balances**
+
+```sql
+UPDATE rms.org_merchant_balances SET outstanding_amount = outstanding_amount + 10, pending_payout_amount = pending_payout_amount + 25, updated_at = NOW() WHERE organization_id = $1 RETURNING outstanding_amount, pending_payout_amount
+```
+
+**DELETE bench appointments (cleanup slice)**
+
+```sql
+DELETE FROM appointments.appointments WHERE organization_id = $1 AND booking_number LIKE 'PERF-BENCH-APT-%' AND status = 'CONFIRMED' RETURNING id
+```
+
+&lt;/details&gt;
+
+---
+
+## 8. Mixed / application-style workloads
+
+| Test | Rows | Min | Avg | P50 | P95 | P99 | Max | Grade |
+|------|-----:|----:|----:|----:|----:|----:|----:|-------|
+| Salon dashboard snapshot (multi-aggregate) | 1 | 91.38 | **99.5** | 96.91 | 116.21 | 116.21 | 116.21 | GOOD |
+| End-user booking history by end_user_ref | 17 | 87.85 | **94.61** | 94.98 | 100.35 | 100.35 | 100.35 | GOOD |
+
+&lt;details&gt;&lt;summary&gt;SQL samples&lt;/summary&gt;
+
+**Salon dashboard snapshot (multi-aggregate)**
+
+```sql
+SELECT (SELECT COUNT(*) FROM appointments.appointments WHERE organization_id = $1 AND starts_at::date = CURRENT_DATE) AS todays_appts, (SELECT COUNT(*) FROM appointments.appointments WHERE organization_id = $1 AND status = 'COMPLETED') AS completed, (SELECT COALESCE(SUM(gross_amount),0) FROM rms.end_user_transactions WHERE organization_id = $1 AND status = 'SUCCESS') AS eut_gross, (SELECT COUNT(*) FROM employee.employees WHERE organization_id = $1 AND status = 'ACTIVE') AS active_staff, (SELECT 
+```
+
+**End-user booking history by end_user_ref**
+
+```sql
+SELECT booking_number, service_name, starts_at, status, gross_amount, payment_status FROM appointments.appointments WHERE end_user_ref = $1 ORDER BY starts_at DESC LIMIT 20
+```
+
+&lt;/details&gt;
+
+---
+
+## 9. EXPLAIN ANALYZE profiles
+
+Postgres planner cost + actual runtime (includes buffer hits). Useful for index / join tuning.
+
+| Query | Planning (ms) | Execution (ms) | Total cost | Actual rows | Top node |
+|-------|-------------:|---------------:|-----------:|------------:|----------|
+| Branch appointments 45d | 0.136 | **0.042** | 158.15 | 0 | Limit |
+| Org EUT daily rollup | 0.12 | **0.04** | 275.23 | 0 | Aggregate |
+| Top branches by GMV | 15.869 | **65.641** | 11826.75 | 20 | Sort |
+| Appointment+service+specialist | 5.645 | **0.05** | 854.59 | 0 | Limit |
+
+---
+
+## 10. Grading rubric
+
+| Grade | Point / range / join (avg) | Writes (avg) | Analytics (avg) |
+|-------|---------------------------:|-------------:|----------------:|
+| EXCELLENT | ≤ 30 ms | ≤ 50 ms | ≤ 500 ms |
+| GOOD | ≤ 100 ms | ≤ 200 ms | ≤ 2 s |
+| ACCEPTABLE | ≤ 400 ms | ≤ 800 ms | ≤ 5 s |
+| SLOW | above | above | above |
+
+&gt; Neon serverless may show higher first-hit latency (compute resume). Warm-up round is excluded from stats.
+
+---
+
+## 11. Recommendations
+
+- **Applied (Round 3):** covering / composite indexes in `076_performance_indexes_round3.sql` (full on local; lite subset `076b` on Neon due to 512 MB cap).
+- **Applied:** analytics SQL rewritten — prefix range predicates (`&gt;= … AND &lt; …`) + `LATERAL` aggregates for cross-schema rollups (avoids cartesian LEFT JOIN blow-up).
+- **GET EUT by transaction_ref (unique)** (ACCEPTABLE, avg 111.53 ms) — review indexes / reduce join width / paginate.
+- Keep `VACUUM ANALYZE` on large tables after bulk loads (appointments, attendance, EUT).
+- Prefer keyset pagination over `OFFSET` for appointment/EUT lists at this scale.
+- Monitor Neon storage (512 MB free tier); current DB ~463 MB.
+
+---
+
+*Report generated by `scripts/run-perf-benchmark.js`*</pre>
+  </details>
+
+  <footer>GlowTap — Database Performance · generated by scripts/run-perf-benchmark.js</footer>
+</div>
+<script>
+const DATA = {"labels":["GET organization by slug (unique)","GET appointment by booking_number (unique)","GET EUT by transaction_ref (unique)","GET employee by org + employee_number","List appointments for branch (30-day window)","Filter appointments by status + org","Attendance for employee (date range)","EUT success list for org (recent)","Appointment + service + specialist join","EUT + appointment + branch join","Branch services with specialist count","Invoice + line items + payment join","Org revenue rollup (EUT sum/count by day)","Platform-wide appointment status histogram","Top 20 branches by completed booking GMV","Specialist utilization (appt hours / specialist)","Attendance present-rate by branch (window)","Running GMV window (org appointments)","Cross-schema merchant payable vs appointments","INSERT appointment (single row)","UPDATE appointment status BOOKED→CONFIRMED","INSERT attendance row","UPDATE org merchant balances","DELETE bench appointments (cleanup slice)","Salon dashboard snapshot (multi-aggregate)","End-user booking history by end_user_ref"],"avg":[89.22,97.34,111.53,93.49,94.51,93.6,92.81,95.01,98.56,96.2,95.52,99.42,94.59,250.44,186.08,94.75,94.69,100.33,133.74,95.47,94.05,91.87,94.27,95.07,99.5,94.61],"p50":[86.27,94.37,121.2,94.48,94.36,94.42,93.97,95.15,98.89,94.2,94.9,99.88,95.86,199.14,171.56,95.11,90.21,94.38,112.88,95.54,95.11,90.92,92.76,95.51,96.91,94.98],"p95":[97,110.71,134.7,95.36,95.28,100.69,95.71,95.41,101.23,102.67,99.69,100.83,98.51,401,246.86,99.71,104.09,129.99,219.95,101.6,95.23,96.6,99.33,96.58,116.21,100.35],"grades":{"EXCELLENT":7,"GOOD":18,"ACCEPTABLE":1,"SLOW":0},"categories":["Point lookup","Range scan","Join","Analytics","Write","Mixed"],"categoryAvg":[97.9,93.98,97.42,136.37,94.15,97.06],"categoryP95":[109.44,96.77,101.11,185.73,97.87,108.28],"comparison":[],"topWins":[],"storage":[{"schema":"appointments","mb":175},{"schema":"employee","mb":124},{"schema":"rms","mb":87},{"schema":"services","mb":27},{"schema":"tickets","mb":18},{"schema":"review","mb":11},{"schema":"public","mb":5},{"schema":"admin_org","mb":4},{"schema":"cms","mb":1},{"schema":"subscription","mb":0}],"inventory":{"db_size":{"bytes":"485572608","pretty":"463 MB"},"schemas":[{"schema":"appointments","tables":4,"bytes":"183271424"},{"schema":"employee","tables":9,"bytes":"129802240"},{"schema":"rms","tables":18,"bytes":"90988544"},{"schema":"services","tables":4,"bytes":"28286976"},{"schema":"tickets","tables":9,"bytes":"18849792"},{"schema":"review","tables":7,"bytes":"11075584"},{"schema":"public","tables":8,"bytes":"5636096"},{"schema":"admin_org","tables":3,"bytes":"4505600"},{"schema":"cms","tables":4,"bytes":"638976"},{"schema":"subscription","tables":2,"bytes":"262144"}],"hottest_tables":[{"relation":"appointments.appointments","live_rows":"170003","bytes":"148086784","size":"141 MB"},{"relation":"employee.attendance_records","live_rows":"272002","bytes":"79519744","size":"76 MB"},{"relation":"rms.end_user_transactions","live_rows":"63761","bytes":"45285376","size":"43 MB"},{"relation":"appointments.appointment_status_events","live_rows":"170006","bytes":"35143680","size":"34 MB"},{"relation":"employee.leave_balances","live_rows":"102006","bytes":"22765568","size":"22 MB"},{"relation":"rms.merchant_ledger_entries","live_rows":"63763","bytes":"20357120","size":"19 MB"},{"relation":"employee.employees","live_rows":"34002","bytes":"14745600","size":"14 MB"},{"relation":"services.branch_services","live_rows":"42512","bytes":"14712832","size":"14 MB"},{"relation":"services.branch_service_specialists","live_rows":"85001","bytes":"13328384","size":"13 MB"},{"relation":"tickets.support_tickets","live_rows":"17002","bytes":"10452992","size":"10208 kB"},{"relation":"review.reviews","live_rows":"17003","bytes":"10420224","size":"10176 kB"},{"relation":"rms.salon_payout_items","live_rows":"34014","bytes":"8265728","size":"8072 kB"},{"relation":"tickets.support_ticket_messages","live_rows":"34003","bytes":"7708672","size":"7528 kB"},{"relation":"employee.leave_requests","live_rows":"17001","bytes":"7602176","size":"7424 kB"},{"relation":"public.branches","live_rows":"4261","bytes":"4333568","size":"4232 kB"},{"relation":"rms.invoices","live_rows":"10202","bytes":"4218880","size":"4120 kB"},{"relation":"employee.branch_leave_policies","live_rows":"12756","bytes":"4210688","size":"4112 kB"},{"relation":"rms.payments","live_rows":"10201","bytes":"3653632","size":"3568 kB"},{"relation":"rms.invoice_line_items","live_rows":"10202","bytes":"3080192","size":"3008 kB"},{"relation":"rms.invoice_payments","live_rows":"10201","bytes":"2523136","size":"2464 kB"},{"relation":"admin_org.sub_admin_modules","live_rows":"13615","bytes":"2187264","size":"2136 kB"},{"relation":"rms.salon_payouts","live_rows":"5103","bytes":"1867776","size":"1824 kB"},{"relation":"admin_org.sub_admin_branches","live_rows":"5955","bytes":"1359872","size":"1328 kB"},{"relation":"admin_org.sub_admins","live_rows":"1704","bytes":"958464","size":"936 kB"},{"relation":"employee.leave_types","live_rows":"2553","bytes":"745472","size":"728 kB"}],"perf_counts":{"perf_orgs":850,"perf_branches":4250,"perf_appointments":170000,"perf_eut":63750,"perf_attendance":272000,"perf_employees":34000,"perf_services":42500}},"slowest":[{"name":"Platform-wide appointment status histogram","avg":250.44,"p95":401},{"name":"Top 20 branches by completed booking GMV","avg":186.08,"p95":246.86},{"name":"Cross-schema merchant payable vs appointments","avg":133.74,"p95":219.95},{"name":"GET EUT by transaction_ref (unique)","avg":111.53,"p95":134.7},{"name":"Running GMV window (org appointments)","avg":100.33,"p95":129.99},{"name":"Salon dashboard snapshot (multi-aggregate)","avg":99.5,"p95":116.21},{"name":"Invoice + line items + payment join","avg":99.42,"p95":100.83},{"name":"Appointment + service + specialist join","avg":98.56,"p95":101.23}]};
+const hasCompare = DATA.comparison && DATA.comparison.length > 0;
+const teal = '#0f766e';
+const tealSoft = 'rgba(20,184,166,0.75)';
+const sky = 'rgba(2,132,199,0.65)';
+const amber = 'rgba(217,119,6,0.7)';
+const rose = 'rgba(225,29,72,0.55)';
+const emerald = 'rgba(5,150,105,0.8)';
+
+Chart.defaults.color = '#5c726a';
+Chart.defaults.borderColor = '#d7e3dc';
+Chart.defaults.font.family = '"IBM Plex Sans", system-ui, sans-serif';
+
+const tip = { backgroundColor: '#12201c', titleFont: { family: 'Sora', size: 12 }, bodyFont: { size: 12 }, padding: 10, cornerRadius: 8 };
+
+new Chart(document.getElementById('chartLatency'), {
+  type: 'bar',
+  data: {
+    labels: DATA.labels.map(l => l.length > 34 ? l.slice(0,32)+'…' : l),
+    datasets: [
+      { label: 'Avg ms', data: DATA.avg, backgroundColor: tealSoft, borderRadius: 6, borderSkipped: false },
+      { label: 'P95 ms', data: DATA.p95, backgroundColor: amber, borderRadius: 6, borderSkipped: false }
+    ]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    scales: {
+      x: { type: 'logarithmic', grid: { color: 'rgba(215,227,220,0.7)' }, title: { display: true, text: 'milliseconds (log)' } },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    },
+    plugins: { legend: { position: 'top' }, tooltip: tip }
+  }
+});
+
+new Chart(document.getElementById('chartGrades'), {
+  type: 'doughnut',
+  data: {
+    labels: Object.keys(DATA.grades),
+    datasets: [{
+      data: Object.values(DATA.grades),
+      backgroundColor: ['#059669', '#14b8a6', '#f59e0b', '#e11d48'],
+      borderWidth: 0, hoverOffset: 8
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '62%',
+    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16 } }, tooltip: tip }
+  }
+});
+
+new Chart(document.getElementById('chartCategory'), {
+  type: 'bar',
+  data: {
+    labels: DATA.categories,
+    datasets: [{ label: 'Avg ms', data: DATA.categoryAvg, backgroundColor: sky, borderRadius: 8, borderSkipped: false }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true, grid: { color: 'rgba(215,227,220,0.7)' } }, x: { grid: { display: false } } },
+    plugins: { legend: { display: false }, tooltip: tip }
+  }
+});
+
+new Chart(document.getElementById('chartRadar'), {
+  type: 'radar',
+  data: {
+    labels: DATA.categories,
+    datasets: [
+      { label: 'Avg', data: DATA.categoryAvg, borderColor: teal, backgroundColor: 'rgba(15,118,110,0.18)', pointBackgroundColor: teal },
+      { label: 'P95', data: DATA.categoryP95, borderColor: '#0284c7', backgroundColor: 'rgba(2,132,199,0.12)', pointBackgroundColor: '#0284c7' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { r: { beginAtZero: true, angleLines: { color: '#d7e3dc' }, grid: { color: '#d7e3dc' }, pointLabels: { font: { size: 11 } } } },
+    plugins: { legend: { position: 'bottom' }, tooltip: tip }
+  }
+});
+
+new Chart(document.getElementById('chartStorage'), {
+  type: 'doughnut',
+  data: {
+    labels: DATA.storage.map(s => s.schema),
+    datasets: [{
+      data: DATA.storage.map(s => s.mb),
+      backgroundColor: ['#0f766e','#0891b2','#0284c7','#4f46e5','#059669','#ca8a04','#db2777','#64748b','#0ea5e9','#65a30d'],
+      borderWidth: 0
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '55%',
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }, tooltip: tip }
+  }
+});
+
+if (hasCompare) {
+  const c = DATA.comparison;
+  new Chart(document.getElementById('chartCompare'), {
+    type: 'bar',
+    data: {
+      labels: c.map(x => x.name.length > 30 ? x.name.slice(0,28)+'…' : x.name),
+      datasets: [
+        { label: 'Before', data: c.map(x => x.before), backgroundColor: rose, borderRadius: 5, borderSkipped: false },
+        { label: 'After', data: c.map(x => x.after), backgroundColor: emerald, borderRadius: 5, borderSkipped: false }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: { x: { type: 'logarithmic', title: { display: true, text: 'ms (log)' } }, y: { ticks: { font: { size: 10 } }, grid: { display: false } } },
+      plugins: { legend: { position: 'top' }, tooltip: tip }
+    }
+  });
+  const wins = DATA.topWins;
+  new Chart(document.getElementById('chartWins'), {
+    type: 'bar',
+    data: {
+      labels: wins.map(x => x.name.length > 32 ? x.name.slice(0,30)+'…' : x.name),
+      datasets: [{ label: '% faster', data: wins.map(x => x.improvement_pct), backgroundColor: tealSoft, borderRadius: 8, borderSkipped: false }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: { x: { beginAtZero: true, max: 100, title: { display: true, text: '% improvement' } }, y: { grid: { display: false } } },
+      plugins: { legend: { display: false }, tooltip: tip }
+    }
+  });
+} else {
+  const slow = DATA.slowest;
+  new Chart(document.getElementById('chartCompare'), {
+    type: 'bar',
+    data: {
+      labels: slow.map(x => x.name.length > 30 ? x.name.slice(0,28)+'…' : x.name),
+      datasets: [
+        { label: 'Avg', data: slow.map(x => x.avg), backgroundColor: tealSoft, borderRadius: 6 },
+        { label: 'P95', data: slow.map(x => x.p95), backgroundColor: amber, borderRadius: 6 }
+      ]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' }, tooltip: tip }
+    }
+  });
+  const tables = DATA.inventory.hottest_tables.slice(0, 8);
+  new Chart(document.getElementById('chartWins'), {
+    type: 'bar',
+    data: {
+      labels: tables.map(t => t.relation),
+      datasets: [{ label: 'Size (MB)', data: tables.map(t => Math.round(Number(t.bytes)/1024/1024)), backgroundColor: sky, borderRadius: 8 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: tip }
+    }
+  });
+}
+</script>
+</body>
+</html>
