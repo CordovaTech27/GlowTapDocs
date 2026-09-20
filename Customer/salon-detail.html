@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Salon Detail</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF; --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #100818; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123,0,255,.35), transparent 60%), #100818;
+    }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; color: #fff; pointer-events: none; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+    .hero {
+      position: relative; height: 220px; flex-shrink: 0;
+    }
+    .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero__veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, transparent 40%, rgba(20,10,30,.55) 100%);
+    }
+    .hero__nav {
+      position: absolute; top: 54px; left: 14px; right: 14px; z-index: 5;
+      display: flex; justify-content: space-between; gap: 10px;
+    }
+    .round {
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,.92); color: var(--ink);
+      display: grid; place-items: center; text-decoration: none; cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,.18);
+    }
+    .round svg { width: 18px; height: 18px; }
+    .hero__badge {
+      position: absolute; left: 14px; bottom: 14px; z-index: 5;
+      padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,.95);
+      font-size: .7rem; font-weight: 700; color: #15803D;
+    }
+    .body { flex: 1; overflow-y: auto; padding: 0 0 100px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .panel {
+      margin-top: -18px; position: relative; z-index: 2;
+      background: var(--surface); border-radius: 22px 22px 0 0; padding: 18px 16px 20px;
+    }
+    .title-row { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: -.03em; }
+    .meta { margin: 6px 0 0; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+    .meta a { color: var(--violet); font-weight: 700; text-decoration: none; }
+    .rating {
+      display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: .85rem; font-weight: 600;
+    }
+    .rating .stars { color: #F59E0B; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .chip {
+      padding: 5px 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line);
+      font-size: .72rem; font-weight: 600; color: var(--muted);
+    }
+    .section { margin-top: 18px; }
+    .section h2 {
+      margin: 0 0 10px; font-family: Outfit, sans-serif; font-size: .95rem; font-weight: 700;
+    }
+    .hours {
+      background: #fff; border-radius: 14px; padding: 12px 14px; font-size: .82rem;
+      border: 1px solid rgba(123,0,255,.06);
+    }
+    .hours strong { color: var(--violet); }
+
+    .slot-rail {
+      display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none;
+      margin: 0 -2px;
+    }
+    .slot-rail::-webkit-scrollbar { display: none; }
+    .slot-pill {
+      flex: 0 0 auto; display: inline-flex; flex-direction: column; align-items: flex-start;
+      gap: 2px; padding: 10px 14px; border-radius: 14px; border: 1.5px solid var(--line);
+      background: #fff; text-decoration: none; color: inherit; min-width: 92px;
+    }
+    .slot-pill strong { font-family: Outfit, sans-serif; font-size: .95rem; font-weight: 700; }
+    .slot-pill span { font-size: .68rem; font-weight: 600; color: var(--muted); }
+    .slot-pill.is-hot {
+      border-color: transparent; background: var(--grad); color: #fff;
+      box-shadow: 0 8px 18px rgba(123,0,255,.28);
+    }
+    .slot-pill.is-hot span { color: rgba(255,255,255,.85); }
+    .slot-pill.is-full {
+      opacity: .45; pointer-events: none;
+    }
+
+    .svc {
+      display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 16px;
+      padding: 12px; margin-bottom: 8px; border: 1px solid rgba(123,0,255,.06);
+      text-decoration: none; color: inherit;
+    }
+    .svc__thumb {
+      width: 56px; height: 56px; border-radius: 14px; overflow: hidden; flex-shrink: 0; background: #eee;
+    }
+    .svc__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .svc__info { flex: 1; min-width: 0; }
+    .svc__name { margin: 0 0 2px; font-weight: 700; font-size: .92rem; }
+    .svc__dur { margin: 0; font-size: .75rem; color: var(--muted); }
+    .svc__price { font-family: Outfit, sans-serif; font-weight: 700; font-size: .95rem; white-space: nowrap; }
+    .svc__book {
+      display: inline-flex; margin-top: 6px; padding: 6px 12px; border-radius: 999px;
+      background: var(--grad); color: #fff; font-size: .72rem; font-weight: 700; text-decoration: none;
+    }
+    .review {
+      background: #fff; border-radius: 14px; padding: 12px 14px; margin-bottom: 8px;
+      border: 1px solid rgba(123,0,255,.06); font-size: .82rem;
+    }
+    .review__top { display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: 700; }
+    .review__top span { color: #F59E0B; font-size: .78rem; }
+    .review p { margin: 0; color: var(--muted); line-height: 1.4; }
+    .sticky {
+      position: absolute; left: 14px; right: 14px; bottom: 18px; z-index: 30;
+      display: grid; grid-template-columns: 48px 1fr; gap: 10px;
+    }
+    .sticky .fav {
+      height: 48px; border-radius: 14px; border: 1.5px solid var(--line); background: #fff;
+      display: grid; place-items: center; color: var(--pink); cursor: pointer;
+    }
+    .sticky .fav svg { width: 20px; height: 20px; }
+    .sticky .cta {
+      height: 48px; border-radius: 14px; border: none; background: var(--grad); color: #fff;
+      font-family: inherit; font-weight: 700; font-size: .92rem; text-decoration: none;
+      display: grid; place-items: center; box-shadow: 0 8px 20px rgba(123,0,255,.3);
+    }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .hero__nav { top: max(12px, env(safe-area-inset-top)); }
+      .sticky { bottom: max(14px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="hero">
+          <img src="assets/salon-bg.png" alt="" style="object-position: 22% 28%;" />
+          <div class="hero__veil"></div>
+          <div class="hero__nav">
+            <a class="round" href="home.html" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></a>
+            <button type="button" class="round" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="m12 3 4 4M12 3 8 7M12 3v12"/></svg></button>
+          </div>
+          <span class="hero__badge">Open now</span>
+        </div>
+
+        <div class="body">
+          <div class="panel">
+            <div class="title-row">
+              <div>
+                <h1 id="salon-name">Luxe Curls — Indiranagar</h1>
+                <p class="meta">12th Main, Indiranagar, Bengaluru · 0.8 km · <a href="#">Map</a></p>
+              </div>
+            </div>
+            <div class="rating"><span class="stars">★ 4.8</span> <span>(214 reviews)</span> · 6 specialists</div>
+            <div class="chips">
+              <span class="chip">Hair</span>
+              <span class="chip">Color</span>
+              <span class="chip">Spa</span>
+              <span class="chip">Online pay</span>
+            </div>
+
+            <div class="section">
+              <h2>Today’s hours</h2>
+              <div class="hours"><strong>Open</strong> · 10:00 AM – 8:30 PM · Last slot 7:45 PM</div>
+            </div>
+
+            <div class="section">
+              <h2>Available time slots</h2>
+              <p class="meta" style="margin:0 0 10px;">Tap a slot to book Haircut &amp; Style · 45 min</p>
+              <div class="slot-rail">
+                <a class="slot-pill is-hot" href="book.html?salon=luxe&amp;service=haircut&amp;date=Today&amp;time=5:00%20PM&amp;step=1">
+                  <strong>5:00 PM</strong>
+                  <span>Today · 2 left</span>
+                </a>
+                <a class="slot-pill" href="book.html?salon=luxe&amp;service=haircut&amp;date=Today&amp;time=6:30%20PM&amp;step=1">
+                  <strong>6:30 PM</strong>
+                  <span>Today</span>
+                </a>
+                <a class="slot-pill" href="book.html?salon=luxe&amp;service=haircut&amp;date=Tomorrow&amp;time=11:30%20AM&amp;step=1">
+                  <strong>11:30 AM</strong>
+                  <span>Tomorrow</span>
+                </a>
+                <a class="slot-pill" href="book.html?salon=luxe&amp;service=haircut&amp;date=Tomorrow&amp;time=2:00%20PM&amp;step=1">
+                  <strong>2:00 PM</strong>
+                  <span>Tomorrow</span>
+                </a>
+                <a class="slot-pill" href="book.html?salon=luxe&amp;service=haircut&amp;date=Tomorrow&amp;time=4:00%20PM&amp;step=1">
+                  <strong>4:00 PM</strong>
+                  <span>Tomorrow</span>
+                </a>
+                <span class="slot-pill is-full">
+                  <strong>7:15 PM</strong>
+                  <span>Fully booked</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="section">
+              <h2>Services</h2>
+              <div class="svc">
+                <div class="svc__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:30% 40%;" /></div>
+                <div class="svc__info">
+                  <p class="svc__name">Haircut &amp; Style</p>
+                  <p class="svc__dur">45 min · Online / Pay at salon</p>
+                  <a class="svc__book" href="book.html?salon=luxe&amp;service=haircut">Book</a>
+                </div>
+                <div class="svc__price">₹899</div>
+              </div>
+              <div class="svc">
+                <div class="svc__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:60% 20%; filter:hue-rotate(-10deg);" /></div>
+                <div class="svc__info">
+                  <p class="svc__name">Blow Dry</p>
+                  <p class="svc__dur">30 min · Online / Pay at salon</p>
+                  <a class="svc__book" href="book.html?salon=luxe&amp;service=blowdry">Book</a>
+                </div>
+                <div class="svc__price">₹499</div>
+              </div>
+              <div class="svc">
+                <div class="svc__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:10% 70%; filter:hue-rotate(40deg);" /></div>
+                <div class="svc__info">
+                  <p class="svc__name">Global Color</p>
+                  <p class="svc__dur">90 min · Online only</p>
+                  <a class="svc__book" href="book.html?salon=luxe&amp;service=color">Book</a>
+                </div>
+                <div class="svc__price">₹2,499</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h2>Recent reviews</h2>
+              <div class="review">
+                <div class="review__top">Ananya <span>★★★★★</span></div>
+                <p>Priya did an amazing cut — walked out glowing. Salon was spotless.</p>
+              </div>
+              <div class="review">
+                <div class="review__top">Rahul <span>★★★★☆</span></div>
+                <p>Slight wait but great blow dry. Will book again on GlowTap.</p>
+              </div>
+            </div>
+
+            <div class="section">
+              <h2>Policies</h2>
+              <div class="hours" style="color:var(--muted);">Free cancel while Booked. After confirmation, cancel needs salon approval. Online refunds per platform rules.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky">
+        <button type="button" class="fav" aria-label="Save favorite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+        <a class="cta" href="book.html?salon=luxe&amp;service=haircut">Book a service</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var map = {
+        bloom: 'Bloom & Brow',
+        nord: 'Nord Hair Lab',
+        aura: 'Aura Spa Retreat',
+        'bandra-glow': 'Luxe Curls — Indiranagar'
+      };
+      var id = new URLSearchParams(location.search).get('id');
+      if (id && map[id]) document.getElementById('salon-name').textContent = map[id];
+    })();
+  </script>
+</body>
+</html>

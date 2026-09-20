@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Book</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF; --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #100818; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123,0,255,.35), transparent 60%), #100818;
+    }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 4px 14px 8px; background: #fff; flex-shrink: 0; }
+    .back { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink); text-decoration: none; background: #fff; cursor: pointer; }
+    .back svg { width: 18px; height: 18px; }
+    .nav__meta { min-width: 0; flex: 1; }
+    .nav h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .nav p { margin: 1px 0 0; font-size: .72rem; color: var(--muted); font-weight: 600; }
+    .steps { display: flex; gap: 4px; padding: 0 16px 10px; background: #fff; flex-shrink: 0; }
+    .steps span { flex: 1; height: 4px; border-radius: 99px; background: #E8E4EF; }
+    .steps span.is-on { background: var(--grad); }
+    .body { flex: 1; overflow-y: auto; padding: 14px 16px 100px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .step { display: none; }
+    .step.is-active { display: block; }
+    .step h2 { margin: 0 0 6px; font-family: Outfit, sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: -.02em; }
+    .step .sub { margin: 0 0 14px; font-size: .82rem; color: var(--muted); }
+    .card {
+      background: #fff; border-radius: 16px; padding: 12px 14px; margin-bottom: 8px;
+      border: 1.5px solid rgba(123,0,255,.08); cursor: pointer; text-align: left; width: 100%;
+      font-family: inherit; color: inherit;
+    }
+    .card.is-active { border-color: rgba(123,0,255,.45); box-shadow: 0 0 0 3px rgba(123,0,255,.1); }
+    .card__title { font-weight: 700; font-size: .92rem; }
+    .card__meta { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .card__row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .card__price { font-family: Outfit, sans-serif; font-weight: 700; color: var(--violet); }
+    .dates { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-bottom: 18px; }
+    .dates::-webkit-scrollbar { display: none; }
+    .date {
+      flex: 0 0 64px; height: 72px; border-radius: 14px; border: 1.5px solid var(--line);
+      background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: inherit; cursor: pointer; color: var(--ink);
+    }
+    .date small { font-size: .65rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .date strong { font-family: Outfit, sans-serif; font-size: 1.15rem; margin-top: 2px; }
+    .date.is-active { border-color: transparent; background: var(--grad); color: #fff; }
+    .date.is-active small { color: rgba(255,255,255,.85); }
+    .slot-head {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 10px;
+    }
+    .slot-head h3 { margin: 0; font-family: Outfit, sans-serif; font-size: .95rem; font-weight: 700; }
+    .slot-head span { font-size: .72rem; font-weight: 600; color: var(--muted); }
+    .slot-group { margin-bottom: 14px; }
+    .slot-group__label {
+      margin: 0 0 8px; font-size: .72rem; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .04em;
+    }
+    .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .slot {
+      min-height: 48px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff;
+      font-family: inherit; font-weight: 700; font-size: .78rem; cursor: pointer; color: var(--ink);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px 4px;
+    }
+    .slot small { font-size: .62rem; font-weight: 600; color: var(--muted); }
+    .slot.is-active { border-color: transparent; background: var(--grad); color: #fff; }
+    .slot.is-active small { color: rgba(255,255,255,.88); }
+    .slot.is-full, .slot:disabled {
+      opacity: 1; cursor: not-allowed; background: #F1F3F6; border-color: #E5EAF0;
+      color: #9AA6B2; text-decoration: none;
+    }
+    .slot.is-full small, .slot:disabled small { color: #C45B5B; font-weight: 700; }
+    .legend {
+      display: flex; gap: 12px; flex-wrap: wrap; margin: 4px 0 0; font-size: .7rem; font-weight: 600; color: var(--muted);
+    }
+    .legend i {
+      display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px;
+    }
+    .legend .avail { background: var(--grad); }
+    .legend .full { background: #E5EAF0; border: 1px solid #D5DCE4; }
+    .spec {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      background: #fff; border: 1.5px solid rgba(123,0,255,.08); border-radius: 16px;
+      padding: 12px; margin-bottom: 8px; font-family: inherit; cursor: pointer; text-align: left; color: inherit;
+    }
+    .spec.is-active { border-color: rgba(123,0,255,.45); box-shadow: 0 0 0 3px rgba(123,0,255,.1); }
+    .spec__av {
+      width: 44px; height: 44px; border-radius: 14px; overflow: hidden; background: #eee; flex-shrink: 0;
+    }
+    .spec__av img { width: 100%; height: 100%; object-fit: cover; }
+    .spec__name { font-weight: 700; font-size: .9rem; }
+    .spec__meta { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .row span { color: var(--muted); }
+    .row strong { font-weight: 700; }
+    .total { margin-top: 10px; padding-top: 10px; border-top: 1px solid #F1F5F9; font-family: Outfit, sans-serif; font-size: 1.1rem; }
+    .pay { display: flex; gap: 8px; margin: 12px 0; }
+    .pay label {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      height: 44px; border-radius: 12px; border: 1.5px solid var(--line); background: #fff;
+      font-size: .8rem; font-weight: 700; cursor: pointer;
+    }
+    .pay input { display: none; }
+    .pay label:has(input:checked) {
+      border-color: transparent; background: var(--grad); color: #fff;
+    }
+    textarea {
+      width: 100%; min-height: 72px; border-radius: 14px; border: 1.5px solid #E8E4EF;
+      padding: 12px; font-family: inherit; font-size: .85rem; resize: vertical; outline: none;
+    }
+    .footer {
+      position: absolute; left: 14px; right: 14px; bottom: 18px; z-index: 30;
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px;
+    }
+    .btn {
+      height: 48px; border-radius: 14px; border: none; font-family: inherit; font-weight: 700;
+      font-size: .9rem; cursor: pointer;
+    }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+    .btn--ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+    .btn--primary {
+      background: var(--grad); color: #fff; box-shadow: 0 8px 20px rgba(123,0,255,.3);
+    }
+    .footer.single { grid-template-columns: 1fr; }
+    .sheet {
+      position: absolute; inset: 0; z-index: 50; display: none; align-items: flex-end;
+      background: rgba(16, 8, 24, .45);
+    }
+    .sheet.is-open { display: flex; }
+    .sheet__panel {
+      width: 100%; background: #fff; border-radius: 22px 22px 0 0; padding: 14px 16px 22px;
+      box-shadow: 0 -12px 40px rgba(0,0,0,.18); animation: slideUp .28s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(24px); opacity: .6; }
+      to { transform: none; opacity: 1; }
+    }
+    .sheet__handle {
+      width: 40px; height: 4px; border-radius: 99px; background: #E5EAF0; margin: 0 auto 12px;
+    }
+    .sheet__title { margin: 0 0 4px; font-family: Outfit, sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .sheet__sub { margin: 0 0 14px; font-size: .8rem; color: var(--muted); font-weight: 600; }
+    .pay-method {
+      display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+      padding: 12px; margin-bottom: 8px; border-radius: 14px; border: 1.5px solid var(--line);
+      background: #fff; font-family: inherit; cursor: pointer; color: inherit;
+    }
+    .pay-method.is-active {
+      border-color: rgba(123,0,255,.45); box-shadow: 0 0 0 3px rgba(123,0,255,.1);
+    }
+    .pay-method__icon {
+      width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+      background: #F3EEFF; color: var(--violet); font-weight: 800; font-size: .78rem; flex-shrink: 0;
+    }
+    .pay-method__icon.card { background: #EEF6FF; color: #2563EB; }
+    .pay-method__icon.wallet { background: #FFF4EC; color: #EA580C; }
+    .pay-method__name { font-weight: 700; font-size: .9rem; }
+    .pay-method__meta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+    .sheet__actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; margin-top: 12px; }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+      .footer { bottom: max(14px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="nav">
+          <button type="button" class="back" id="btn-back" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></button>
+          <div class="nav__meta">
+            <h1>Book appointment</h1>
+            <p id="step-label">Step 1 of 4 · Service</p>
+          </div>
+        </div>
+        <div class="steps" id="steps" aria-hidden="true">
+          <span class="is-on"></span><span></span><span></span><span></span>
+        </div>
+
+        <div class="body">
+          <div class="step is-active" data-step="0">
+            <h2>Select service</h2>
+            <p class="sub">One service per booking</p>
+            <button type="button" class="card is-active" data-svc="Haircut &amp; Style" data-price="899" data-dur="45 min">
+              <div class="card__row">
+                <div>
+                  <div class="card__title">Haircut &amp; Style</div>
+                  <div class="card__meta">45 min · Online / Pay at salon</div>
+                </div>
+                <div class="card__price">₹899</div>
+              </div>
+            </button>
+            <button type="button" class="card" data-svc="Blow Dry" data-price="499" data-dur="30 min">
+              <div class="card__row">
+                <div>
+                  <div class="card__title">Blow Dry</div>
+                  <div class="card__meta">30 min · Online / Pay at salon</div>
+                </div>
+                <div class="card__price">₹499</div>
+              </div>
+            </button>
+            <button type="button" class="card" data-svc="Global Color" data-price="2499" data-dur="90 min">
+              <div class="card__row">
+                <div>
+                  <div class="card__title">Global Color</div>
+                  <div class="card__meta">90 min · Online only</div>
+                </div>
+                <div class="card__price">₹2,499</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="step" data-step="1">
+            <h2>Pick a date &amp; time</h2>
+            <p class="sub">Choose a day, then pick an open slot</p>
+            <div class="dates" id="dates"></div>
+
+            <div class="slot-head">
+              <h3 id="slot-sub">Slots for Tomorrow</h3>
+              <span id="slot-count">5 open</span>
+            </div>
+            <div id="slots">
+              <div class="slot-group">
+                <p class="slot-group__label">Morning</p>
+                <div class="slots">
+                  <button type="button" class="slot is-full" disabled data-time="10:00 AM">10:00 AM<small>Full</small></button>
+                  <button type="button" class="slot" data-time="10:45 AM">10:45 AM<small>Open</small></button>
+                  <button type="button" class="slot is-active" data-time="11:30 AM">11:30 AM<small>2 left</small></button>
+                  <button type="button" class="slot is-full" disabled data-time="12:15 PM">12:15 PM<small>Full</small></button>
+                </div>
+              </div>
+              <div class="slot-group">
+                <p class="slot-group__label">Afternoon</p>
+                <div class="slots">
+                  <button type="button" class="slot" data-time="2:00 PM">2:00 PM<small>Open</small></button>
+                  <button type="button" class="slot is-full" disabled data-time="3:30 PM">3:30 PM<small>Full</small></button>
+                  <button type="button" class="slot" data-time="4:00 PM">4:00 PM<small>1 left</small></button>
+                </div>
+              </div>
+              <div class="slot-group">
+                <p class="slot-group__label">Evening</p>
+                <div class="slots">
+                  <button type="button" class="slot" data-time="5:00 PM">5:00 PM<small>Open</small></button>
+                  <button type="button" class="slot is-full" disabled data-time="6:30 PM">6:30 PM<small>Full</small></button>
+                  <button type="button" class="slot is-full" disabled data-time="7:15 PM">7:15 PM<small>Full</small></button>
+                </div>
+              </div>
+            </div>
+            <p class="legend"><span><i class="avail"></i>Available</span><span><i class="full"></i>Not available / full</span></p>
+          </div>
+
+          <div class="step" data-step="2">
+            <h2>Specialist</h2>
+            <p class="sub">Choose someone or auto-assign</p>
+            <button type="button" class="spec is-active" data-spec="Priya S.">
+              <span class="spec__av"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              <span>
+                <div class="spec__name">Priya S.</div>
+                <div class="spec__meta">Senior stylist · ★ 4.9</div>
+              </span>
+            </button>
+            <button type="button" class="spec" data-spec="Arjun K.">
+              <span class="spec__av"><img src="assets/salon-bg.png" alt="" style="object-position:40% 30%; filter:grayscale(.2);" /></span>
+              <span>
+                <div class="spec__name">Arjun K.</div>
+                <div class="spec__meta">Stylist · ★ 4.7</div>
+              </span>
+            </button>
+            <button type="button" class="spec" data-spec="Auto-assign">
+              <span class="spec__av" style="display:grid;place-items:center;background:#F3EEFF;color:#7B00FF;font-weight:700;">⚡</span>
+              <span>
+                <div class="spec__name">Auto-assign</div>
+                <div class="spec__meta">Best available for this slot</div>
+              </span>
+            </button>
+          </div>
+
+          <div class="step" data-step="3">
+            <h2>Review &amp; pay</h2>
+            <p class="sub">Confirm details before booking</p>
+            <div class="card" style="cursor:default;">
+              <div class="row"><span>Salon</span><strong>Luxe Curls — Indiranagar</strong></div>
+              <div class="row"><span>Service</span><strong id="sum-svc">Haircut &amp; Style</strong></div>
+              <div class="row"><span>Duration</span><strong id="sum-dur">45 min</strong></div>
+              <div class="row"><span>Specialist</span><strong id="sum-spec">Priya S.</strong></div>
+              <div class="row"><span>When</span><strong id="sum-when">Tomorrow · 11:30 AM</strong></div>
+              <div class="row"><span>Service</span><strong id="sum-price">₹899</strong></div>
+              <div class="row"><span>Online discount</span><strong style="color:#059669;">−₹90</strong></div>
+              <div class="row total"><span>Total</span><strong id="sum-total">₹809</strong></div>
+            </div>
+            <div class="pay">
+              <label><input type="radio" name="pay" value="online" checked /> Pay online</label>
+              <label><input type="radio" name="pay" value="salon" /> Pay at salon</label>
+            </div>
+            <textarea placeholder="Notes to salon (optional)"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer" id="footer">
+        <button type="button" class="btn btn--ghost" id="btn-prev">Back</button>
+        <button type="button" class="btn btn--primary" id="btn-next">Continue</button>
+      </div>
+
+      <div class="sheet" id="pay-sheet" aria-hidden="true">
+        <div class="sheet__panel" role="dialog" aria-labelledby="pay-title">
+          <div class="sheet__handle"></div>
+          <h2 class="sheet__title" id="pay-title">Payment method</h2>
+          <p class="sheet__sub">Pay <strong id="pay-amount">₹809</strong> securely to confirm</p>
+          <button type="button" class="pay-method is-active" data-method="UPI">
+            <span class="pay-method__icon">UPI</span>
+            <span>
+              <div class="pay-method__name">UPI</div>
+              <div class="pay-method__meta">GPay · PhonePe · Paytm</div>
+            </span>
+          </button>
+          <button type="button" class="pay-method" data-method="Card">
+            <span class="pay-method__icon card">CARD</span>
+            <span>
+              <div class="pay-method__name">Credit / Debit card</div>
+              <div class="pay-method__meta">Visa · Mastercard · RuPay</div>
+            </span>
+          </button>
+          <button type="button" class="pay-method" data-method="Netbanking">
+            <span class="pay-method__icon wallet">NET</span>
+            <span>
+              <div class="pay-method__name">Netbanking</div>
+              <div class="pay-method__meta">All major banks</div>
+            </span>
+          </button>
+          <button type="button" class="pay-method" data-method="Wallet">
+            <span class="pay-method__icon wallet">₹</span>
+            <span>
+              <div class="pay-method__name">Wallets</div>
+              <div class="pay-method__meta">Amazon Pay · Mobikwik</div>
+            </span>
+          </button>
+          <div class="sheet__actions">
+            <button type="button" class="btn btn--ghost" id="pay-cancel">Cancel</button>
+            <button type="button" class="btn btn--primary" id="pay-confirm">Pay now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var step = 0;
+      var max = 3;
+      var busy = false;
+      var labels = ['Service', 'Date & time', 'Specialist', 'Review'];
+      var state = {
+        svc: 'Haircut & Style',
+        price: 899,
+        dur: '45 min',
+        date: 'Tomorrow',
+        time: '11:30 AM',
+        spec: 'Priya S.',
+        method: 'UPI'
+      };
+
+      var stepEls = document.querySelectorAll('.step');
+      var stepBars = document.querySelectorAll('#steps span');
+      var stepLabel = document.getElementById('step-label');
+      var btnNext = document.getElementById('btn-next');
+      var btnPrev = document.getElementById('btn-prev');
+      var btnBack = document.getElementById('btn-back');
+      var footer = document.getElementById('footer');
+      var paySheet = document.getElementById('pay-sheet');
+
+      function openCount() {
+        return document.querySelectorAll('#slots .slot:not(:disabled)').length;
+      }
+
+      function syncSummary() {
+        document.getElementById('sum-svc').textContent = state.svc;
+        document.getElementById('sum-dur').textContent = state.dur;
+        document.getElementById('sum-spec').textContent = state.spec;
+        document.getElementById('sum-when').textContent = state.date + ' · ' + state.time;
+        document.getElementById('sum-price').textContent = '₹' + state.price.toLocaleString('en-IN');
+        var discount = Math.round(state.price * 0.1);
+        var total = state.price - discount;
+        document.getElementById('sum-total').textContent = '₹' + total.toLocaleString('en-IN');
+        document.getElementById('pay-amount').textContent = '₹' + total.toLocaleString('en-IN');
+        document.getElementById('slot-sub').textContent = 'Slots for ' + state.date;
+        document.getElementById('slot-count').textContent = openCount() + ' open';
+      }
+
+      function renderDates(preferred) {
+        var wrap = document.getElementById('dates');
+        var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        var base = new Date();
+        wrap.innerHTML = '';
+        var activeIdx = preferred === 'Today' ? 0 : 1;
+        for (var i = 0; i < 7; i++) {
+          var d = new Date(base);
+          d.setDate(base.getDate() + i);
+          var label = i === 0 ? 'Today' : (i === 1 ? 'Tomorrow' : (days[d.getDay()] + ' ' + d.getDate()));
+          var short = i === 0 ? 'Today' : (i === 1 ? 'Tmr' : days[d.getDay()]);
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'date' + (i === activeIdx ? ' is-active' : '');
+          btn.innerHTML = '<small>' + short + '</small><strong>' + d.getDate() + '</strong>';
+          btn.setAttribute('data-label', label);
+          btn.addEventListener('click', function () {
+            wrap.querySelectorAll('.date').forEach(function (x) { x.classList.remove('is-active'); });
+            this.classList.add('is-active');
+            state.date = this.getAttribute('data-label');
+            syncSummary();
+          });
+          wrap.appendChild(btn);
+        }
+        state.date = preferred || 'Tomorrow';
+      }
+
+      function showStep(i) {
+        step = i;
+        stepEls.forEach(function (el) {
+          el.classList.toggle('is-active', Number(el.getAttribute('data-step')) === step);
+        });
+        stepBars.forEach(function (bar, idx) {
+          bar.classList.toggle('is-on', idx <= step);
+        });
+        stepLabel.textContent = 'Step ' + (step + 1) + ' of 4 · ' + labels[step];
+        btnPrev.style.visibility = step === 0 ? 'hidden' : 'visible';
+        btnNext.textContent = step === max ? 'Confirm booking' : 'Continue';
+        footer.classList.toggle('single', step === 0);
+        syncSummary();
+      }
+
+      function goConfirm(payMode) {
+        if (busy) return;
+        busy = true;
+        btnNext.disabled = true;
+        var q = new URLSearchParams({
+          svc: state.svc,
+          when: state.date + ' · ' + state.time,
+          spec: state.spec,
+          pay: payMode,
+          method: state.method || '',
+          total: String(state.price - Math.round(state.price * 0.1))
+        });
+        location.href = 'booking-confirm.html?' + q.toString();
+      }
+
+      function openPaySheet() {
+        paySheet.classList.add('is-open');
+        paySheet.setAttribute('aria-hidden', 'false');
+      }
+
+      function closePaySheet() {
+        paySheet.classList.remove('is-open');
+        paySheet.setAttribute('aria-hidden', 'true');
+      }
+
+      document.querySelectorAll('.step[data-step="0"] .card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          document.querySelectorAll('.step[data-step="0"] .card').forEach(function (c) { c.classList.remove('is-active'); });
+          card.classList.add('is-active');
+          state.svc = card.getAttribute('data-svc');
+          state.price = Number(card.getAttribute('data-price'));
+          state.dur = card.getAttribute('data-dur');
+          syncSummary();
+        });
+      });
+
+      document.querySelectorAll('#slots .slot').forEach(function (slot) {
+        if (slot.disabled) return;
+        slot.addEventListener('click', function () {
+          document.querySelectorAll('#slots .slot').forEach(function (s) { s.classList.remove('is-active'); });
+          slot.classList.add('is-active');
+          state.time = slot.getAttribute('data-time');
+          syncSummary();
+        });
+      });
+
+      document.querySelectorAll('.spec').forEach(function (spec) {
+        spec.addEventListener('click', function () {
+          document.querySelectorAll('.spec').forEach(function (s) { s.classList.remove('is-active'); });
+          spec.classList.add('is-active');
+          state.spec = spec.getAttribute('data-spec');
+          syncSummary();
+        });
+      });
+
+      document.querySelectorAll('.pay-method').forEach(function (method) {
+        method.addEventListener('click', function () {
+          document.querySelectorAll('.pay-method').forEach(function (m) { m.classList.remove('is-active'); });
+          method.classList.add('is-active');
+          state.method = method.getAttribute('data-method');
+        });
+      });
+
+      document.querySelectorAll('input[name="pay"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+          if (radio.value === 'online' && radio.checked) openPaySheet();
+          else closePaySheet();
+        });
+      });
+
+      btnNext.addEventListener('click', function () {
+        if (busy) return;
+        if (step < max) {
+          showStep(step + 1);
+          return;
+        }
+        var pay = document.querySelector('input[name="pay"]:checked');
+        if (pay && pay.value === 'online') {
+          openPaySheet();
+          return;
+        }
+        goConfirm('salon');
+      });
+
+      btnPrev.addEventListener('click', function () {
+        if (busy) return;
+        closePaySheet();
+        if (step > 0) showStep(step - 1);
+      });
+
+      btnBack.addEventListener('click', function () {
+        if (busy) return;
+        if (paySheet.classList.contains('is-open')) {
+          closePaySheet();
+          return;
+        }
+        if (step > 0) showStep(step - 1);
+        else history.length > 1 ? history.back() : (location.href = 'salon-detail.html');
+      });
+
+      document.getElementById('pay-cancel').addEventListener('click', closePaySheet);
+      document.getElementById('pay-confirm').addEventListener('click', function () {
+        goConfirm('online');
+      });
+      paySheet.addEventListener('click', function (e) {
+        if (e.target === paySheet) closePaySheet();
+      });
+
+      var params = new URLSearchParams(location.search);
+      var svcMap = { haircut: 'Haircut & Style', blowdry: 'Blow Dry', color: 'Global Color' };
+      var svcKey = params.get('service');
+      if (svcKey && svcMap[svcKey]) {
+        document.querySelectorAll('.step[data-step="0"] .card').forEach(function (card) {
+          var match = card.getAttribute('data-svc') === svcMap[svcKey];
+          card.classList.toggle('is-active', match);
+          if (match) {
+            state.svc = card.getAttribute('data-svc');
+            state.price = Number(card.getAttribute('data-price'));
+            state.dur = card.getAttribute('data-dur');
+          }
+        });
+      }
+
+      var dateParam = params.get('date');
+      var timeParam = params.get('time');
+      renderDates(dateParam === 'Today' || dateParam === 'Tomorrow' ? dateParam : 'Tomorrow');
+
+      if (timeParam) {
+        var found = false;
+        document.querySelectorAll('#slots .slot').forEach(function (slot) {
+          if (slot.disabled) return;
+          var match = slot.getAttribute('data-time') === timeParam;
+          slot.classList.toggle('is-active', match);
+          if (match) {
+            state.time = timeParam;
+            found = true;
+          }
+        });
+        if (!found) {
+          var firstOpen = document.querySelector('#slots .slot:not(:disabled)');
+          if (firstOpen) {
+            document.querySelectorAll('#slots .slot').forEach(function (s) { s.classList.remove('is-active'); });
+            firstOpen.classList.add('is-active');
+            state.time = firstOpen.getAttribute('data-time');
+          }
+        }
+      }
+
+      var startStep = Number(params.get('step'));
+      // Old links used step=2 for time; date+time is now step 1
+      if (startStep === 2) startStep = 1;
+      if (!Number.isFinite(startStep) || startStep < 0 || startStep > max) startStep = 0;
+      showStep(startStep);
+    })();
+  </script>
+</body>
+</html>

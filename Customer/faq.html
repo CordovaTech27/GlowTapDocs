@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — FAQ</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF;
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #100818; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123,0,255,.35), transparent 60%), #100818; }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px; background: #fff; }
+    .back { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink); text-decoration: none; }
+    .back svg { width: 18px; height: 18px; }
+    .nav h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .body { flex: 1; overflow-y: auto; padding: 12px 16px 28px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .faq {
+      background: #fff; border-radius: 16px; margin-bottom: 8px; border: 1px solid rgba(123,0,255,.06);
+      overflow: hidden; box-shadow: 0 4px 14px rgba(30,42,50,.04);
+    }
+    .faq__q {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 14px; border: none; background: transparent; font-family: inherit; font-size: .9rem;
+      font-weight: 700; text-align: left; cursor: pointer; color: var(--ink);
+    }
+    .faq__q svg { width: 16px; height: 16px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+    .faq.is-open .faq__q svg { transform: rotate(180deg); }
+    .faq__a {
+      display: none; padding: 0 14px 14px; font-size: .82rem; color: var(--muted); line-height: 1.5;
+    }
+    .faq.is-open .faq__a { display: block; }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="nav">
+          <a class="back" href="support.html" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></a>
+          <h1>FAQ</h1>
+        </div>
+        <div class="body">
+          <div class="faq is-open">
+            <button type="button" class="faq__q">How do I cancel a booking? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="faq__a">From My bookings → open the appointment. If status is Booked, cancel directly. If Confirmed, request cancellation for salon approval.</div>
+          </div>
+          <div class="faq">
+            <button type="button" class="faq__q">When do I get a refund? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="faq__a">Online payments refund per platform rules after cancel/approval. Track status on booking detail.</div>
+          </div>
+          <div class="faq">
+            <button type="button" class="faq__q">Can I reschedule? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="faq__a">Yes for Booked or Confirmed appointments, usually until 2 hours before the slot (salon/platform rules may vary).</div>
+          </div>
+          <div class="faq">
+            <button type="button" class="faq__q">Pay online vs pay at salon? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="faq__a">Online charges at booking when enabled. Pay at salon leaves the appointment unpaid until the salon collects.</div>
+          </div>
+          <div class="faq">
+            <button type="button" class="faq__q">How do I contact support? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>
+            <div class="faq__a">Help &amp; support → Contact support to raise a ticket, or open My tickets to follow up.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('.faq__q').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.parentElement;
+        var open = item.classList.contains('is-open');
+        document.querySelectorAll('.faq').forEach(function (f) { f.classList.remove('is-open'); });
+        if (!open) item.classList.add('is-open');
+      });
+    });
+  </script>
+</body>
+</html>

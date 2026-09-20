@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Home</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330;
+      --muted: #6B7A88;
+      --line: #E5EAF0;
+      --violet: #7B00FF;
+      --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA;
+      --phone-w: 390px;
+      --phone-h: 844px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #100818;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      overflow: auto;
+    }
+
+    .studio {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
+        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
+        #100818;
+    }
+
+    .stage {
+      position: relative;
+      z-index: 1;
+      width: var(--phone-w);
+      height: var(--phone-h);
+      flex-shrink: 0;
+      animation: in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes in {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .phone {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      border-radius: 42px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow:
+        0 0 0 9px #171022,
+        0 0 0 11px #2c1a42,
+        0 36px 70px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 32px;
+      background: #050308;
+      border-radius: 20px;
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    .status {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      z-index: 35;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--ink);
+      pointer-events: none;
+    }
+    .status__right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+    }
+    .status__right svg {
+      display: block;
+      width: 16px;
+      height: 11px;
+      color: inherit;
+    }
+    .status__right .status-battery { width: 25px; height: 12px; }
+
+    .screen {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: 52px;
+    }
+
+    /* —— Top bar (Zomato / Blinkit style) —— */
+    .top {
+      flex-shrink: 0;
+      padding: 2px 16px 10px;
+      background: #fff;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .brand-logo {
+      display: none;
+    }
+    .loc {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0;
+      flex: 1;
+      min-width: 0;
+    }
+    .loc__btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-width: 0;
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      color: inherit;
+    }
+    .loc__pin { display: none; }
+    .loc__meta { min-width: 0; width: 100%; }
+    .loc__label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: Outfit, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: none;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .loc__label::after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--ink);
+      margin-top: 2px;
+    }
+    .loc__place {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-family: inherit;
+      font-weight: 500;
+      font-size: 0.78rem;
+      letter-spacing: 0;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+    .loc__place-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .loc__place svg { display: none; }
+
+    .top__actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .icon-btn--profile {
+      padding: 0;
+      overflow: hidden;
+      border: none;
+      background: var(--grad);
+      color: #fff;
+      font-family: Outfit, sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F7F4FA;
+      border: 1.5px solid #E8E4EF;
+      border-radius: 14px;
+      padding: 12px 12px 12px 14px;
+    }
+    .search:focus-within {
+      background: #fff;
+      border-color: rgba(123, 0, 255, 0.4);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.08);
+    }
+    .search svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
+    .search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 0;
+    }
+    .search input::placeholder { color: #94A3B8; }
+    .search__filter {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: none;
+      background: var(--grad);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(123, 0, 255, 0.28);
+    }
+    .search__filter svg { width: 16px; height: 16px; color: #fff; }
+
+    .sheet--search {
+      padding-bottom: 36px;
+    }
+    .sheet--search .sheet__sub { margin-bottom: 12px; }
+    .search-suggestions {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .search-suggestions button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+    }
+    .search-suggestions button svg {
+      width: 16px;
+      height: 16px;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    /* Category circles — Blinkit / Zepto style */
+    .cats {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin: 0 -16px 16px;
+      padding: 2px 16px 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .cats::-webkit-scrollbar { display: none; }
+    .cat {
+      flex: 0 0 auto;
+      width: 68px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: inherit;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .cat__icon {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 20px;
+      display: block;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 6px 14px rgba(30, 42, 50, 0.1);
+      border: 2.5px solid transparent;
+      box-sizing: border-box;
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+    .cat__photo {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .cat__gt {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
+      z-index: 1;
+    }
+    .cat__gt img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .cat__label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-align: center;
+      line-height: 1.15;
+      max-width: 68px;
+    }
+    .cat.is-active .cat__icon {
+      border-color: var(--violet);
+      box-shadow: 0 6px 16px rgba(123, 0, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: rgba(18, 12, 28, 0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      border-radius: inherit;
+    }
+    .sheet-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 10px 18px 28px;
+      transform: translateY(110%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 -12px 40px rgba(30, 42, 50, 0.18);
+    }
+    .sheet.is-open { transform: translateY(0); }
+    .sheet__handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: #E5EAF0;
+      margin: 4px auto 14px;
+    }
+    .sheet__title {
+      font-family: Outfit, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+    .sheet__sub {
+      margin: 0 0 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .sheet__list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .sheet__option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      color: inherit;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .sheet__option.is-active,
+    .sheet__option:hover {
+      border-color: rgba(123, 0, 255, 0.35);
+      background: #F7F4FA;
+    }
+    .sheet__option-pin {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: var(--grad);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .sheet__option-pin svg { width: 16px; height: 16px; color: #fff; }
+    .sheet__option-text { flex: 1; min-width: 0; }
+    .sheet__option-name {
+      display: block;
+      font-family: Outfit, sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .sheet__option-meta {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    .sheet__option-check {
+      width: 20px;
+      height: 20px;
+      color: var(--violet);
+      opacity: 0;
+      flex-shrink: 0;
+    }
+    .sheet__option.is-active .sheet__option-check { opacity: 1; }
+
+    /* —— Scroll body —— */
+    .body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 14px 16px 100px;
+      scrollbar-width: none;
+    }
+    .body::-webkit-scrollbar { display: none; }
+
+    /* —— Promo carousel (gradient art only — no GT watermark photo) —— */
+    .promo {
+      margin: 0 -16px 16px;
+      padding: 0 16px;
+    }
+    .promo__track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+      padding-right: 18px;
+    }
+    .promo__track::-webkit-scrollbar { display: none; }
+
+    .banner {
+      flex: 0 0 calc(100% - 28px);
+      scroll-snap-align: start;
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      text-decoration: none;
+      color: #fff;
+      min-height: 138px;
+      display: flex;
+      align-items: stretch;
+      box-shadow: 0 12px 28px rgba(88, 0, 180, 0.22);
+    }
+    .banner__art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .banner__art::before,
+    .banner__art::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .banner__wm {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 88px;
+      height: 88px;
+      z-index: 1;
+      opacity: 1;
+      pointer-events: none;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .banner__wm img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .banner--pay .banner__wm,
+    .banner--new .banner__wm,
+    .banner--peak .banner__wm {
+      opacity: 1;
+    }
+    .banner--pay .banner__art {
+      background: linear-gradient(135deg, #4C00B8 0%, #7B00FF 48%, #C026D3 100%);
+    }
+    .banner--pay .banner__art::before {
+      width: 160px; height: 160px; right: -40px; top: -50px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .banner--pay .banner__art::after {
+      width: 110px; height: 110px; right: 28px; bottom: -40px;
+      background: rgba(255, 3, 200, 0.28);
+    }
+    .banner--new .banner__art {
+      background: linear-gradient(135deg, #831843 0%, #DB2777 45%, #F472B6 100%);
+    }
+    .banner--new .banner__art::before {
+      width: 140px; height: 140px; right: -30px; bottom: -45px;
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .banner--new .banner__art::after {
+      width: 90px; height: 90px; right: 50px; top: -30px;
+      background: rgba(124, 58, 237, 0.35);
+    }
+    .banner--peak .banner__art {
+      background: linear-gradient(135deg, #1E3A5F 0%, #5B21B6 50%, #7C3AED 100%);
+    }
+    .banner--peak .banner__art::before {
+      width: 150px; height: 150px; right: -45px; top: -20px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .banner--peak .banner__art::after {
+      width: 100px; height: 100px; right: 20px; bottom: -35px;
+      background: rgba(244, 114, 182, 0.3);
+    }
+
+    .banner__content {
+      position: relative;
+      z-index: 1;
+      padding: 18px 20px;
+      max-width: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .banner__eyebrow {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+    .banner__title {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.32rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 0 12px;
+    }
+    .banner__title em {
+      font-style: italic;
+      font-weight: 700;
+      color: #FCE7F3;
+    }
+    .banner__cta {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .promo__dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .promo__dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 99px;
+      border: none;
+      padding: 0;
+      background: #D8CCE8;
+      cursor: pointer;
+      transition: width 0.2s, background 0.2s;
+    }
+    .promo__dot.is-active {
+      width: 18px;
+      background-image: var(--grad);
+      background-color: #7B00FF;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 4px 0 10px;
+    }
+    .section-head h2 {
+      margin: 0;
+      font-family: Outfit, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .section-head a {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--violet);
+      text-decoration: none;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin: 0 -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+      scrollbar-width: none;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .chip.is-active {
+      border-color: transparent;
+      background: var(--grad);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(123, 0, 255, 0.25);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .toolbar__count {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .view-toggle {
+      display: flex;
+      background: #fff;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .view-toggle button {
+      width: 32px;
+      height: 28px;
+      border: none;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+    .view-toggle button.is-active {
+      background: #F3EEFF;
+      color: var(--violet);
+    }
+    .view-toggle svg { width: 15px; height: 15px; }
+
+    /* —— Salon cards —— */
+    .salon {
+      display: block;
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      margin-bottom: 12px;
+      border: 1px solid rgba(123, 0, 255, 0.06);
+      box-shadow: 0 6px 20px rgba(30, 42, 50, 0.05);
+      transition: transform 0.15s;
+    }
+    .salon:active { transform: scale(0.985); }
+
+    .salon__media {
+      position: relative;
+      height: 128px;
+      overflow: hidden;
+    }
+    .salon__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .salon__badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.95);
+      color: #15803D;
+    }
+    .salon__badge.is-closed { color: #B91C1C; }
+    .salon__fav {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.92);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .salon__fav.is-on { color: var(--pink); }
+    .salon__fav svg { width: 16px; height: 16px; }
+
+    .salon__body { padding: 12px 14px 14px; }
+    .salon__row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .salon__name {
+      margin: 0;
+      font-family: Outfit, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .salon__brand {
+      margin: 2px 0 0;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .salon__dist {
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--violet);
+      background: #F3EEFF;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+    .salon__meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin: 8px 0 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .salon__meta .stars { color: #F59E0B; letter-spacing: 0.02em; }
+    .salon__meta .muted { color: var(--muted); font-weight: 500; }
+    .salon__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: #F3F4F6;
+      padding: 4px 8px;
+      border-radius: 7px;
+    }
+
+    /* —— Bottom dock: tab pill + circular search (reference style) —— */
+    .dock {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 22px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: calc(100% - 28px);
+    }
+    .tabbar {
+      position: relative;
+      left: auto;
+      transform: none;
+      bottom: auto;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      width: max-content;
+      max-width: none;
+      padding: 6px;
+      background: rgba(28, 28, 30, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+    }
+    .dock-search {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(28, 28, 30, 0.92);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .dock-search:active { transform: scale(0.94); }
+    .dock-search svg {
+      width: 22px;
+      height: 22px;
+      stroke: #fff;
+      stroke-width: 2.2;
+      color: #fff;
+    }
+    .tab {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 38px;
+      padding: 0;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s;
+      box-sizing: border-box;
+    }
+    .tab svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.8;
+    }
+    .tab.is-active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .tab .dot {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FF3B30;
+      bottom: 7px;
+      right: 10px;
+      top: auto;
+      border: 1.5px solid rgba(28, 28, 30, 0.92);
+    }
+    .tab .tab-label { display: none; }
+
+    .home-ind {
+      position: absolute;
+      bottom: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: rgba(30, 42, 50, 0.15);
+      border-radius: 99px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status, .home-ind { display: none; }
+      .stage { width: 100%; height: 100dvh; animation: none; }
+      .phone {
+        width: 100%;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+      .tabbar { bottom: auto; }
+      .dock { bottom: max(16px, env(safe-area-inset-bottom)); }
+      .body { padding-bottom: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+
+  <div class="stage">
+    <div class="phone" role="application" aria-label="GlowTap — Home">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true">
+        <span>9:41</span>
+        <span class="status__right">
+          <svg viewBox="0 0 17 12"><rect x="0" y="8" width="3" height="4" rx="0.6" fill="currentColor"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="0.6" fill="currentColor"/><rect x="9" y="3" width="3" height="9" rx="0.6" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="0.6" fill="currentColor" opacity="0.35"/></svg>
+          <svg viewBox="0 0 16 12"><path fill="currentColor" d="M8 9.6a1.35 1.35 0 1 1 0 2.7 1.35 1.35 0 0 1 0-2.7Zm0-3.55c1.5 0 2.88.55 3.95 1.47l-1.2 1.2A3.9 3.9 0 0 0 8 7.85c-.95 0-1.82.34-2.5.9L4.3 7.55A5.55 5.55 0 0 1 8 6.05Zm0-3.5c2.45 0 4.68.9 6.42 2.4L13.2 6.15A7.35 7.35 0 0 0 8 4.35c-2.1 0-4.02.78-5.5 2.06L1.3 5.2A9.55 9.55 0 0 1 8 2.55Z"/></svg>
+          <svg class="status-battery" viewBox="0 0 28 13"><rect x="0.75" y="0.75" width="23.5" height="11.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/><rect x="2.4" y="2.5" width="18" height="8" rx="1.2" fill="currentColor"/><path fill="currentColor" opacity="0.9" d="M25.2 4.2h1.4c.7 0 1.2.5 1.2 1.15v2.3c0 .65-.5 1.15-1.2 1.15h-1.4V4.2Z"/></svg>
+        </span>
+      </div>
+
+      <div class="screen">
+        <header class="top">
+          <div class="brand-row">
+            <div class="loc">
+              <button type="button" class="loc__btn" id="loc-open" title="Change location" aria-haspopup="dialog" aria-controls="loc-sheet">
+                <span class="loc__meta">
+                  <span class="loc__label" id="loc-title">Home</span>
+                  <span class="loc__place">
+                    <span class="loc__place-text" id="loc-label">Indiranagar, Bengaluru</span>
+                  </span>
+                </span>
+              </button>
+            </div>
+            <div class="top__actions">
+              <button type="button" class="icon-btn" title="Favorites" aria-label="Favorites">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+              <a class="icon-btn icon-btn--profile" href="profile.html" title="Profile" aria-label="Profile">A</a>
+            </div>
+          </div>
+        </header>
+
+        <div class="body">
+          <div class="cats" role="list" aria-label="Categories">
+            <button type="button" class="cat is-active" data-cat="hair">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 22% 28%;" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Hair</span>
+            </button>
+            <button type="button" class="cat" data-cat="spa">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 70% 40%; filter: hue-rotate(85deg) saturate(1.05);" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Spa</span>
+            </button>
+            <button type="button" class="cat" data-cat="facial">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 45% 60%; filter: hue-rotate(-20deg) brightness(1.05);" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Facial</span>
+            </button>
+            <button type="button" class="cat" data-cat="nails">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 10% 70%; filter: hue-rotate(280deg) saturate(1.1);" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Nails</span>
+            </button>
+            <button type="button" class="cat" data-cat="makeup">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 80% 20%; filter: hue-rotate(35deg) saturate(1.15);" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Makeup</span>
+            </button>
+            <button type="button" class="cat" data-cat="mens">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 55% 45%; filter: grayscale(0.35) contrast(1.05);" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Men’s</span>
+            </button>
+            <button type="button" class="cat" data-cat="other">
+              <span class="cat__icon">
+                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 30% 50%; filter: saturate(0.85);" />
+                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
+              </span>
+              <span class="cat__label">Other</span>
+            </button>
+          </div>
+
+          <div class="promo" id="promo">
+            <div class="promo__track" id="promo-track">
+              <a class="banner banner--pay" href="salon-detail.html?promo=pay">
+                <div class="banner__art" aria-hidden="true"></div>
+                <div class="banner__wm" aria-hidden="true">
+                  <img src="assets/glowtap-mark.svg" alt="" />
+                </div>
+                <div class="banner__content">
+                  <div class="banner__eyebrow">This week</div>
+                  <h2 class="banner__title">Pay online &amp; save <em>10%</em></h2>
+                  <span class="banner__cta">View offers →</span>
+                </div>
+              </a>
+              <a class="banner banner--new" href="salon-detail.html?promo=new">
+                <div class="banner__art" aria-hidden="true"></div>
+                <div class="banner__wm" aria-hidden="true">
+                  <img src="assets/glowtap-mark.svg" alt="" />
+                </div>
+                <div class="banner__content">
+                  <div class="banner__eyebrow">Just opened</div>
+                  <h2 class="banner__title">New salons near <em>you</em></h2>
+                  <span class="banner__cta">Explore →</span>
+                </div>
+              </a>
+              <a class="banner banner--peak" href="salon-detail.html?promo=peak">
+                <div class="banner__art" aria-hidden="true"></div>
+                <div class="banner__wm" aria-hidden="true">
+                  <img src="assets/glowtap-mark.svg" alt="" />
+                </div>
+                <div class="banner__content">
+                  <div class="banner__eyebrow">Book smart</div>
+                  <h2 class="banner__title">Off-peak slots from <em>₹299</em></h2>
+                  <span class="banner__cta">See times →</span>
+                </div>
+              </a>
+            </div>
+            <div class="promo__dots" id="promo-dots" aria-label="Promo slides">
+              <button type="button" class="promo__dot is-active" aria-label="Slide 1"></button>
+              <button type="button" class="promo__dot" aria-label="Slide 2"></button>
+              <button type="button" class="promo__dot" aria-label="Slide 3"></button>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <h2>Popular near you</h2>
+            <a href="#radius">See all</a>
+          </div>
+
+          <div class="chips" role="list">
+            <button type="button" class="chip is-active">Open now</button>
+            <button type="button" class="chip">Haircut</button>
+            <button type="button" class="chip">Facial</button>
+            <button type="button" class="chip">Spa</button>
+            <button type="button" class="chip">4★+</button>
+            <button type="button" class="chip">Offers</button>
+          </div>
+
+          <div class="toolbar">
+            <span class="toolbar__count">12 salons · sorted by distance</span>
+            <div class="view-toggle" role="group" aria-label="View mode">
+              <button type="button" class="is-active" title="List" aria-label="List view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+              </button>
+              <button type="button" title="Map" aria-label="Map view">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 7 6-3 6 3 6-3v13l-6 3-6-3-6 3V7Z"/><path d="M9 4v13M15 7v13"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <a class="salon" href="salon-detail.html?id=bandra-glow">
+            <div class="salon__media">
+              <img src="assets/salon-bg.png" alt="" style="object-position: 20% 30%;" />
+              <span class="salon__badge">Open</span>
+              <button type="button" class="salon__fav is-on" aria-label="Saved" onclick="event.preventDefault()">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <div class="salon__body">
+              <div class="salon__row">
+                <div>
+                  <h3 class="salon__name">Luxe Curls — Indiranagar</h3>
+                  <p class="salon__brand">Luxe Curls Studio</p>
+                </div>
+                <span class="salon__dist">0.8 km</span>
+              </div>
+              <div class="salon__meta">
+                <span class="stars">★ 4.8</span>
+                <span class="muted">(214)</span>
+                <span>From ₹499</span>
+              </div>
+              <div class="salon__tags">
+                <span class="tag">Haircut</span>
+                <span class="tag">Color</span>
+                <span class="tag">Spa</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="salon" href="salon-detail.html?id=bloom">
+            <div class="salon__media">
+              <img src="assets/salon-bg.png" alt="" style="object-position: 70% 40%; filter: hue-rotate(-12deg) saturate(1.1);" />
+              <span class="salon__badge">Open</span>
+              <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <div class="salon__body">
+              <div class="salon__row">
+                <div>
+                  <h3 class="salon__name">Bloom &amp; Brow</h3>
+                  <p class="salon__brand">Bloom Beauty Co.</p>
+                </div>
+                <span class="salon__dist">1.4 km</span>
+              </div>
+              <div class="salon__meta">
+                <span class="stars">★ 4.6</span>
+                <span class="muted">(98)</span>
+                <span>From ₹349</span>
+              </div>
+              <div class="salon__tags">
+                <span class="tag">Facial</span>
+                <span class="tag">Brows</span>
+                <span class="tag">Makeup</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="salon" href="salon-detail.html?id=nord">
+            <div class="salon__media">
+              <img src="assets/salon-bg.png" alt="" style="object-position: 40% 55%; filter: hue-rotate(18deg) brightness(0.95);" />
+              <span class="salon__badge is-closed">Closed</span>
+              <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <div class="salon__body">
+              <div class="salon__row">
+                <div>
+                  <h3 class="salon__name">Nord Hair Lab</h3>
+                  <p class="salon__brand">Nord Collective</p>
+                </div>
+                <span class="salon__dist">2.1 km</span>
+              </div>
+              <div class="salon__meta">
+                <span class="stars">★ 4.9</span>
+                <span class="muted">(312)</span>
+                <span>From ₹699</span>
+              </div>
+              <div class="salon__tags">
+                <span class="tag">Haircut</span>
+                <span class="tag">Styling</span>
+                <span class="tag">Unisex</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="salon" href="salon-detail.html?id=aura">
+            <div class="salon__media">
+              <img src="assets/salon-bg.png" alt="" style="object-position: 10% 20%; filter: saturate(1.2);" />
+              <span class="salon__badge">Open</span>
+              <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <div class="salon__body">
+              <div class="salon__row">
+                <div>
+                  <h3 class="salon__name">Aura Spa Retreat</h3>
+                  <p class="salon__brand">Aura Wellness</p>
+                </div>
+                <span class="salon__dist">2.8 km</span>
+              </div>
+              <div class="salon__meta">
+                <span class="stars">★ 4.7</span>
+                <span class="muted">(156)</span>
+                <span>From ₹899</span>
+              </div>
+              <div class="salon__tags">
+                <span class="tag">Spa</span>
+                <span class="tag">Massage</span>
+                <span class="tag">Facial</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="dock">
+        <nav class="tabbar" aria-label="Primary">
+          <a class="tab is-active" href="home.html" title="Home" aria-label="Home" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3.2 4 10v10a1 1 0 0 0 1 1h5v-6h4v6h5a1 1 0 0 0 1-1V10l-8-6.8Z"/></svg>
+          </a>
+          <a class="tab" href="bookings.html" title="Bookings" aria-label="Bookings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5V7M16 3.5V7"/></svg>
+          </a>
+          <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
+            <span class="dot" aria-hidden="true"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+          </a>
+          <a class="tab" href="profile.html" title="Profile" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0"/></svg>
+          </a>
+        </nav>
+        <button type="button" class="dock-search" id="dock-search" title="Search" aria-label="Search salons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-backdrop" id="loc-backdrop" hidden></div>
+      <div class="sheet" id="loc-sheet" role="dialog" aria-modal="true" aria-labelledby="loc-sheet-title" hidden>
+        <div class="sheet__handle" aria-hidden="true"></div>
+        <h2 class="sheet__title" id="loc-sheet-title">Choose area</h2>
+        <p class="sheet__sub">Updates nearby salons for this wireframe</p>
+        <div class="sheet__list" id="loc-list">
+          <button type="button" class="sheet__option is-active" data-place="Indiranagar, Bengaluru" data-area="Indiranagar">
+            <span class="sheet__option-pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+            <span class="sheet__option-text"><span class="sheet__option-name">Indiranagar</span><span class="sheet__option-meta">Bengaluru · 0.8–2.8 km</span></span>
+            <svg class="sheet__option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5L20 7"/></svg>
+          </button>
+          <button type="button" class="sheet__option" data-place="Koramangala, Bengaluru" data-area="Koramangala">
+            <span class="sheet__option-pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+            <span class="sheet__option-text"><span class="sheet__option-name">Koramangala</span><span class="sheet__option-meta">Bengaluru · 1.2–3.4 km</span></span>
+            <svg class="sheet__option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5L20 7"/></svg>
+          </button>
+          <button type="button" class="sheet__option" data-place="HSR Layout, Bengaluru" data-area="HSR Layout">
+            <span class="sheet__option-pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+            <span class="sheet__option-text"><span class="sheet__option-name">HSR Layout</span><span class="sheet__option-meta">Bengaluru · 2.0–4.1 km</span></span>
+            <svg class="sheet__option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5L20 7"/></svg>
+          </button>
+          <button type="button" class="sheet__option" data-place="Whitefield, Bengaluru" data-area="Whitefield">
+            <span class="sheet__option-pin" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
+            <span class="sheet__option-text"><span class="sheet__option-name">Whitefield</span><span class="sheet__option-meta">Bengaluru · 4.5–7.2 km</span></span>
+            <svg class="sheet__option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m5 12 5 5L20 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sheet-backdrop" id="search-backdrop" hidden></div>
+      <div class="sheet sheet--search" id="search-sheet" role="dialog" aria-modal="true" aria-labelledby="search-sheet-title" hidden>
+        <div class="sheet__handle" aria-hidden="true"></div>
+        <h2 class="sheet__title" id="search-sheet-title">Search</h2>
+        <p class="sheet__sub">Salon, service, or area</p>
+        <div class="search" id="home-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="home-search-input" placeholder="Search salon, service or area" aria-label="Search salons" />
+          <button type="button" class="search__filter" title="Filters" aria-label="Filters">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+          </button>
+        </div>
+        <div class="search-suggestions">
+          <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Haircut near me</button>
+          <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Facial · Indiranagar</button>
+          <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Spa under ₹999</button>
+        </div>
+      </div>
+
+      <div class="home-ind" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.chips .chip').forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        chip.classList.toggle('is-active');
+      });
+    });
+    document.querySelectorAll('.cats .cat').forEach(function (cat) {
+      cat.addEventListener('click', function () {
+        document.querySelectorAll('.cats .cat').forEach(function (c) { c.classList.remove('is-active'); });
+        cat.classList.add('is-active');
+      });
+    });
+    document.querySelectorAll('.view-toggle button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.view-toggle button').forEach(function (b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+      });
+    });
+
+    (function () {
+      var dockSearch = document.getElementById('dock-search');
+      var backdrop = document.getElementById('search-backdrop');
+      var sheet = document.getElementById('search-sheet');
+      var searchInput = document.getElementById('home-search-input');
+      if (!dockSearch || !backdrop || !sheet) return;
+
+      function openSearch() {
+        backdrop.hidden = false;
+        sheet.hidden = false;
+        requestAnimationFrame(function () {
+          backdrop.classList.add('is-open');
+          sheet.classList.add('is-open');
+          if (searchInput) setTimeout(function () { searchInput.focus(); }, 220);
+        });
+      }
+
+      function closeSearch() {
+        backdrop.classList.remove('is-open');
+        sheet.classList.remove('is-open');
+        setTimeout(function () {
+          backdrop.hidden = true;
+          sheet.hidden = true;
+        }, 280);
+      }
+
+      dockSearch.addEventListener('click', openSearch);
+      backdrop.addEventListener('click', closeSearch);
+    })();
+
+    (function () {
+      var openBtn = document.getElementById('loc-open');
+      var backdrop = document.getElementById('loc-backdrop');
+      var sheet = document.getElementById('loc-sheet');
+      var label = document.getElementById('loc-label');
+      var title = document.getElementById('loc-title');
+      var options = Array.prototype.slice.call(document.querySelectorAll('#loc-list .sheet__option'));
+      if (!openBtn || !backdrop || !sheet || !label) return;
+
+      function openSheet() {
+        backdrop.hidden = false;
+        sheet.hidden = false;
+        requestAnimationFrame(function () {
+          backdrop.classList.add('is-open');
+          sheet.classList.add('is-open');
+        });
+      }
+
+      function closeSheet() {
+        backdrop.classList.remove('is-open');
+        sheet.classList.remove('is-open');
+        setTimeout(function () {
+          backdrop.hidden = true;
+          sheet.hidden = true;
+        }, 280);
+      }
+
+      openBtn.addEventListener('click', openSheet);
+      backdrop.addEventListener('click', closeSheet);
+
+      options.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+          options.forEach(function (o) { o.classList.remove('is-active'); });
+          opt.classList.add('is-active');
+          label.textContent = opt.getAttribute('data-place') || '';
+          var area = opt.getAttribute('data-area') || '';
+          if (title && area) title.textContent = area;
+          var firstName = document.querySelector('.salon__name');
+          if (firstName && area) {
+            firstName.textContent = 'Luxe Curls — ' + area;
+          }
+          closeSheet();
+        });
+      });
+    })();
+
+    (function () {
+      var track = document.getElementById('promo-track');
+      var dots = Array.prototype.slice.call(document.querySelectorAll('#promo-dots .promo__dot'));
+      if (!track || !dots.length) return;
+
+      var index = 0;
+      var timer = null;
+      var paused = false;
+
+      function slideWidth() {
+        var first = track.querySelector('.banner');
+        if (!first) return track.clientWidth;
+        return first.getBoundingClientRect().width + 12;
+      }
+
+      function setActive(i) {
+        index = (i + dots.length) % dots.length;
+        dots.forEach(function (d, idx) {
+          d.classList.toggle('is-active', idx === index);
+        });
+      }
+
+      function goTo(i, smooth) {
+        setActive(i);
+        track.scrollTo({
+          left: index * slideWidth(),
+          behavior: smooth === false ? 'auto' : 'smooth'
+        });
+      }
+
+      function next() {
+        goTo(index + 1);
+      }
+
+      function start() {
+        stop();
+        timer = setInterval(function () {
+          if (!paused) next();
+        }, 3200);
+      }
+
+      function stop() {
+        if (timer) clearInterval(timer);
+        timer = null;
+      }
+
+      track.addEventListener('scroll', function () {
+        var i = Math.round(track.scrollLeft / slideWidth());
+        setActive(Math.max(0, Math.min(dots.length - 1, i)));
+      });
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () {
+          goTo(i);
+          start();
+        });
+      });
+
+      ['pointerdown', 'touchstart', 'mouseenter'].forEach(function (ev) {
+        track.addEventListener(ev, function () { paused = true; });
+      });
+      ['pointerup', 'touchend', 'mouseleave'].forEach(function (ev) {
+        track.addEventListener(ev, function () { paused = false; });
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) stop();
+        else start();
+      });
+
+      start();
+    })();
+  </script>
+</body>
+</html>

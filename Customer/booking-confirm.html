@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Booking Confirmed</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #100818; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123,0,255,.35), transparent 60%), #100818;
+    }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .body {
+      flex: 1; overflow-y: auto; padding: 24px 20px 28px; display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
+    .check {
+      width: 72px; height: 72px; border-radius: 50%; background: var(--grad); color: #fff;
+      display: grid; place-items: center; margin-bottom: 16px;
+      box-shadow: 0 12px 28px rgba(123,0,255,.35);
+      animation: pop .45s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes pop {
+      from { transform: scale(.7); opacity: 0; }
+      to { transform: none; opacity: 1; }
+    }
+    .check svg { width: 34px; height: 34px; }
+    h1 { margin: 0 0 6px; font-family: Outfit, sans-serif; font-size: 1.4rem; font-weight: 700; letter-spacing: -.03em; }
+    .lead { margin: 0 0 18px; color: var(--muted); font-size: .9rem; }
+    .card {
+      width: 100%; text-align: left; background: #fff; border-radius: 18px; padding: 16px;
+      border: 1px solid rgba(123,0,255,.08); box-shadow: 0 8px 22px rgba(30,42,50,.06); margin-bottom: 16px;
+    }
+    .id {
+      font-size: .72rem; font-weight: 700; color: var(--violet); letter-spacing: .04em; margin-bottom: 10px;
+    }
+    .row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
+    .row span { color: var(--muted); }
+    .row strong { font-weight: 700; text-align: right; }
+    .actions { width: 100%; display: grid; gap: 10px; margin-top: auto; }
+    .btn {
+      height: 48px; border-radius: 14px; display: grid; place-items: center; text-decoration: none;
+      font-weight: 700; font-size: .92rem;
+    }
+    .btn--primary { background: var(--grad); color: #fff; box-shadow: 0 8px 20px rgba(123,0,255,.3); }
+    .btn--ghost { background: #fff; color: var(--ink); border: 1.5px solid var(--line); }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="body">
+          <div class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="m5 12 5 5L20 7"/></svg>
+          </div>
+          <h1>Booking confirmed</h1>
+          <p class="lead">You’re all set. We’ll notify you when the salon confirms.</p>
+
+          <div class="card">
+            <div class="id" id="bid">GT-48401</div>
+            <div class="row"><span>Salon</span><strong>Luxe Curls — Indiranagar</strong></div>
+            <div class="row"><span>Service</span><strong id="svc">Haircut &amp; Style</strong></div>
+            <div class="row"><span>Specialist</span><strong id="spec">Priya S.</strong></div>
+            <div class="row"><span>When</span><strong id="when">Tomorrow · 11:30 AM</strong></div>
+            <div class="row"><span>Payment</span><strong id="pay">Paid online · ₹809</strong></div>
+          </div>
+
+          <div class="actions">
+            <a class="btn btn--primary" href="booking-detail.html?id=GT-48401">View booking</a>
+            <a class="btn btn--ghost" href="home.html">Back to home</a>
+            <a class="btn btn--ghost" href="salon-detail.html">Book another</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search);
+      if (p.get('svc')) document.getElementById('svc').textContent = p.get('svc');
+      if (p.get('spec')) document.getElementById('spec').textContent = p.get('spec');
+      if (p.get('when')) document.getElementById('when').textContent = p.get('when');
+      var pay = p.get('pay') === 'salon' ? 'Pay at salon' : 'Paid online';
+      var method = p.get('method');
+      if (pay === 'Paid online' && method) pay += ' · ' + method;
+      var total = p.get('total');
+      document.getElementById('pay').textContent = pay + (total ? ' · ₹' + total : '');
+    })();
+  </script>
+</body>
+</html>

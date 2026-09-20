@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlowTap Customer — Wireframe Index</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      margin: 0;
+      padding: 40px 24px;
+      background: linear-gradient(165deg, #fff, #F8F5FF);
+      color: #1E2A32;
+    }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    h1 { font-family: Outfit, sans-serif; font-size: 1.75rem; margin: 0 0 8px; }
+    .sub { color: #6B7A88; margin-bottom: 28px; line-height: 1.5; }
+    .card {
+      background: #fff;
+      border: 1px solid rgba(123, 0, 255, 0.1);
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(123, 0, 255, 0.06);
+    }
+    h2 { font-size: 1rem; margin: 0 0 12px; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 6px 0; }
+    a { color: #7B00FF; font-weight: 600; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { font-size: 0.85em; background: #F3EEFF; padding: 1px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Customer App Wireframes</h1>
+    <p class="sub">
+      End Customer mobile app · <code>Customer-Functional-Spec.md</code> §4.1 ·
+      Phone frame ~390×844 · Auth required (no guest mode)
+    </p>
+
+    <div class="card">
+      <h2>§4.1 Authentication</h2>
+      <ul>
+        <li><a href="login.html">Sign in / Welcome</a> — Google or Sign in → <a href="home.html">Home</a></li>
+        <li><a href="login.html?error=1">Sign in — bad credentials</a></li>
+        <li><a href="login.html?disabled=1">Sign in — account disabled</a></li>
+        <li><a href="login.html?expired=1">Sign in — session expired</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.2 Home — Nearby</h2>
+      <ul>
+        <li><a href="home.html">Home</a> — location, categories, promo, salon cards, floating tabs</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.6 My Bookings</h2>
+      <ul>
+        <li><a href="bookings.html">Bookings</a> — Upcoming / Past / All, next booking card, search</li>
+        <li><a href="booking-detail.html?id=GT-48291">Booking detail</a> — timeline, payment, cancel / reschedule</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.9 Notifications</h2>
+      <ul>
+        <li><a href="notifications.html">Alerts</a> — unread / bookings / offers, mark all read, clear all</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.7 Profile &amp; account</h2>
+      <ul>
+        <li><a href="profile.html">Profile</a> — hero, stats, menus</li>
+        <li><a href="edit-profile.html">Edit profile</a> — name &amp; photo</li>
+        <li><a href="change-password.html">Change password</a></li>
+        <li><a href="subscription.html">Subscription</a> — GlowTap Plus plans</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.8 Help &amp; support</h2>
+      <ul>
+        <li><a href="support.html">Help hub</a> — FAQ · Contact · My tickets</li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="contact.html">Contact support</a></li>
+        <li><a href="tickets.html">My tickets</a> · <a href="ticket-detail.html?id=TK-2041">Ticket detail</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>§4.3 Salon detail &amp; §4.5 Booking</h2>
+      <ul>
+        <li><a href="salon-detail.html">Salon detail</a> — gallery, hours, available slots, services, reviews</li>
+        <li><a href="book.html?salon=luxe&amp;service=haircut">Book flow</a> — service → date+slots → specialist → review / pay methods</li>
+        <li><a href="booking-confirm.html">Booking confirmation</a></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Next (planned)</h2>
+      <ul>
+        <li>Sign up · OTP · Forgot password</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

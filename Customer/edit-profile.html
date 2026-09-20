@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Edit Profile</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #100818; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123,0,255,.35), transparent 60%), #100818; }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px; background: #fff; }
+    .back { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink); text-decoration: none; }
+    .back svg { width: 18px; height: 18px; }
+    .nav h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .body { flex: 1; overflow-y: auto; padding: 16px 16px 28px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .avatar-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .avatar {
+      width: 88px; height: 88px; border-radius: 24px; overflow: hidden; background: #fff;
+      box-shadow: 0 10px 24px rgba(123,0,255,.2); border: 3px solid #fff;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .change-photo {
+      border: none; background: transparent; color: var(--violet); font-family: inherit;
+      font-size: .82rem; font-weight: 700; cursor: pointer;
+    }
+    label { display: block; font-size: .72rem; font-weight: 700; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; margin: 0 0 6px; }
+    .field { margin-bottom: 14px; }
+    input {
+      width: 100%; border: 1.5px solid #E8E4EF; border-radius: 14px; padding: 12px 14px;
+      font-family: inherit; font-size: .9rem; font-weight: 500; background: #fff; color: var(--ink); outline: none;
+    }
+    input:focus { border-color: rgba(123,0,255,.4); box-shadow: 0 0 0 3px rgba(123,0,255,.08); }
+    input:disabled { background: #F3F4F6; color: var(--muted); }
+    .hint { margin: 6px 0 0; font-size: .72rem; color: var(--muted); }
+    .btn {
+      display: grid; place-items: center; height: 48px; border-radius: 14px; border: none; width: 100%;
+      background: var(--grad); color: #fff; font-family: inherit; font-weight: 700; font-size: .92rem;
+      cursor: pointer; box-shadow: 0 8px 20px rgba(123,0,255,.28); margin-top: 10px; text-decoration: none;
+    }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="nav">
+          <a class="back" href="profile.html" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></a>
+          <h1>Edit profile</h1>
+        </div>
+        <div class="body">
+          <div class="avatar-wrap">
+            <div class="avatar"><img src="assets/glowtap-mark.svg" alt="" /></div>
+            <button type="button" class="change-photo">Change photo</button>
+          </div>
+          <form action="profile.html" method="get">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" type="text" value="ABCD" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" type="email" value="abcd@gmail.com" disabled />
+              <p class="hint">Changing email triggers OTP re-verification.</p>
+            </div>
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input id="phone" type="tel" value="+91 98765 43210" disabled />
+              <p class="hint">Changing phone requires OTP verification.</p>
+            </div>
+            <button type="submit" class="btn">Save changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

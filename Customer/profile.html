@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Profile</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330;
+      --muted: #6B7A88;
+      --line: #E5EAF0;
+      --violet: #7B00FF;
+      --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA;
+      --phone-w: 390px;
+      --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #100818;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      overflow: auto;
+    }
+    .studio {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
+        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
+        #100818;
+    }
+    .stage {
+      position: relative;
+      z-index: 1;
+      width: var(--phone-w);
+      height: var(--phone-h);
+      flex-shrink: 0;
+      animation: in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes in {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    .phone {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      border-radius: 42px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .island {
+      position: absolute;
+      top: 11px; left: 50%;
+      transform: translateX(-50%);
+      width: 110px; height: 32px;
+      background: #050308;
+      border-radius: 20px;
+      z-index: 40;
+      pointer-events: none;
+    }
+    .status {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      z-index: 35;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      pointer-events: none;
+    }
+    .status__right { display: flex; align-items: center; gap: 6px; }
+    .status__right svg { display: block; width: 16px; height: 11px; }
+    .status__right .status-battery { width: 25px; height: 12px; }
+
+    .screen {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: 52px;
+    }
+
+    .body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 8px 16px 110px;
+      scrollbar-width: none;
+    }
+    .body::-webkit-scrollbar { display: none; }
+
+    .hero {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      background: var(--grad);
+      padding: 20px 18px 18px;
+      color: #fff;
+      margin-bottom: 14px;
+      box-shadow: 0 14px 32px rgba(123, 0, 255, 0.28);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 140px; height: 140px;
+      right: -30px; top: -40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+    .hero__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .hero__avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+    }
+    .hero__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .hero__edit {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+    }
+    .hero__edit svg { width: 14px; height: 14px; }
+    .hero__name {
+      margin: 14px 0 4px;
+      font-family: Outfit, sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      position: relative;
+      z-index: 1;
+    }
+    .hero__contact {
+      margin: 0;
+      font-size: 0.82rem;
+      opacity: 0.92;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+    .pill svg { width: 12px; height: 12px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .stat {
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 10px;
+      text-align: center;
+      border: 1px solid rgba(123, 0, 255, 0.06);
+      box-shadow: 0 4px 14px rgba(30, 42, 50, 0.04);
+    }
+    .stat__val {
+      font-family: Outfit, sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .stat__label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 4px 2px 8px;
+    }
+
+    .menu {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(123, 0, 255, 0.06);
+      box-shadow: 0 6px 18px rgba(30, 42, 50, 0.04);
+      margin-bottom: 14px;
+    }
+    .menu__item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      text-decoration: none;
+      color: inherit;
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: left;
+      border-bottom: 1px solid #F1F5F9;
+    }
+    .menu__item:last-child { border-bottom: none; }
+    .menu__item:active { background: #Faf8ff; }
+    .menu__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      background: #F3EEFF;
+      color: var(--violet);
+    }
+    .menu__icon svg { width: 18px; height: 18px; }
+    .menu__icon--rose { background: #FFE4EC; color: #E11D48; }
+    .menu__icon--mint { background: #D1FAE5; color: #059669; }
+    .menu__icon--sky { background: #DBEAFE; color: #2563EB; }
+    .menu__icon--amber { background: #FFEDD5; color: #EA580C; }
+    .menu__icon--slate { background: #F1F5F9; color: #475569; }
+    .menu__text { flex: 1; min-width: 0; }
+    .menu__title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .menu__sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 1px;
+    }
+    .menu__chev {
+      width: 16px;
+      height: 16px;
+      color: #C4CDD6;
+      flex-shrink: 0;
+    }
+    .menu__item--danger .menu__title { color: #B91C1C; }
+    .menu__item--danger .menu__icon {
+      background: #FEF2F2;
+      color: #B91C1C;
+    }
+
+    .foot {
+      text-align: center;
+      padding: 8px 8px 4px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .foot strong {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--ink);
+      font-family: Outfit, sans-serif;
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+    .foot strong img {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      object-fit: cover;
+    }
+
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: rgba(18, 12, 28, 0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      border-radius: inherit;
+    }
+    .sheet-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      z-index: 45;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 10px 18px 28px;
+      transform: translateY(110%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 -12px 40px rgba(30, 42, 50, 0.18);
+    }
+    .sheet.is-open { transform: translateY(0); }
+    .sheet__handle {
+      width: 40px; height: 4px;
+      border-radius: 999px;
+      background: #E5EAF0;
+      margin: 4px auto 14px;
+    }
+    .sheet__title {
+      margin: 0 0 6px;
+      font-family: Outfit, sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sheet__sub {
+      margin: 0 0 16px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .sheet__actions {
+      display: grid;
+      gap: 8px;
+    }
+    .btn {
+      height: 46px;
+      border-radius: 14px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn--ghost {
+      background: #F3F0F7;
+      color: var(--ink);
+    }
+    .btn--danger {
+      background: #B91C1C;
+      color: #fff;
+    }
+
+    .tabbar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 22px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      width: max-content;
+      max-width: calc(100% - 48px);
+      padding: 6px;
+      background: rgba(28, 28, 30, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .tab {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 38px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0;
+      border-radius: 999px;
+    }
+    .tab svg { width: 22px; height: 22px; }
+    .tab.is-active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .tab .dot {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FF3B30;
+      bottom: 7px;
+      right: 10px;
+      border: 1.5px solid rgba(28, 28, 30, 0.92);
+    }
+    .home-ind {
+      position: absolute;
+      bottom: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: rgba(30, 42, 50, 0.15);
+      border-radius: 99px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status, .home-ind { display: none; }
+      .stage { width: 100%; height: 100dvh; animation: none; }
+      .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+      .tabbar { bottom: max(16px, env(safe-area-inset-bottom)); }
+      .body { padding-bottom: 110px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone" role="application" aria-label="GlowTap — Profile">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true">
+        <span>9:41</span>
+        <span class="status__right">
+          <svg viewBox="0 0 17 12"><rect x="0" y="8" width="3" height="4" rx="0.6" fill="currentColor"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="0.6" fill="currentColor"/><rect x="9" y="3" width="3" height="9" rx="0.6" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="0.6" fill="currentColor" opacity="0.35"/></svg>
+          <svg viewBox="0 0 16 12"><path fill="currentColor" d="M8 9.6a1.35 1.35 0 1 1 0 2.7 1.35 1.35 0 0 1 0-2.7Zm0-3.55c1.5 0 2.88.55 3.95 1.47l-1.2 1.2A3.9 3.9 0 0 0 8 7.85c-.95 0-1.82.34-2.5.9L4.3 7.55A5.55 5.55 0 0 1 8 6.05Zm0-3.5c2.45 0 4.68.9 6.42 2.4L13.2 6.15A7.35 7.35 0 0 0 8 4.35c-2.1 0-4.02.78-5.5 2.06L1.3 5.2A9.55 9.55 0 0 1 8 2.55Z"/></svg>
+          <svg class="status-battery" viewBox="0 0 28 13"><rect x="0.75" y="0.75" width="23.5" height="11.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/><rect x="2.4" y="2.5" width="18" height="8" rx="1.2" fill="currentColor"/><path fill="currentColor" opacity="0.9" d="M25.2 4.2h1.4c.7 0 1.2.5 1.2 1.15v2.3c0 .65-.5 1.15-1.2 1.15h-1.4V4.2Z"/></svg>
+        </span>
+      </div>
+
+      <div class="screen">
+        <div class="body">
+          <div class="hero">
+            <div class="hero__top">
+              <div class="hero__avatar">
+                <img src="assets/glowtap-mark.svg" alt="" />
+              </div>
+              <a class="hero__edit" href="edit-profile.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3 2.1 2.1 0 0 1 0 3L8 18l-4 1 1-4 11.5-11.5Z"/></svg>
+                Edit
+              </a>
+            </div>
+            <h1 class="hero__name">ABCD</h1>
+            <p class="hero__contact">abcd@gmail.com</p>
+            <div class="badges">
+              <span class="pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                Email verified
+              </span>
+              <span class="pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 5 5L20 7"/></svg>
+                Phone verified
+              </span>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <div class="stat__val">12</div>
+              <div class="stat__label">Bookings</div>
+            </div>
+            <div class="stat">
+              <div class="stat__val">4</div>
+              <div class="stat__label">Favorites</div>
+            </div>
+            <div class="stat">
+              <div class="stat__val">2025</div>
+              <div class="stat__label">Member since</div>
+            </div>
+          </div>
+
+          <div class="section-label">Account</div>
+          <div class="menu">
+            <a class="menu__item" href="edit-profile.html">
+              <span class="menu__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Edit profile</span>
+                <span class="menu__sub">Name &amp; photo</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="subscription.html">
+              <span class="menu__icon menu__icon--amber" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3 14 9l6 .5-4.5 4 1.5 6L12 16.5 6.5 19.5l1.5-6L3.5 9.5 9.5 9 12 3Z"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Subscription</span>
+                <span class="menu__sub">GlowTap Plus · plans &amp; billing</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="home.html">
+              <span class="menu__icon menu__icon--mint" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Saved locations</span>
+                <span class="menu__sub">Home · Work · Indiranagar</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="home.html">
+              <span class="menu__icon menu__icon--rose" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Favorites</span>
+                <span class="menu__sub">4 saved salons</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div class="section-label">Preferences</div>
+          <div class="menu">
+            <a class="menu__item" href="notifications.html">
+              <span class="menu__icon menu__icon--sky" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Notification preferences</span>
+                <span class="menu__sub">Push · Email · SMS</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="change-password.html">
+              <span class="menu__icon menu__icon--amber" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Change password</span>
+                <span class="menu__sub">Email &amp; password login</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div class="section-label">Support</div>
+          <div class="menu">
+            <a class="menu__item" href="support.html">
+              <span class="menu__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.6 1-1.6 2.3"/><path d="M12 17h.01"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Help &amp; support</span>
+                <span class="menu__sub">FAQ · Contact · My tickets</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="login.html">
+              <span class="menu__icon menu__icon--slate" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M10 17H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/><path d="m15 16 4-4-4-4"/><path d="M19 12H9"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Log out</span>
+                <span class="menu__sub">Sign in again anytime</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <button type="button" class="menu__item menu__item--danger" id="delete-open">
+              <span class="menu__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Delete account</span>
+                <span class="menu__sub">Request data deletion</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="foot">
+            <strong><img src="assets/glowtap-mark.svg" alt="" /> GlowTap</strong><br />
+            Customer app · Wireframe v1
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-backdrop" id="del-backdrop" hidden></div>
+      <div class="sheet" id="del-sheet" role="dialog" aria-modal="true" aria-labelledby="del-title" hidden>
+        <div class="sheet__handle" aria-hidden="true"></div>
+        <h2 class="sheet__title" id="del-title">Delete account?</h2>
+        <p class="sheet__sub">We’ll submit a deletion request for Super Admin review. You won’t be able to book until the request is processed.</p>
+        <div class="sheet__actions">
+          <button type="button" class="btn btn--danger" id="del-confirm">Request deletion</button>
+          <button type="button" class="btn btn--ghost" id="del-cancel">Keep account</button>
+        </div>
+      </div>
+
+      <nav class="tabbar" aria-label="Primary">
+        <a class="tab" href="home.html" title="Home" aria-label="Home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+        </a>
+        <a class="tab" href="bookings.html" title="Bookings" aria-label="Bookings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5V7M16 3.5V7"/></svg>
+        </a>
+        <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
+          <span class="dot" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+        </a>
+        <a class="tab is-active" href="profile.html" title="Profile" aria-label="Profile" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0Z"/></svg>
+        </a>
+      </nav>
+      <div class="home-ind" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var openBtn = document.getElementById('delete-open');
+      var backdrop = document.getElementById('del-backdrop');
+      var sheet = document.getElementById('del-sheet');
+      var cancel = document.getElementById('del-cancel');
+      var confirm = document.getElementById('del-confirm');
+      if (!openBtn || !backdrop || !sheet) return;
+
+      function openSheet() {
+        backdrop.hidden = false;
+        sheet.hidden = false;
+        requestAnimationFrame(function () {
+          backdrop.classList.add('is-open');
+          sheet.classList.add('is-open');
+        });
+      }
+      function closeSheet() {
+        backdrop.classList.remove('is-open');
+        sheet.classList.remove('is-open');
+        setTimeout(function () {
+          backdrop.hidden = true;
+          sheet.hidden = true;
+        }, 280);
+      }
+
+      openBtn.addEventListener('click', openSheet);
+      backdrop.addEventListener('click', closeSheet);
+      cancel.addEventListener('click', closeSheet);
+      confirm.addEventListener('click', function () {
+        closeSheet();
+        alert('Deletion request submitted (wireframe).');
+      });
+    })();
+  </script>
+</body>
+</html>

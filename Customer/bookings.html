@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Bookings</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330;
+      --muted: #6B7A88;
+      --line: #E5EAF0;
+      --violet: #7B00FF;
+      --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA;
+      --phone-w: 390px;
+      --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #100818;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      overflow: auto;
+    }
+    .studio {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
+        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
+        #100818;
+    }
+    .stage {
+      position: relative;
+      z-index: 1;
+      width: var(--phone-w);
+      height: var(--phone-h);
+      flex-shrink: 0;
+      animation: in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes in {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: none; }
+    }
+    .phone {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      border-radius: 42px;
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 32px;
+      background: #050308;
+      border-radius: 20px;
+      z-index: 40;
+      pointer-events: none;
+    }
+    .status {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      z-index: 35;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--ink);
+      pointer-events: none;
+    }
+    .status__right { display: flex; align-items: center; gap: 6px; }
+    .status__right svg { display: block; width: 16px; height: 11px; }
+    .status__right .status-battery { width: 25px; height: 12px; }
+
+    .screen {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: 52px;
+    }
+
+    .top {
+      flex-shrink: 0;
+      padding: 4px 16px 12px;
+      background: #fff;
+    }
+    .top__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .top__title {
+      margin: 0;
+      font-family: Outfit, sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .top__sub {
+      margin: 2px 0 0;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--ink);
+      flex-shrink: 0;
+    }
+    .icon-btn svg { width: 18px; height: 18px; }
+    .icon-btn--menu {
+      border: none;
+      border-radius: 12px;
+      background: var(--grad);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(123, 0, 255, 0.32);
+    }
+    .icon-btn--menu svg { color: #fff; }
+
+    .seg {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: #F3F0F7;
+      border-radius: 999px;
+    }
+    .seg__btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      border-radius: 999px;
+      padding: 9px 8px;
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    }
+    .seg__btn.is-active {
+      background: #fff;
+      color: var(--ink);
+      box-shadow: 0 2px 8px rgba(30, 42, 50, 0.08);
+    }
+
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      background: #fff;
+      border: 1.5px solid #E8E4EF;
+      border-radius: 14px;
+      padding: 11px 12px 11px 14px;
+      box-shadow: 0 2px 10px rgba(30, 42, 50, 0.04);
+    }
+    .search svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
+    .search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 0;
+    }
+    .search input::placeholder { color: #94A3B8; }
+
+    .body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 14px 16px 100px;
+      scrollbar-width: none;
+    }
+    .body::-webkit-scrollbar { display: none; }
+
+    .panel { display: none; }
+    .panel.is-active { display: block; }
+
+    .next-rail {
+      margin: 0 -16px 14px;
+      padding: 0 16px;
+    }
+    .next-rail__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 10px;
+      padding: 0 2px;
+    }
+    .next-rail__head h2 {
+      margin: 0;
+      font-family: Outfit, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .next-rail__head span {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .next-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+      padding-right: 16px;
+    }
+    .next-track::-webkit-scrollbar { display: none; }
+
+    .next-card {
+      flex: 0 0 calc(100% - 28px);
+      scroll-snap-align: start;
+      position: relative;
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      border-radius: 22px;
+      overflow: hidden;
+      min-height: 148px;
+      box-shadow: 0 14px 32px rgba(88, 0, 180, 0.22);
+    }
+
+    /* Card 1 — brand gradient + GT */
+    .next-card--brand {
+      background: linear-gradient(125deg, #4C00B8 0%, #7B00FF 42%, #FF03C8 100%);
+    }
+    .next-card--brand::before {
+      content: "";
+      position: absolute;
+      width: 160px; height: 160px;
+      right: -40px; top: -50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+    .next-card--brand::after {
+      content: "";
+      position: absolute;
+      width: 100px; height: 100px;
+      right: 36px; bottom: -40px;
+      border-radius: 50%;
+      background: rgba(255, 3, 200, 0.28);
+      pointer-events: none;
+    }
+
+    /* Card 2 — photo glass */
+    .next-card--photo {
+      background: #1a1028;
+    }
+    .next-card--photo .next-card__bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.55) saturate(1.15);
+    }
+    .next-card--photo .next-card__veil {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, rgba(20, 8, 40, 0.92) 0%, rgba(88, 0, 160, 0.45) 55%, rgba(255, 3, 200, 0.25) 100%);
+      pointer-events: none;
+    }
+
+    /* Card 3 — split countdown */
+    .next-card--split {
+      background: #111827;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      min-height: 148px;
+      color: #fff;
+    }
+    .next-card--split .next-card__left {
+      padding: 16px 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+    .next-card--split .next-card__right {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(160deg, #7B00FF, #FF03C8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 12px;
+    }
+    .next-card--split .next-card__right::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255, 255, 255, 0.28);
+      pointer-events: none;
+    }
+    .next-card__countdown {
+      font-family: Outfit, sans-serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+    .next-card__countdown-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      position: relative;
+      z-index: 1;
+    }
+    .next-card__chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      width: max-content;
+      margin-bottom: 8px;
+    }
+    .next-card__chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ADE80;
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.25);
+    }
+
+    .next-card__inner {
+      padding: 16px 16px 14px;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      min-height: 148px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-sizing: border-box;
+    }
+    .next-card__inner--pad {
+      padding-right: 90px;
+    }
+    .next-card__eyebrow {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+    .next-card__title {
+      margin: 0 0 4px;
+      font-family: Outfit, sans-serif;
+      font-size: 1.12rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .next-card__meta {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      opacity: 0.92;
+    }
+    .next-card__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .next-card__time {
+      font-family: Outfit, sans-serif;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+    .next-card__cta {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 7px 12px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+    }
+    .next-card__gt {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+      z-index: 2;
+    }
+    .next-card__gt img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .next-card__photo-thumb {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+      z-index: 2;
+    }
+    .next-card__photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .next-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .next-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 99px;
+      border: none;
+      padding: 0;
+      background: #D6D0E0;
+      cursor: pointer;
+      transition: width 0.2s, background 0.2s;
+    }
+    .next-dot.is-active {
+      width: 18px;
+      background: var(--violet);
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 4px 0 10px;
+    }
+
+    .booking {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid rgba(123, 0, 255, 0.06);
+      box-shadow: 0 6px 18px rgba(30, 42, 50, 0.05);
+      padding: 14px;
+      margin-bottom: 10px;
+      transition: transform 0.12s;
+    }
+    .booking:active { transform: scale(0.985); }
+    .booking__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .booking__id {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge--booked { background: #EEF2FF; color: #4338CA; }
+    .badge--confirmed { background: #ECFDF5; color: #047857; }
+    .badge--progress { background: #FFF7ED; color: #C2410C; }
+    .badge--completed { background: #F3F4F6; color: #374151; }
+    .badge--cancelled { background: #FEF2F2; color: #B91C1C; }
+    .badge--noshow { background: #FDF4FF; color: #A21CAF; }
+
+    .booking__main {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .booking__thumb {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #eee;
+    }
+    .booking__thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .booking__info { min-width: 0; flex: 1; }
+    .booking__salon {
+      margin: 0 0 2px;
+      font-family: Outfit, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .booking__service {
+      margin: 0 0 6px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .booking__when {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .booking__when svg { width: 14px; height: 14px; color: var(--violet); flex-shrink: 0; }
+
+    .booking__foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 11px;
+      border-top: 1px solid #F1F5F9;
+    }
+    .booking__pay {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .booking__pay strong { color: var(--ink); font-weight: 700; }
+    .booking__amt {
+      font-family: Outfit, sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+    .empty h3 {
+      margin: 0 0 6px;
+      font-family: Outfit, sans-serif;
+      color: var(--ink);
+      font-size: 1.05rem;
+    }
+    .empty p { margin: 0 0 16px; font-size: 0.85rem; }
+    .empty a {
+      display: inline-flex;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--grad);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+
+    .tabbar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 22px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      width: max-content;
+      max-width: calc(100% - 48px);
+      padding: 6px;
+      background: rgba(28, 28, 30, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .tab {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 38px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0;
+      border-radius: 999px;
+    }
+    .tab svg { width: 22px; height: 22px; }
+    .tab.is-active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.18);
+    }
+    .tab .dot {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FF3B30;
+      bottom: 7px;
+      right: 10px;
+      border: 1.5px solid rgba(28, 28, 30, 0.92);
+    }
+    .home-ind {
+      position: absolute;
+      bottom: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: rgba(30, 42, 50, 0.15);
+      border-radius: 99px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status, .home-ind { display: none; }
+      .stage { width: 100%; height: 100dvh; animation: none; }
+      .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+      .tabbar { bottom: max(16px, env(safe-area-inset-bottom)); }
+      .body { padding-bottom: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone" role="application" aria-label="GlowTap — Bookings">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true">
+        <span>9:41</span>
+        <span class="status__right">
+          <svg viewBox="0 0 17 12"><rect x="0" y="8" width="3" height="4" rx="0.6" fill="currentColor"/><rect x="4.5" y="5.5" width="3" height="6.5" rx="0.6" fill="currentColor"/><rect x="9" y="3" width="3" height="9" rx="0.6" fill="currentColor"/><rect x="13.5" y="0" width="3" height="12" rx="0.6" fill="currentColor" opacity="0.35"/></svg>
+          <svg viewBox="0 0 16 12"><path fill="currentColor" d="M8 9.6a1.35 1.35 0 1 1 0 2.7 1.35 1.35 0 0 1 0-2.7Zm0-3.55c1.5 0 2.88.55 3.95 1.47l-1.2 1.2A3.9 3.9 0 0 0 8 7.85c-.95 0-1.82.34-2.5.9L4.3 7.55A5.55 5.55 0 0 1 8 6.05Zm0-3.5c2.45 0 4.68.9 6.42 2.4L13.2 6.15A7.35 7.35 0 0 0 8 4.35c-2.1 0-4.02.78-5.5 2.06L1.3 5.2A9.55 9.55 0 0 1 8 2.55Z"/></svg>
+          <svg class="status-battery" viewBox="0 0 28 13"><rect x="0.75" y="0.75" width="23.5" height="11.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/><rect x="2.4" y="2.5" width="18" height="8" rx="1.2" fill="currentColor"/><path fill="currentColor" opacity="0.9" d="M25.2 4.2h1.4c.7 0 1.2.5 1.2 1.15v2.3c0 .65-.5 1.15-1.2 1.15h-1.4V4.2Z"/></svg>
+        </span>
+      </div>
+
+      <div class="screen">
+        <header class="top">
+          <div class="top__row">
+            <div>
+              <h1 class="top__title">My bookings</h1>
+              <p class="top__sub">Upcoming, past &amp; all appointments</p>
+            </div>
+            <button type="button" class="icon-btn icon-btn--menu" title="Filters" aria-label="Filters">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
+            </button>
+          </div>
+          <div class="seg" role="tablist" aria-label="Booking views">
+            <button type="button" class="seg__btn is-active" data-panel="upcoming" role="tab" aria-selected="true">Upcoming</button>
+            <button type="button" class="seg__btn" data-panel="past" role="tab" aria-selected="false">Past</button>
+            <button type="button" class="seg__btn" data-panel="all" role="tab" aria-selected="false">All</button>
+          </div>
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" id="booking-search" placeholder="Search salon, service, ID…" aria-label="Search bookings" />
+          </div>
+        </header>
+
+        <div class="body">
+          <div class="panel is-active" id="panel-upcoming" data-view="upcoming">
+            <div class="next-rail" id="next-rail">
+              <div class="next-rail__head">
+                <h2>Next up</h2>
+                <span>Swipe · 3 upcoming</span>
+              </div>
+              <div class="next-track" id="next-track">
+                <a class="next-card next-card--brand" href="booking-detail.html?id=GT-48291">
+                  <div class="next-card__gt" aria-hidden="true"><img src="assets/glowtap-mark.svg" alt="" /></div>
+                  <div class="next-card__inner next-card__inner--pad">
+                    <div>
+                      <div class="next-card__chip"><span class="next-card__chip-dot"></span> Confirmed</div>
+                      <h2 class="next-card__title">Luxe Curls — Indiranagar</h2>
+                      <p class="next-card__meta">Haircut &amp; Style · Priya S.</p>
+                    </div>
+                    <div class="next-card__row">
+                      <span class="next-card__time">Tomorrow · 11:30 AM</span>
+                      <span class="next-card__cta">View →</span>
+                    </div>
+                  </div>
+                </a>
+
+                <a class="next-card next-card--photo" href="booking-detail.html?id=GT-48302">
+                  <img class="next-card__bg" src="assets/salon-bg.png" alt="" style="object-position: 70% 40%;" />
+                  <div class="next-card__veil" aria-hidden="true"></div>
+                  <div class="next-card__photo-thumb" aria-hidden="true">
+                    <img src="assets/glowtap-mark.svg" alt="" />
+                  </div>
+                  <div class="next-card__inner next-card__inner--pad">
+                    <div>
+                      <div class="next-card__eyebrow">This weekend</div>
+                      <h2 class="next-card__title">Bloom &amp; Brow</h2>
+                      <p class="next-card__meta">Hydra Facial · Ananya</p>
+                    </div>
+                    <div class="next-card__row">
+                      <span class="next-card__time">Sat · 4:00 PM</span>
+                      <span class="next-card__cta">Details →</span>
+                    </div>
+                  </div>
+                </a>
+
+                <a class="next-card next-card--split" href="booking-detail.html?id=GT-48310">
+                  <div class="next-card__left">
+                    <div>
+                      <div class="next-card__eyebrow">Booked · awaiting salon</div>
+                      <h2 class="next-card__title">Nord Hair Lab</h2>
+                      <p class="next-card__meta" style="margin-bottom: 0;">Signature Cut · Arjun</p>
+                    </div>
+                    <div class="next-card__row">
+                      <span class="next-card__time">Mon · 6:30 PM</span>
+                      <span class="next-card__cta">Open →</span>
+                    </div>
+                  </div>
+                  <div class="next-card__right">
+                    <div class="next-card__countdown">2d</div>
+                    <div class="next-card__countdown-label">to go</div>
+                  </div>
+                </a>
+              </div>
+              <div class="next-dots" id="next-dots" aria-label="Next booking slides">
+                <button type="button" class="next-dot is-active" aria-label="Card 1"></button>
+                <button type="button" class="next-dot" aria-label="Card 2"></button>
+                <button type="button" class="next-dot" aria-label="Card 3"></button>
+              </div>
+            </div>
+
+            <div class="section-label">Also upcoming</div>
+
+            <a class="booking" href="booking-detail.html?id=GT-48291" data-q="luxe curls haircut confirmed">
+              <div class="booking__top">
+                <span class="booking__id">GT-48291</span>
+                <span class="badge badge--confirmed">Confirmed</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:22% 28%;" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Luxe Curls — Indiranagar</h3>
+                  <p class="booking__service">Haircut &amp; Style · Priya S.</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    Tomorrow · 11:30 AM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay">Paid online</span>
+                <span class="booking__amt">₹899</span>
+              </div>
+            </a>
+
+            <a class="booking" href="booking-detail.html?id=GT-48302" data-q="bloom facial confirmed">
+              <div class="booking__top">
+                <span class="booking__id">GT-48302</span>
+                <span class="badge badge--confirmed">Confirmed</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:70% 40%; filter:hue-rotate(-12deg);" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Bloom &amp; Brow</h3>
+                  <p class="booking__service">Hydra Facial · Ananya</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    Sat, 29 Aug · 4:00 PM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay">Paid online</span>
+                <span class="booking__amt">₹1,299</span>
+              </div>
+            </a>
+
+            <a class="booking" href="booking-detail.html?id=GT-48310" data-q="nord haircut booked">
+              <div class="booking__top">
+                <span class="booking__id">GT-48310</span>
+                <span class="badge badge--booked">Booked</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:40% 55%; filter:hue-rotate(18deg);" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Nord Hair Lab</h3>
+                  <p class="booking__service">Signature Cut · Arjun</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    Mon, 1 Sep · 6:30 PM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay">Pay at salon</span>
+                <span class="booking__amt">₹699</span>
+              </div>
+            </a>
+
+            <a class="booking" href="booking-detail.html?id=GT-48322" data-q="aura spa massage confirmed">
+              <div class="booking__top">
+                <span class="booking__id">GT-48322</span>
+                <span class="badge badge--confirmed">Confirmed</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:10% 20%; filter:saturate(1.15);" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Aura Spa Retreat</h3>
+                  <p class="booking__service">Deep Tissue · Meera</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    Wed, 3 Sep · 10:00 AM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay">Paid online</span>
+                <span class="booking__amt">₹1,899</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="panel" id="panel-past" data-view="past">
+            <a class="booking" href="booking-detail.html?id=GT-48110" data-q="luxe curls completed">
+              <div class="booking__top">
+                <span class="booking__id">GT-48110</span>
+                <span class="badge badge--completed">Completed</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:22% 28%;" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Luxe Curls — Indiranagar</h3>
+                  <p class="booking__service">Blow Dry · Priya S.</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    12 Aug · 2:00 PM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay"><strong>Rate experience</strong></span>
+                <span class="booking__amt">₹499</span>
+              </div>
+            </a>
+
+            <a class="booking" href="booking-detail.html?id=GT-48088" data-q="aura spa cancelled">
+              <div class="booking__top">
+                <span class="booking__id">GT-48088</span>
+                <span class="badge badge--cancelled">Cancelled</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:10% 20%; filter:saturate(1.2);" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Aura Spa Retreat</h3>
+                  <p class="booking__service">Swedish Massage</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    3 Aug · 11:00 AM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay">Refund initiated</span>
+                <span class="booking__amt">₹1,899</span>
+              </div>
+            </a>
+
+            <a class="booking" href="booking-detail.html?id=GT-47901" data-q="nord no-show">
+              <div class="booking__top">
+                <span class="booking__id">GT-47901</span>
+                <span class="badge badge--noshow">No-Show</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:40% 55%; filter:hue-rotate(18deg) grayscale(0.2);" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Nord Hair Lab</h3>
+                  <p class="booking__service">Beard Trim · Arjun</p>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    28 Jul · 7:00 PM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay">Unpaid</span>
+                <span class="booking__amt">₹349</span>
+              </div>
+            </a>
+          </div>
+
+          <div class="panel" id="panel-all" data-view="all">
+            <!-- filled by JS from upcoming + past clones -->
+          </div>
+        </div>
+      </div>
+
+      <nav class="tabbar" aria-label="Primary">
+        <a class="tab" href="home.html" title="Home" aria-label="Home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+        </a>
+        <a class="tab is-active" href="bookings.html" title="Bookings" aria-label="Bookings" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3.5h10a.5.5 0 0 1 .5.5v1.5H6.5V4a.5.5 0 0 1 .5-.5Zm-2 3h14A1.5 1.5 0 0 1 20.5 8v12A1.5 1.5 0 0 1 19 21.5H5A1.5 1.5 0 0 1 3.5 20V8A1.5 1.5 0 0 1 5 6.5ZM8 11h3v3H8v-3Zm5 0h3v3h-3v-3ZM8 16h3v3H8v-3Zm5 0h3v3h-3v-3Z"/></svg>
+        </a>
+        <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
+          <span class="dot" aria-hidden="true"></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+        </a>
+        <a class="tab" href="profile.html" title="Profile" aria-label="Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0"/></svg>
+        </a>
+      </nav>
+      <div class="home-ind" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var buttons = Array.prototype.slice.call(document.querySelectorAll('.seg__btn'));
+      var panels = {
+        upcoming: document.getElementById('panel-upcoming'),
+        past: document.getElementById('panel-past'),
+        all: document.getElementById('panel-all')
+      };
+      var allPanel = panels.all;
+
+      function buildAll() {
+        allPanel.innerHTML = '';
+        var label = document.createElement('div');
+        label.className = 'section-label';
+        label.textContent = 'All bookings';
+        allPanel.appendChild(label);
+
+        [panels.upcoming, panels.past].forEach(function (panel) {
+          panel.querySelectorAll('a.booking').forEach(function (node) {
+            allPanel.appendChild(node.cloneNode(true));
+          });
+        });
+      }
+      buildAll();
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('data-panel');
+          buttons.forEach(function (b) {
+            b.classList.toggle('is-active', b === btn);
+            b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+          });
+          Object.keys(panels).forEach(function (key) {
+            panels[key].classList.toggle('is-active', key === id);
+          });
+        });
+      });
+
+      var search = document.getElementById('booking-search');
+      search.addEventListener('input', function () {
+        var q = (search.value || '').trim().toLowerCase();
+        document.querySelectorAll('.panel .booking').forEach(function (card) {
+          var hay = ((card.getAttribute('data-q') || '') + ' ' + card.textContent).toLowerCase();
+          card.style.display = !q || hay.indexOf(q) !== -1 ? '' : 'none';
+        });
+        document.querySelectorAll('#next-track .next-card').forEach(function (card) {
+          var hay = card.textContent.toLowerCase();
+          card.style.display = !q || hay.indexOf(q) !== -1 ? '' : 'none';
+        });
+      });
+    })();
+
+    (function () {
+      var track = document.getElementById('next-track');
+      var dots = Array.prototype.slice.call(document.querySelectorAll('#next-dots .next-dot'));
+      if (!track || !dots.length) return;
+
+      var index = 0;
+      var timer = null;
+      var paused = false;
+
+      function slideWidth() {
+        var first = track.querySelector('.next-card');
+        if (!first) return track.clientWidth;
+        return first.getBoundingClientRect().width + 12;
+      }
+
+      function setActive(i) {
+        index = (i + dots.length) % dots.length;
+        dots.forEach(function (d, idx) {
+          d.classList.toggle('is-active', idx === index);
+        });
+      }
+
+      function goTo(i) {
+        setActive(i);
+        track.scrollTo({ left: index * slideWidth(), behavior: 'smooth' });
+      }
+
+      function start() {
+        stop();
+        timer = setInterval(function () {
+          if (!paused) goTo(index + 1);
+        }, 3800);
+      }
+
+      function stop() {
+        if (timer) clearInterval(timer);
+        timer = null;
+      }
+
+      track.addEventListener('scroll', function () {
+        var i = Math.round(track.scrollLeft / slideWidth());
+        setActive(Math.max(0, Math.min(dots.length - 1, i)));
+      });
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () {
+          goTo(i);
+          start();
+        });
+      });
+
+      ['pointerdown', 'touchstart', 'mouseenter'].forEach(function (ev) {
+        track.addEventListener(ev, function () { paused = true; });
+      });
+      ['pointerup', 'touchend', 'mouseleave'].forEach(function (ev) {
+        track.addEventListener(ev, function () { paused = false; });
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) stop();
+        else start();
+      });
+
+      start();
+    })();
+  </script>
+</body>
+</html>

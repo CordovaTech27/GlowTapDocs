@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Sign in</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@500;600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330;
+      --muted: #6B7A88;
+      --line: #E5EAF0;
+      --violet: #7B00FF;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --phone-w: 390px;
+      --phone-h: 844px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+      body {
+      font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background: #100818;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      overflow: auto;
+    }
+
+    .studio {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
+        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
+        #100818;
+    }
+
+    .stage {
+      position: relative;
+      z-index: 1;
+      width: var(--phone-w);
+      height: var(--phone-h);
+      flex-shrink: 0;
+      animation: in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes in {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .phone {
+      width: var(--phone-w);
+      height: var(--phone-h);
+      border-radius: 42px;
+      overflow: hidden;
+      background: #0c0612;
+      box-shadow:
+        0 0 0 9px #171022,
+        0 0 0 11px #2c1a42,
+        0 36px 70px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 32px;
+      background: #050308;
+      border-radius: 20px;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .status {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      z-index: 25;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 0 28px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+      pointer-events: none;
+      letter-spacing: -0.01em;
+    }
+    .status__right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status__right svg {
+      display: block;
+      width: 16px;
+      height: 11px;
+      color: #fff;
+    }
+    .status__right .status-battery {
+      width: 25px;
+      height: 12px;
+    }
+
+    .screen {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero {
+      position: relative;
+      height: 280px;
+      flex-shrink: 0;
+      padding: 64px 24px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      color: #fff;
+      overflow: hidden;
+    }
+    .hero__media {
+      position: absolute;
+      inset: 0;
+    }
+    .hero__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 18% 32%;
+      transform: scale(1.12);
+      filter: saturate(1.1) brightness(0.85);
+    }
+    .hero__scrim {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, transparent 0%, transparent 45%, rgba(12, 6, 18, 0.88) 100%),
+        linear-gradient(180deg, rgba(12, 6, 18, 0.5) 0%, rgba(12, 6, 18, 0.2) 38%, rgba(12, 6, 18, 0.94) 100%),
+        linear-gradient(135deg, rgba(123, 0, 255, 0.32), rgba(255, 3, 200, 0.1));
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 2;
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 600;
+      font-size: 2.15rem;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      margin: 0 0 12px;
+      max-width: 11ch;
+      color: #fff;
+      text-wrap: balance;
+      text-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+      animation: rise 0.75s 0.08s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero h1 .glow {
+      font-style: italic;
+      font-weight: 700;
+      background: linear-gradient(105deg, #E9D5FF 0%, #F9A8D4 42%, #FF6BCB 78%, #C4B5FD 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.04em;
+      padding-right: 0.04em;
+    }
+    .hero p {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      font-family: Outfit, 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      color: rgba(255, 255, 255, 0.78);
+      max-width: 26ch;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      animation: rise 0.75s 0.18s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .sheet {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      margin-top: -20px;
+      background: #fff;
+      border-radius: 28px 28px 0 0;
+      padding: 26px 24px 36px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sheet h2 {
+      font-family: Outfit, sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+    .sheet__sub {
+      margin: 0 0 18px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .alert {
+      display: none;
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+    .alert.is-visible { display: block; }
+    .alert--danger {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #B91C1C;
+    }
+    .alert--warn {
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      color: #B45309;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 50px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 0.94rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .btn:active { transform: scale(0.985); }
+
+    .btn--google {
+      background: #fff;
+      color: var(--ink);
+      border: 1.5px solid var(--line);
+      margin-bottom: 16px;
+    }
+    .btn--google:hover {
+      border-color: rgba(123, 0, 255, 0.35);
+      box-shadow: 0 4px 14px rgba(123, 0, 255, 0.08);
+    }
+    .btn--google svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .btn--primary {
+      background-image: var(--grad);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(123, 0, 255, 0.32);
+    }
+    .btn--primary:hover { box-shadow: 0 10px 26px rgba(123, 0, 255, 0.4); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+    .divider i {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+      font-style: normal;
+    }
+    .divider span {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #8A97A5;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .field { margin-bottom: 12px; }
+    .field label {
+      display: block;
+      margin: 0 0 6px 2px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .field input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 0.94rem;
+      color: var(--ink);
+      background: #F8FAFC;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .field input::placeholder { color: #94A3B8; }
+    .field input:focus {
+      background: #fff;
+      border-color: rgba(123, 0, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1);
+    }
+
+    .forgot {
+      display: block;
+      text-align: right;
+      margin: -2px 2px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--violet);
+      text-decoration: none;
+    }
+    .forgot:hover { color: #9B2FD9; }
+
+    .signup {
+      margin-top: auto;
+      padding-top: 18px;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .signup a {
+      color: var(--violet);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .home-ind {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 4px;
+      background: rgba(30, 42, 50, 0.18);
+      border-radius: 99px;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .demo {
+      position: fixed;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+    }
+    .demo a { color: rgba(255, 255, 255, 0.5); margin: 0 4px; }
+
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .demo, .island, .status, .home-ind { display: none; }
+      .stage {
+        width: 100%;
+        height: 100dvh;
+        animation: none;
+      }
+      .phone {
+        width: 100%;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .hero {
+        height: auto;
+        min-height: 30dvh;
+        max-height: 34dvh;
+        padding-top: max(52px, env(safe-area-inset-top));
+      }
+      .sheet { padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+
+  <div class="stage" id="stage">
+    <div class="phone" role="application" aria-label="GlowTap — Sign in">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true">
+        <span>9:41</span>
+        <span class="status__right">
+          <!-- Cellular -->
+          <svg viewBox="0 0 17 12" aria-hidden="true">
+            <rect x="0" y="8" width="3" height="4" rx="0.6" fill="currentColor"/>
+            <rect x="4.5" y="5.5" width="3" height="6.5" rx="0.6" fill="currentColor"/>
+            <rect x="9" y="3" width="3" height="9" rx="0.6" fill="currentColor"/>
+            <rect x="13.5" y="0" width="3" height="12" rx="0.6" fill="currentColor" opacity="0.35"/>
+          </svg>
+          <!-- Wi‑Fi -->
+          <svg viewBox="0 0 16 12" aria-hidden="true">
+            <path fill="currentColor" d="M8 9.6a1.35 1.35 0 1 1 0 2.7 1.35 1.35 0 0 1 0-2.7Zm0-3.55c1.5 0 2.88.55 3.95 1.47l-1.2 1.2A3.9 3.9 0 0 0 8 7.85c-.95 0-1.82.34-2.5.9L4.3 7.55A5.55 5.55 0 0 1 8 6.05Zm0-3.5c2.45 0 4.68.9 6.42 2.4L13.2 6.15A7.35 7.35 0 0 0 8 4.35c-2.1 0-4.02.78-5.5 2.06L1.3 5.2A9.55 9.55 0 0 1 8 2.55Z"/>
+          </svg>
+          <!-- Battery -->
+          <svg class="status-battery" viewBox="0 0 28 13" aria-hidden="true">
+            <rect x="0.75" y="0.75" width="23.5" height="11.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.9"/>
+            <rect x="2.4" y="2.5" width="18" height="8" rx="1.2" fill="currentColor"/>
+            <path fill="currentColor" opacity="0.9" d="M25.2 4.2h1.4c.7 0 1.2.5 1.2 1.15v2.3c0 .65-.5 1.15-1.2 1.15h-1.4V4.2Z"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="screen">
+        <header class="hero">
+          <div class="hero__media" aria-hidden="true">
+            <img src="assets/salon-bg.png" alt="" />
+            <div class="hero__scrim"></div>
+          </div>
+          <h1>Book your next <span class="glow">glow</span></h1>
+          <p>Find salons nearby and reserve your slot in minutes.</p>
+        </header>
+
+        <main class="sheet">
+          <h2>Welcome back</h2>
+          <p class="sheet__sub">Sign in to continue booking.</p>
+
+          <div id="alert-disabled" class="alert alert--danger" role="alert">
+            Your account has been disabled. Contact support.
+          </div>
+          <div id="alert-error" class="alert alert--danger" role="alert">
+            Invalid email or password. Please try again.
+          </div>
+          <div id="alert-expired" class="alert alert--warn" role="alert">
+            Your session expired. Sign in again to continue.
+          </div>
+
+          <a class="btn btn--google" href="home.html">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+          </a>
+
+          <div class="divider" aria-hidden="true"><i></i><span>or with email</span><i></i></div>
+
+          <form id="login-form" novalidate>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="username" placeholder="you@email.com" required />
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Your password" required />
+            </div>
+            <a class="forgot" href="forgot-password.html">Forgot password?</a>
+            <button class="btn btn--primary" type="submit">Sign in</button>
+          </form>
+
+          <p class="signup">
+            New here? <a href="signup.html">Create account</a>
+          </p>
+        </main>
+      </div>
+
+      <div class="home-ind" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <p class="demo">
+    States:
+    <a href="?">default</a>
+    <a href="?error=1">error</a>
+    <a href="?disabled=1">disabled</a>
+    <a href="?expired=1">expired</a>
+  </p>
+
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search);
+      if (q.get('disabled') === '1') document.getElementById('alert-disabled').classList.add('is-visible');
+      if (q.get('error') === '1') document.getElementById('alert-error').classList.add('is-visible');
+      if (q.get('expired') === '1') document.getElementById('alert-expired').classList.add('is-visible');
+
+      document.getElementById('login-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('email').value.trim();
+        var pass = document.getElementById('password').value;
+        if (!email || !pass) {
+          location.href = '?error=1';
+          return;
+        }
+        // Wireframe: jump to Home (OTP flow screens come later)
+        location.href = 'home.html';
+      });
+    })();
+  </script>
+</body>
+</html>
