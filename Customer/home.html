@@ -7,13 +7,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@500;600;700&display=swap" />
   <style>
     :root {
-      --ink: #1A2330;
-      --muted: #6B7A88;
-      --line: #E5EAF0;
-      --violet: #7B00FF;
+      --ink: #241828;
+      --muted: #7A6E78;
+      --line: #EDE4EC;
+      --violet: #8B00E8;
       --pink: #FF03C8;
-      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
-      --surface: #F7F4FA;
+      --grad: linear-gradient(100deg, #8B00E8 0%, #C026D3 48%, #FF03C8 100%);
+      --surface: #FBF7FA;
       --phone-w: 390px;
       --phone-h: 844px;
     }
@@ -24,7 +24,7 @@
     body {
       font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
-      background: #100818;
+      background: #ffffff;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -40,10 +40,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
-        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
-        #100818;
+      background: #ffffff;
     }
 
     .stage {
@@ -225,8 +222,10 @@
       cursor: pointer;
       color: var(--ink);
       flex-shrink: 0;
+      text-decoration: none;
     }
     .icon-btn svg { width: 18px; height: 18px; }
+    .icon-btn--fav { color: var(--pink); }
     .icon-btn--profile {
       padding: 0;
       overflow: hidden;
@@ -355,25 +354,6 @@
     .cat__photo {
       position: absolute;
       inset: 0;
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .cat__gt {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      overflow: hidden;
-      background: #fff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
-      z-index: 1;
-    }
-    .cat__gt img {
       display: block;
       width: 100%;
       height: 100%;
@@ -585,7 +565,9 @@
       opacity: 1;
     }
     .banner--pay .banner__art {
-      background: linear-gradient(135deg, #4C00B8 0%, #7B00FF 48%, #C026D3 100%);
+      background:
+        linear-gradient(135deg, rgba(76, 0, 184, 0.88) 0%, rgba(123, 0, 255, 0.7) 48%, rgba(192, 38, 211, 0.55) 100%),
+        url("assets/photos/promo-pay.jpg") center/cover no-repeat;
     }
     .banner--pay .banner__art::before {
       width: 160px; height: 160px; right: -40px; top: -50px;
@@ -596,7 +578,9 @@
       background: rgba(255, 3, 200, 0.28);
     }
     .banner--new .banner__art {
-      background: linear-gradient(135deg, #831843 0%, #DB2777 45%, #F472B6 100%);
+      background:
+        linear-gradient(135deg, rgba(131, 24, 67, 0.88) 0%, rgba(219, 39, 119, 0.7) 45%, rgba(244, 114, 182, 0.5) 100%),
+        url("assets/photos/salon-interior.jpg") center/cover no-repeat;
     }
     .banner--new .banner__art::before {
       width: 140px; height: 140px; right: -30px; bottom: -45px;
@@ -607,7 +591,9 @@
       background: rgba(124, 58, 237, 0.35);
     }
     .banner--peak .banner__art {
-      background: linear-gradient(135deg, #1E3A5F 0%, #5B21B6 50%, #7C3AED 100%);
+      background:
+        linear-gradient(135deg, rgba(30, 58, 95, 0.88) 0%, rgba(91, 33, 182, 0.72) 50%, rgba(124, 58, 237, 0.55) 100%),
+        url("assets/photos/salon-nails.jpg") center/cover no-repeat;
     }
     .banner--peak .banner__art::before {
       width: 150px; height: 150px; right: -45px; top: -20px;
@@ -732,7 +718,37 @@
       border-color: transparent;
       background: var(--grad);
       color: #fff;
-      box-shadow: 0 4px 12px rgba(123, 0, 255, 0.25);
+      box-shadow: 0 4px 12px rgba(139, 0, 232, 0.25);
+    }
+    .chip--deal {
+      border-color: #86EFAC;
+      background: #ECFDF5;
+      color: #047857;
+      font-weight: 800;
+    }
+    .chip--deal.is-active {
+      background: linear-gradient(100deg, #059669 0%, #10B981 100%);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 6px 14px rgba(5, 150, 105, 0.28);
+    }
+    .tag--deal {
+      background: #ECFDF5 !important;
+      color: #047857 !important;
+      font-weight: 800 !important;
+    }
+    .salon__deal {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 2;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #059669;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
     }
 
     .toolbar {
@@ -866,7 +882,8 @@
       font-weight: 600;
       color: var(--ink);
     }
-    .salon__meta .stars { color: #F59E0B; letter-spacing: 0.02em; }
+    .salon__meta .stars { color: #F59E0B; letter-spacing: 0.02em; font-weight: 700; }
+    .salon__meta .stars.is-high { color: #059669; }
     .salon__meta .muted { color: var(--muted); font-weight: 500; }
     .salon__tags {
       display: flex;
@@ -881,6 +898,85 @@
       padding: 4px 8px;
       border-radius: 7px;
     }
+
+    .stylist-rail {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding: 2px 2px 14px;
+      margin: 0 -2px 4px;
+      scrollbar-width: none;
+    }
+    .stylist-rail::-webkit-scrollbar { display: none; }
+    .stylist {
+      flex: 0 0 148px;
+      position: relative;
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid rgba(123, 0, 255, 0.08);
+      box-shadow: 0 6px 16px rgba(30, 42, 50, 0.05);
+    }
+    .stylist__fav {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: none;
+      background: #F7F4FA;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: var(--muted);
+      z-index: 2;
+      padding: 0;
+    }
+    .stylist__fav.is-on { color: var(--pink); background: #FFE8F6; }
+    .stylist__fav svg { width: 15px; height: 15px; pointer-events: none; }
+    .stylist__av {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #F3EEFF;
+      margin-bottom: 10px;
+    }
+    .stylist__av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .stylist__name {
+      margin: 0;
+      font-family: Outfit, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .stylist__salon {
+      margin: 3px 0 0;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .stylist__meta {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .stylist__meta .stars.is-high { color: #059669; }
+    .stylist__meta .dist { color: var(--violet); }
+
+    .salon-list.is-hidden,
+    .stylist-list.is-hidden { display: none; }
+    .salon.is-filtered-out { display: none !important; }
 
     /* —— Bottom dock: tab pill + circular search (reference style) —— */
     .dock {
@@ -1039,9 +1135,9 @@
               </button>
             </div>
             <div class="top__actions">
-              <button type="button" class="icon-btn" title="Favorites" aria-label="Favorites">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
-              </button>
+              <a class="icon-btn icon-btn--fav" id="btn-favorites" href="favorites.html" title="Favourite salons near me" aria-label="Favourite salons near me">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </a>
               <a class="icon-btn icon-btn--profile" href="profile.html" title="Profile" aria-label="Profile">A</a>
             </div>
           </div>
@@ -1051,51 +1147,44 @@
           <div class="cats" role="list" aria-label="Categories">
             <button type="button" class="cat is-active" data-cat="hair">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 22% 28%;" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-hair.jpg" alt=""  />
+</span>
               <span class="cat__label">Hair</span>
             </button>
             <button type="button" class="cat" data-cat="spa">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 70% 40%; filter: hue-rotate(85deg) saturate(1.05);" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-spa.jpg" alt=""  />
+</span>
               <span class="cat__label">Spa</span>
             </button>
             <button type="button" class="cat" data-cat="facial">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 45% 60%; filter: hue-rotate(-20deg) brightness(1.05);" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-facial.jpg" alt=""  />
+</span>
               <span class="cat__label">Facial</span>
             </button>
             <button type="button" class="cat" data-cat="nails">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 10% 70%; filter: hue-rotate(280deg) saturate(1.1);" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-nails.jpg" alt=""  />
+</span>
               <span class="cat__label">Nails</span>
             </button>
             <button type="button" class="cat" data-cat="makeup">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 80% 20%; filter: hue-rotate(35deg) saturate(1.15);" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-makeup.jpg" alt=""  />
+</span>
               <span class="cat__label">Makeup</span>
             </button>
             <button type="button" class="cat" data-cat="mens">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 55% 45%; filter: grayscale(0.35) contrast(1.05);" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-mens.jpg" alt=""  />
+</span>
               <span class="cat__label">Men’s</span>
             </button>
             <button type="button" class="cat" data-cat="other">
               <span class="cat__icon">
-                <img class="cat__photo" src="assets/salon-bg.png" alt="" style="object-position: 30% 50%; filter: saturate(0.85);" />
-                <span class="cat__gt"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              </span>
+                <img class="cat__photo" src="assets/photos/salon-interior.jpg" alt=""  />
+</span>
               <span class="cat__label">Other</span>
             </button>
           </div>
@@ -1148,17 +1237,20 @@
             <a href="#radius">See all</a>
           </div>
 
-          <div class="chips" role="list">
-            <button type="button" class="chip is-active">Open now</button>
-            <button type="button" class="chip">Haircut</button>
-            <button type="button" class="chip">Facial</button>
-            <button type="button" class="chip">Spa</button>
-            <button type="button" class="chip">4★+</button>
-            <button type="button" class="chip">Offers</button>
+          <div class="chips" role="list" aria-label="Sort and filters">
+            <button type="button" class="chip is-active" data-filter="recent">Recent</button>
+            <button type="button" class="chip chip--deal" data-filter="discount">Discount</button>
+            <button type="button" class="chip" data-filter="hairstylist">Hairstylist</button>
+            <button type="button" class="chip" data-filter="rated">4★+</button>
+            <button type="button" class="chip" data-filter="open">Open now</button>
+            <button type="button" class="chip" data-filter="nearest">Nearest</button>
+            <button type="button" class="chip" data-filter="online">Online pay</button>
+            <button type="button" class="chip" data-filter="price">Price ↓</button>
+            <button type="button" class="chip" data-filter="top">Top rated</button>
           </div>
 
           <div class="toolbar">
-            <span class="toolbar__count">12 salons · sorted by distance</span>
+            <span class="toolbar__count" id="salon-sort-label">12 salons · sorted by recent</span>
             <div class="view-toggle" role="group" aria-label="View mode">
               <button type="button" class="is-active" title="List" aria-label="List view">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
@@ -1169,10 +1261,122 @@
             </div>
           </div>
 
-          <a class="salon" href="salon-detail.html?id=bandra-glow">
+          <div class="stylist-list is-hidden" id="stylist-list">
+            <div class="stylist-rail" aria-label="Popular hairstylists near you">
+              <a class="stylist" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.&amp;step=2">
+                <button type="button" class="stylist__fav is-on" aria-label="Saved hairstylist" title="Favourite">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                </button>
+                <div class="stylist__av"><img src="assets/photos/stylist-1.jpg" alt="" /></div>
+                <h3 class="stylist__name">Priya S.</h3>
+                <p class="stylist__salon">Luxe Curls</p>
+                <div class="stylist__meta">
+                  <span class="stars is-high">★ 4.9</span>
+                  <span class="dist">0.8 km</span>
+                </div>
+              </a>
+              <a class="stylist" href="book.html?salon=nord&amp;service=haircut&amp;spec=Arjun%20K.&amp;step=2">
+                <button type="button" class="stylist__fav is-on" aria-label="Saved hairstylist" title="Favourite">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                </button>
+                <div class="stylist__av"><img src="assets/photos/stylist-2.jpg" alt="" /></div>
+                <h3 class="stylist__name">Arjun K.</h3>
+                <p class="stylist__salon">Nord Hair Lab</p>
+                <div class="stylist__meta">
+                  <span class="stars is-high">★ 4.7</span>
+                  <span class="dist">2.1 km</span>
+                </div>
+              </a>
+              <a class="stylist" href="book.html?salon=bloom&amp;service=blowdry&amp;spec=Neha%20R.&amp;step=2">
+                <button type="button" class="stylist__fav" aria-label="Save hairstylist" title="Favourite">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                </button>
+                <div class="stylist__av"><img src="assets/photos/stylist-3.jpg" alt="" /></div>
+                <h3 class="stylist__name">Neha R.</h3>
+                <p class="stylist__salon">Bloom &amp; Brow</p>
+                <div class="stylist__meta">
+                  <span class="stars is-high">★ 4.8</span>
+                  <span class="dist">1.4 km</span>
+                </div>
+              </a>
+              <a class="stylist" href="book.html?salon=aura&amp;service=blowdry&amp;step=2">
+                <button type="button" class="stylist__fav" aria-label="Save hairstylist" title="Favourite">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                </button>
+                <div class="stylist__av"><img src="assets/photos/stylist-4.jpg" alt="" /></div>
+                <h3 class="stylist__name">Meera D.</h3>
+                <p class="stylist__salon">Aura Spa</p>
+                <div class="stylist__meta">
+                  <span class="stars is-high">★ 4.6</span>
+                  <span class="dist">2.8 km</span>
+                </div>
+              </a>
+            </div>
+
+            <a class="salon" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.&amp;step=2">
+              <div class="salon__media">
+                <img src="assets/photos/stylist-1.jpg" alt="" />
+                <span class="salon__badge">Available today</span>
+                <button type="button" class="salon__fav is-on" aria-label="Saved hairstylist">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                </button>
+              </div>
+              <div class="salon__body">
+                <div class="salon__row">
+                  <div>
+                    <h3 class="salon__name">Priya S.</h3>
+                    <p class="salon__brand">Senior hairstylist · Luxe Curls</p>
+                  </div>
+                  <span class="salon__dist">0.8 km</span>
+                </div>
+                <div class="salon__meta">
+                  <span class="stars is-high">★ 4.9</span>
+                  <span class="muted">You liked ★5</span>
+                  <span>Haircut · Blow dry</span>
+                </div>
+                <div class="salon__tags">
+                  <span class="tag">Hairstylist</span>
+                  <span class="tag">Next slot 5:00 PM</span>
+                </div>
+              </div>
+            </a>
+
+            <a class="salon" href="book.html?salon=nord&amp;service=haircut&amp;spec=Arjun%20K.&amp;step=2">
+              <div class="salon__media">
+                <img src="assets/photos/stylist-2.jpg" alt="" />
+                <span class="salon__badge">Available tomorrow</span>
+                <button type="button" class="salon__fav is-on" aria-label="Saved hairstylist">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                </button>
+              </div>
+              <div class="salon__body">
+                <div class="salon__row">
+                  <div>
+                    <h3 class="salon__name">Arjun K.</h3>
+                    <p class="salon__brand">Stylist · Nord Hair Lab</p>
+                  </div>
+                  <span class="salon__dist">2.1 km</span>
+                </div>
+                <div class="salon__meta">
+                  <span class="stars is-high">★ 4.7</span>
+                  <span class="muted">You liked ★4</span>
+                  <span>Cut · Beard</span>
+                </div>
+                <div class="salon__tags">
+                  <span class="tag">Hairstylist</span>
+                  <span class="tag">Men’s specialist</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <div class="salon-list" id="salon-list">
+          <a class="salon" href="salon-detail.html?id=bandra-glow"
+             data-rating="4.8" data-dist="0.8" data-price="499" data-open="1" data-deal="1" data-online="1" data-recent="1">
             <div class="salon__media">
-              <img src="assets/salon-bg.png" alt="" style="object-position: 20% 30%;" />
+              <img src="assets/photos/salon-hair.jpg" alt="" />
               <span class="salon__badge">Open</span>
+              <span class="salon__deal">20% OFF</span>
               <button type="button" class="salon__fav is-on" aria-label="Saved" onclick="event.preventDefault()">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
               </button>
@@ -1186,22 +1390,24 @@
                 <span class="salon__dist">0.8 km</span>
               </div>
               <div class="salon__meta">
-                <span class="stars">★ 4.8</span>
+                <span class="stars is-high">★ 4.8</span>
                 <span class="muted">(214)</span>
                 <span>From ₹499</span>
               </div>
               <div class="salon__tags">
+                <span class="tag tag--deal">Up to 20% OFF</span>
                 <span class="tag">Haircut</span>
                 <span class="tag">Color</span>
-                <span class="tag">Spa</span>
               </div>
             </div>
           </a>
 
-          <a class="salon" href="salon-detail.html?id=bloom">
+          <a class="salon" href="salon-detail.html?id=bloom"
+             data-rating="4.6" data-dist="1.4" data-price="349" data-open="1" data-deal="1" data-online="1" data-recent="2">
             <div class="salon__media">
-              <img src="assets/salon-bg.png" alt="" style="object-position: 70% 40%; filter: hue-rotate(-12deg) saturate(1.1);" />
+              <img src="assets/photos/salon-makeup.jpg" alt="" />
               <span class="salon__badge">Open</span>
+              <span class="salon__deal">Flat ₹200 OFF</span>
               <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
               </button>
@@ -1215,21 +1421,22 @@
                 <span class="salon__dist">1.4 km</span>
               </div>
               <div class="salon__meta">
-                <span class="stars">★ 4.6</span>
+                <span class="stars is-high">★ 4.6</span>
                 <span class="muted">(98)</span>
                 <span>From ₹349</span>
               </div>
               <div class="salon__tags">
+                <span class="tag tag--deal">₹200 OFF</span>
                 <span class="tag">Facial</span>
-                <span class="tag">Brows</span>
                 <span class="tag">Makeup</span>
               </div>
             </div>
           </a>
 
-          <a class="salon" href="salon-detail.html?id=nord">
+          <a class="salon" href="salon-detail.html?id=nord"
+             data-rating="4.9" data-dist="2.1" data-price="699" data-open="0" data-deal="0" data-online="0" data-recent="3">
             <div class="salon__media">
-              <img src="assets/salon-bg.png" alt="" style="object-position: 40% 55%; filter: hue-rotate(18deg) brightness(0.95);" />
+              <img src="assets/photos/salon-mens.jpg" alt="" />
               <span class="salon__badge is-closed">Closed</span>
               <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
@@ -1244,7 +1451,7 @@
                 <span class="salon__dist">2.1 km</span>
               </div>
               <div class="salon__meta">
-                <span class="stars">★ 4.9</span>
+                <span class="stars is-high">★ 4.9</span>
                 <span class="muted">(312)</span>
                 <span>From ₹699</span>
               </div>
@@ -1256,10 +1463,12 @@
             </div>
           </a>
 
-          <a class="salon" href="salon-detail.html?id=aura">
+          <a class="salon" href="salon-detail.html?id=aura"
+             data-rating="4.7" data-dist="2.8" data-price="899" data-open="1" data-deal="1" data-online="1" data-recent="4">
             <div class="salon__media">
-              <img src="assets/salon-bg.png" alt="" style="object-position: 10% 20%; filter: saturate(1.2);" />
+              <img src="assets/photos/salon-spa.jpg" alt="" />
               <span class="salon__badge">Open</span>
+              <span class="salon__deal">30% OFF</span>
               <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
               </button>
@@ -1273,17 +1482,79 @@
                 <span class="salon__dist">2.8 km</span>
               </div>
               <div class="salon__meta">
-                <span class="stars">★ 4.7</span>
+                <span class="stars is-high">★ 4.7</span>
                 <span class="muted">(156)</span>
                 <span>From ₹899</span>
               </div>
               <div class="salon__tags">
+                <span class="tag tag--deal">Up to 30% OFF</span>
                 <span class="tag">Spa</span>
-                <span class="tag">Massage</span>
                 <span class="tag">Facial</span>
               </div>
             </div>
           </a>
+
+          <a class="salon" href="salon-detail.html?id=bloom"
+             data-rating="4.3" data-dist="0.5" data-price="299" data-open="1" data-deal="0" data-online="1" data-recent="5">
+            <div class="salon__media">
+              <img src="assets/photos/salon-nails.jpg" alt="" style="object-position:50% 30%;" />
+              <span class="salon__badge">Open</span>
+              <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <div class="salon__body">
+              <div class="salon__row">
+                <div>
+                  <h3 class="salon__name">Tip &amp; Toe Nails</h3>
+                  <p class="salon__brand">Near Metro · Indiranagar</p>
+                </div>
+                <span class="salon__dist">0.5 km</span>
+              </div>
+              <div class="salon__meta">
+                <span class="stars">★ 4.3</span>
+                <span class="muted">(67)</span>
+                <span>From ₹299</span>
+              </div>
+              <div class="salon__tags">
+                <span class="tag">Manicure</span>
+                <span class="tag">Gel</span>
+                <span class="tag">Online pay</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="salon" href="salon-detail.html?id=nord"
+             data-rating="4.5" data-dist="3.2" data-price="1299" data-open="0" data-deal="1" data-online="0" data-recent="6">
+            <div class="salon__media">
+              <img src="assets/photos/salon-color.jpg" alt="" style="object-position:50% 40%;" />
+              <span class="salon__badge is-closed">Opens 4 PM</span>
+              <span class="salon__deal">15% OFF</span>
+              <button type="button" class="salon__fav" aria-label="Save" onclick="event.preventDefault()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <div class="salon__body">
+              <div class="salon__row">
+                <div>
+                  <h3 class="salon__name">Velvet Color Bar</h3>
+                  <p class="salon__brand">Koramangala</p>
+                </div>
+                <span class="salon__dist">3.2 km</span>
+              </div>
+              <div class="salon__meta">
+                <span class="stars is-high">★ 4.5</span>
+                <span class="muted">(141)</span>
+                <span>From ₹1,299</span>
+              </div>
+              <div class="salon__tags">
+                <span class="tag tag--deal">15% OFF</span>
+                <span class="tag">Color</span>
+                <span class="tag">Balayage</span>
+              </div>
+            </div>
+          </a>
+          </div>
         </div>
       </div>
 
@@ -1361,9 +1632,83 @@
   </div>
 
   <script>
+    document.querySelectorAll('.stylist__fav, .salon__fav').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        btn.classList.toggle('is-on');
+        var on = btn.classList.contains('is-on');
+        btn.setAttribute('aria-label', on ? 'Saved hairstylist' : 'Save hairstylist');
+      });
+    });
+
     document.querySelectorAll('.chips .chip').forEach(function (chip) {
       chip.addEventListener('click', function () {
-        chip.classList.toggle('is-active');
+        document.querySelectorAll('.chips .chip').forEach(function (c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+
+        var filter = chip.getAttribute('data-filter') || 'recent';
+        var label = document.getElementById('salon-sort-label');
+        var salonList = document.getElementById('salon-list');
+        var stylistList = document.getElementById('stylist-list');
+        var showStylists = filter === 'hairstylist';
+
+        if (salonList) salonList.classList.toggle('is-hidden', showStylists);
+        if (stylistList) stylistList.classList.toggle('is-hidden', !showStylists);
+
+        if (showStylists) {
+          if (label) label.textContent = '8 hairstylists · near you';
+          return;
+        }
+
+        var cards = Array.prototype.slice.call(document.querySelectorAll('#salon-list > .salon'));
+        cards.forEach(function (card) { card.classList.remove('is-filtered-out'); });
+
+        function num(el, attr) { return Number(el.getAttribute(attr)) || 0; }
+
+        var visible = cards.filter(function (card) {
+          if (filter === 'discount') return card.getAttribute('data-deal') === '1';
+          if (filter === 'open') return card.getAttribute('data-open') === '1';
+          if (filter === 'online') return card.getAttribute('data-online') === '1';
+          if (filter === 'rated') return num(card, 'data-rating') >= 4.5;
+          return true;
+        });
+
+        cards.forEach(function (card) {
+          if (visible.indexOf(card) === -1) card.classList.add('is-filtered-out');
+        });
+
+        var sorted = visible.slice();
+        if (filter === 'nearest') {
+          sorted.sort(function (a, b) { return num(a, 'data-dist') - num(b, 'data-dist'); });
+        } else if (filter === 'price') {
+          sorted.sort(function (a, b) { return num(a, 'data-price') - num(b, 'data-price'); });
+        } else if (filter === 'top' || filter === 'rated') {
+          sorted.sort(function (a, b) { return num(b, 'data-rating') - num(a, 'data-rating'); });
+        } else if (filter === 'discount') {
+          sorted.sort(function (a, b) { return num(a, 'data-dist') - num(b, 'data-dist'); });
+        } else if (filter === 'open' || filter === 'online') {
+          sorted.sort(function (a, b) { return num(a, 'data-recent') - num(b, 'data-recent'); });
+        } else {
+          sorted.sort(function (a, b) { return num(a, 'data-recent') - num(b, 'data-recent'); });
+        }
+
+        sorted.forEach(function (card) { salonList.appendChild(card); });
+        cards.forEach(function (card) {
+          if (visible.indexOf(card) === -1) salonList.appendChild(card);
+        });
+
+        var labels = {
+          recent: sorted.length + ' salons · sorted by recent',
+          discount: sorted.length + ' salons · with discounts',
+          rated: sorted.length + ' salons · 4★+ and up',
+          open: sorted.length + ' salons · open now',
+          nearest: sorted.length + ' salons · nearest first',
+          online: sorted.length + ' salons · online pay',
+          price: sorted.length + ' salons · price low to high',
+          top: sorted.length + ' salons · top rated'
+        };
+        if (label) label.textContent = labels[filter] || (sorted.length + ' salons');
       });
     });
     document.querySelectorAll('.cats .cat').forEach(function (cat) {
@@ -1450,9 +1795,18 @@
           if (firstName && area) {
             firstName.textContent = 'Luxe Curls — ' + area;
           }
+          var favBtn = document.getElementById('btn-favorites');
+          if (favBtn && area) {
+            favBtn.href = 'favorites.html?near=' + encodeURIComponent(area);
+          }
           closeSheet();
         });
       });
+
+      var favBtnInit = document.getElementById('btn-favorites');
+      if (favBtnInit && title) {
+        favBtnInit.href = 'favorites.html?near=' + encodeURIComponent(title.textContent.trim() || 'Indiranagar');
+      }
     })();
 
     (function () {

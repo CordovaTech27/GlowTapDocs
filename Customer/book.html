@@ -14,12 +14,12 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; }
     body {
-      font-family: 'DM Sans', system-ui, sans-serif; background: #100818; color: var(--ink);
+      font-family: 'DM Sans', system-ui, sans-serif; background: #ffffff; color: var(--ink);
       display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
     }
     .studio {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background: radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123,0,255,.35), transparent 60%), #100818;
+      background: #ffffff;
     }
     .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
     .phone {
@@ -102,6 +102,7 @@
       display: flex; align-items: center; gap: 12px; width: 100%;
       background: #fff; border: 1.5px solid rgba(123,0,255,.08); border-radius: 16px;
       padding: 12px; margin-bottom: 8px; font-family: inherit; cursor: pointer; text-align: left; color: inherit;
+      position: relative;
     }
     .spec.is-active { border-color: rgba(123,0,255,.45); box-shadow: 0 0 0 3px rgba(123,0,255,.1); }
     .spec__av {
@@ -110,6 +111,16 @@
     .spec__av img { width: 100%; height: 100%; object-fit: cover; }
     .spec__name { font-weight: 700; font-size: .9rem; }
     .spec__meta { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .spec__meta .rate { color: #F59E0B; font-weight: 700; }
+    .spec__meta .rate.is-high { color: #059669; }
+    .spec__liked {
+      margin-left: auto; flex-shrink: 0; font-size: .68rem; font-weight: 800;
+      padding: 5px 8px; border-radius: 99px; background: #ECFDF5; color: #059669;
+    }
+    .spec-note {
+      margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #FFF7ED;
+      font-size: .78rem; font-weight: 600; color: #9A3412;
+    }
     .row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; font-size: .88rem; }
     .row span { color: var(--muted); }
     .row strong { font-weight: 700; }
@@ -207,34 +218,8 @@
         <div class="body">
           <div class="step is-active" data-step="0">
             <h2>Select service</h2>
-            <p class="sub">One service per booking</p>
-            <button type="button" class="card is-active" data-svc="Haircut &amp; Style" data-price="899" data-dur="45 min">
-              <div class="card__row">
-                <div>
-                  <div class="card__title">Haircut &amp; Style</div>
-                  <div class="card__meta">45 min · Online / Pay at salon</div>
-                </div>
-                <div class="card__price">₹899</div>
-              </div>
-            </button>
-            <button type="button" class="card" data-svc="Blow Dry" data-price="499" data-dur="30 min">
-              <div class="card__row">
-                <div>
-                  <div class="card__title">Blow Dry</div>
-                  <div class="card__meta">30 min · Online / Pay at salon</div>
-                </div>
-                <div class="card__price">₹499</div>
-              </div>
-            </button>
-            <button type="button" class="card" data-svc="Global Color" data-price="2499" data-dur="90 min">
-              <div class="card__row">
-                <div>
-                  <div class="card__title">Global Color</div>
-                  <div class="card__meta">90 min · Online only</div>
-                </div>
-                <div class="card__price">₹2,499</div>
-              </div>
-            </button>
+            <p class="sub">One service per booking · <span id="salon-label">Luxe Curls</span></p>
+            <div id="service-cards"></div>
           </div>
 
           <div class="step" data-step="1">
@@ -279,34 +264,15 @@
           <div class="step" data-step="2">
             <h2>Specialist</h2>
             <p class="sub">Choose someone or auto-assign</p>
-            <button type="button" class="spec is-active" data-spec="Priya S.">
-              <span class="spec__av"><img src="assets/glowtap-mark.svg" alt="" /></span>
-              <span>
-                <div class="spec__name">Priya S.</div>
-                <div class="spec__meta">Senior stylist · ★ 4.9</div>
-              </span>
-            </button>
-            <button type="button" class="spec" data-spec="Arjun K.">
-              <span class="spec__av"><img src="assets/salon-bg.png" alt="" style="object-position:40% 30%; filter:grayscale(.2);" /></span>
-              <span>
-                <div class="spec__name">Arjun K.</div>
-                <div class="spec__meta">Stylist · ★ 4.7</div>
-              </span>
-            </button>
-            <button type="button" class="spec" data-spec="Auto-assign">
-              <span class="spec__av" style="display:grid;place-items:center;background:#F3EEFF;color:#7B00FF;font-weight:700;">⚡</span>
-              <span>
-                <div class="spec__name">Auto-assign</div>
-                <div class="spec__meta">Best available for this slot</div>
-              </span>
-            </button>
+            <p class="spec-note" id="spec-note"></p>
+            <div id="spec-list"></div>
           </div>
 
           <div class="step" data-step="3">
             <h2>Review &amp; pay</h2>
             <p class="sub">Confirm details before booking</p>
             <div class="card" style="cursor:default;">
-              <div class="row"><span>Salon</span><strong>Luxe Curls — Indiranagar</strong></div>
+              <div class="row"><span>Salon</span><strong id="sum-salon">Luxe Curls — Indiranagar</strong></div>
               <div class="row"><span>Service</span><strong id="sum-svc">Haircut &amp; Style</strong></div>
               <div class="row"><span>Duration</span><strong id="sum-dur">45 min</strong></div>
               <div class="row"><span>Specialist</span><strong id="sum-spec">Priya S.</strong></div>
@@ -378,14 +344,167 @@
       var busy = false;
       var labels = ['Service', 'Date & time', 'Specialist', 'Review'];
       var state = {
-        svc: 'Haircut & Style',
-        price: 899,
-        dur: '45 min',
+        svc: '',
+        price: 0,
+        dur: '',
         date: 'Tomorrow',
         time: '11:30 AM',
-        spec: 'Priya S.',
-        method: 'UPI'
+        spec: '',
+        method: 'UPI',
+        salonKey: 'luxe',
+        salonName: 'Luxe Curls � Indiranagar'
       };
+
+      var salonCatalog = {
+        luxe: {
+          name: 'Luxe Curls � Indiranagar',
+          short: 'Luxe Curls',
+          note: 'From past visits: you rated <strong>Priya ?5</strong> � she�s available below.',
+          services: [
+            { key: 'haircut', name: 'Haircut & Style', price: 899, dur: '45 min', meta: '45 min � Online / Pay at salon' },
+            { key: 'blowdry', name: 'Blow Dry', price: 499, dur: '30 min', meta: '30 min � Online / Pay at salon' },
+            { key: 'color', name: 'Global Color', price: 2499, dur: '90 min', meta: '90 min � Online only' }
+          ],
+          specs: [
+            { name: 'Priya S.', role: 'Senior stylist', photo: 'assets/photos/stylist-1.jpg', rate: '4.9', liked: 'You liked ?5' },
+            { name: 'Kavya M.', role: 'Colorist', photo: 'assets/photos/stylist-3.jpg', rate: '4.8', liked: '' }
+          ]
+        },
+        bloom: {
+          name: 'Bloom & Brow',
+          short: 'Bloom & Brow',
+          note: 'Glow specialists for skin & brows � pick Neha or Ananya.',
+          services: [
+            { key: 'facial', name: 'Hydra Facial', price: 1299, dur: '60 min', meta: '60 min � Online / Pay at salon' },
+            { key: 'brow', name: 'Brow Threading', price: 249, dur: '20 min', meta: '20 min � Pay at salon' },
+            { key: 'makeup', name: 'Soft Glam Makeup', price: 1799, dur: '75 min', meta: '75 min � Online only' }
+          ],
+          specs: [
+            { name: 'Neha R.', role: 'Facial expert', photo: 'assets/photos/stylist-3.jpg', rate: '4.8', liked: '' },
+            { name: 'Ananya M.', role: 'Brow artist', photo: 'assets/photos/stylist-4.jpg', rate: '4.7', liked: 'You liked ?5' }
+          ]
+        },
+        nord: {
+          name: 'Nord Hair Lab',
+          short: 'Nord Hair Lab',
+          note: 'From past visits: you rated <strong>Arjun ?4</strong> � pick him again below.',
+          services: [
+            { key: 'haircut', name: 'Signature Cut', price: 699, dur: '40 min', meta: '40 min � Online / Pay at salon' },
+            { key: 'beard', name: 'Beard Trim', price: 349, dur: '25 min', meta: '25 min � Pay at salon' },
+            { key: 'keratin', name: 'Keratin Smooth', price: 3499, dur: '120 min', meta: '120 min � Online only' }
+          ],
+          specs: [
+            { name: 'Arjun K.', role: 'Lead barber', photo: 'assets/photos/stylist-2.jpg', rate: '4.7', liked: 'You liked ?4' },
+            { name: 'Rohan P.', role: 'Keratin specialist', photo: 'assets/photos/stylist-1.jpg', rate: '4.6', liked: '' }
+          ]
+        },
+        aura: {
+          name: 'Aura Spa Retreat',
+          short: 'Aura Spa',
+          note: 'Therapist-led rituals � Meera or Divya for this slot.',
+          services: [
+            { key: 'deep', name: 'Deep Tissue', price: 1899, dur: '60 min', meta: '60 min � Online / Pay at salon' },
+            { key: 'swedish', name: 'Swedish Massage', price: 1499, dur: '50 min', meta: '50 min � Online / Pay at salon' },
+            { key: 'stone', name: 'Hot Stone Ritual', price: 2299, dur: '75 min', meta: '75 min � Online only' }
+          ],
+          specs: [
+            { name: 'Meera D.', role: 'Lead therapist', photo: 'assets/photos/stylist-4.jpg', rate: '4.9', liked: 'You liked ?5' },
+            { name: 'Divya L.', role: 'Hot stone', photo: 'assets/photos/stylist-3.jpg', rate: '4.8', liked: '' }
+          ]
+        }
+      };
+
+      function esc(s) {
+        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+      }
+
+      var params = new URLSearchParams(location.search);
+      var salonKey = params.get('salon') || 'luxe';
+      if (!salonCatalog[salonKey]) salonKey = 'luxe';
+      var salon = salonCatalog[salonKey];
+      state.salonKey = salonKey;
+      state.salonName = salon.name;
+
+      document.getElementById('salon-label').textContent = salon.short;
+      document.getElementById('sum-salon').textContent = salon.name;
+      document.getElementById('spec-note').innerHTML = salon.note;
+
+      function bindServiceCards() {
+        document.querySelectorAll('#service-cards .card').forEach(function (card) {
+          card.addEventListener('click', function () {
+            document.querySelectorAll('#service-cards .card').forEach(function (c) { c.classList.remove('is-active'); });
+            card.classList.add('is-active');
+            state.svc = card.getAttribute('data-svc');
+            state.price = Number(card.getAttribute('data-price'));
+            state.dur = card.getAttribute('data-dur');
+            syncSummary();
+          });
+        });
+      }
+
+      function bindSpecs() {
+        document.querySelectorAll('#spec-list .spec').forEach(function (spec) {
+          spec.addEventListener('click', function () {
+            document.querySelectorAll('#spec-list .spec').forEach(function (s) { s.classList.remove('is-active'); });
+            spec.classList.add('is-active');
+            state.spec = spec.getAttribute('data-spec');
+            syncSummary();
+          });
+        });
+      }
+
+      function renderServices(preferredKey) {
+        var wrap = document.getElementById('service-cards');
+        var activeIdx = 0;
+        salon.services.forEach(function (svc, i) {
+          if (preferredKey && svc.key === preferredKey) activeIdx = i;
+        });
+        wrap.innerHTML = salon.services.map(function (svc, i) {
+          return (
+            '<button type="button" class="card' + (i === activeIdx ? ' is-active' : '') + '" data-svc="' + esc(svc.name) + '" data-price="' + svc.price + '" data-dur="' + esc(svc.dur) + '" data-key="' + esc(svc.key) + '">' +
+              '<div class="card__row"><div>' +
+                '<div class="card__title">' + esc(svc.name) + '</div>' +
+                '<div class="card__meta">' + esc(svc.meta) + '</div>' +
+              '</div><div class="card__price">?' + svc.price.toLocaleString('en-IN') + '</div></div>' +
+            '</button>'
+          );
+        }).join('');
+        var active = salon.services[activeIdx];
+        state.svc = active.name;
+        state.price = active.price;
+        state.dur = active.dur;
+        bindServiceCards();
+      }
+
+      function renderSpecs(preferredName) {
+        var wrap = document.getElementById('spec-list');
+        var html = salon.specs.map(function (s, i) {
+          var active = preferredName ? s.name === preferredName : i === 0;
+          return (
+            '<button type="button" class="spec' + (active ? ' is-active' : '') + '" data-spec="' + esc(s.name) + '">' +
+              '<span class="spec__av"><img src="' + esc(s.photo) + '" alt="" /></span>' +
+              '<span><div class="spec__name">' + esc(s.name) + '</div>' +
+              '<div class="spec__meta">' + esc(s.role) + ' � <span class="rate is-high">? ' + esc(s.rate) + '</span></div></span>' +
+              (s.liked ? '<span class="spec__liked">' + esc(s.liked) + '</span>' : '') +
+            '</button>'
+          );
+        }).join('');
+        html +=
+          '<button type="button" class="spec" data-spec="Auto-assign">' +
+            '<span class="spec__av" style="display:grid;place-items:center;background:#F3EEFF;color:#7B00FF;font-weight:700;">?</span>' +
+            '<span><div class="spec__name">Auto-assign</div><div class="spec__meta">Best available for this slot</div></span>' +
+          '</button>';
+        wrap.innerHTML = html;
+        var activeSpec = preferredName && salon.specs.some(function (s) { return s.name === preferredName; })
+          ? preferredName
+          : salon.specs[0].name;
+        state.spec = activeSpec;
+        if (preferredName === 'Auto-assign') state.spec = 'Auto-assign';
+        bindSpecs();
+      }
+
+      renderServices(params.get('service'));
+      renderSpecs(params.get('spec'));
 
       var stepEls = document.querySelectorAll('.step');
       var stepBars = document.querySelectorAll('#steps span');
@@ -404,12 +523,12 @@
         document.getElementById('sum-svc').textContent = state.svc;
         document.getElementById('sum-dur').textContent = state.dur;
         document.getElementById('sum-spec').textContent = state.spec;
-        document.getElementById('sum-when').textContent = state.date + ' · ' + state.time;
-        document.getElementById('sum-price').textContent = '₹' + state.price.toLocaleString('en-IN');
+        document.getElementById('sum-when').textContent = state.date + ' � ' + state.time;
+        document.getElementById('sum-price').textContent = '?' + state.price.toLocaleString('en-IN');
         var discount = Math.round(state.price * 0.1);
         var total = state.price - discount;
-        document.getElementById('sum-total').textContent = '₹' + total.toLocaleString('en-IN');
-        document.getElementById('pay-amount').textContent = '₹' + total.toLocaleString('en-IN');
+        document.getElementById('sum-total').textContent = '?' + total.toLocaleString('en-IN');
+        document.getElementById('pay-amount').textContent = '?' + total.toLocaleString('en-IN');
         document.getElementById('slot-sub').textContent = 'Slots for ' + state.date;
         document.getElementById('slot-count').textContent = openCount() + ' open';
       }
@@ -449,7 +568,7 @@
         stepBars.forEach(function (bar, idx) {
           bar.classList.toggle('is-on', idx <= step);
         });
-        stepLabel.textContent = 'Step ' + (step + 1) + ' of 4 · ' + labels[step];
+        stepLabel.textContent = 'Step ' + (step + 1) + ' of 4 � ' + labels[step];
         btnPrev.style.visibility = step === 0 ? 'hidden' : 'visible';
         btnNext.textContent = step === max ? 'Confirm booking' : 'Continue';
         footer.classList.toggle('single', step === 0);
@@ -462,8 +581,9 @@
         btnNext.disabled = true;
         var q = new URLSearchParams({
           svc: state.svc,
-          when: state.date + ' · ' + state.time,
+          when: state.date + ' � ' + state.time,
           spec: state.spec,
+          salon: state.salonName,
           pay: payMode,
           method: state.method || '',
           total: String(state.price - Math.round(state.price * 0.1))
@@ -481,32 +601,12 @@
         paySheet.setAttribute('aria-hidden', 'true');
       }
 
-      document.querySelectorAll('.step[data-step="0"] .card').forEach(function (card) {
-        card.addEventListener('click', function () {
-          document.querySelectorAll('.step[data-step="0"] .card').forEach(function (c) { c.classList.remove('is-active'); });
-          card.classList.add('is-active');
-          state.svc = card.getAttribute('data-svc');
-          state.price = Number(card.getAttribute('data-price'));
-          state.dur = card.getAttribute('data-dur');
-          syncSummary();
-        });
-      });
-
       document.querySelectorAll('#slots .slot').forEach(function (slot) {
         if (slot.disabled) return;
         slot.addEventListener('click', function () {
           document.querySelectorAll('#slots .slot').forEach(function (s) { s.classList.remove('is-active'); });
           slot.classList.add('is-active');
           state.time = slot.getAttribute('data-time');
-          syncSummary();
-        });
-      });
-
-      document.querySelectorAll('.spec').forEach(function (spec) {
-        spec.addEventListener('click', function () {
-          document.querySelectorAll('.spec').forEach(function (s) { s.classList.remove('is-active'); });
-          spec.classList.add('is-active');
-          state.spec = spec.getAttribute('data-spec');
           syncSummary();
         });
       });
@@ -553,7 +653,7 @@
           return;
         }
         if (step > 0) showStep(step - 1);
-        else history.length > 1 ? history.back() : (location.href = 'salon-detail.html');
+        else history.length > 1 ? history.back() : (location.href = 'salon-detail.html?id=' + encodeURIComponent(salonKey));
       });
 
       document.getElementById('pay-cancel').addEventListener('click', closePaySheet);
@@ -563,21 +663,6 @@
       paySheet.addEventListener('click', function (e) {
         if (e.target === paySheet) closePaySheet();
       });
-
-      var params = new URLSearchParams(location.search);
-      var svcMap = { haircut: 'Haircut & Style', blowdry: 'Blow Dry', color: 'Global Color' };
-      var svcKey = params.get('service');
-      if (svcKey && svcMap[svcKey]) {
-        document.querySelectorAll('.step[data-step="0"] .card').forEach(function (card) {
-          var match = card.getAttribute('data-svc') === svcMap[svcKey];
-          card.classList.toggle('is-active', match);
-          if (match) {
-            state.svc = card.getAttribute('data-svc');
-            state.price = Number(card.getAttribute('data-price'));
-            state.dur = card.getAttribute('data-dur');
-          }
-        });
-      }
 
       var dateParam = params.get('date');
       var timeParam = params.get('time');
@@ -605,9 +690,10 @@
       }
 
       var startStep = Number(params.get('step'));
-      // Old links used step=2 for time; date+time is now step 1
-      if (startStep === 2) startStep = 1;
+      if (startStep === 2 && !params.get('spec')) startStep = 1;
       if (!Number.isFinite(startStep) || startStep < 0 || startStep > max) startStep = 0;
+      if (params.get('spec') && !Number.isFinite(Number(params.get('step')))) startStep = 2;
+
       showStep(startStep);
     })();
   </script>

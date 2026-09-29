@@ -22,7 +22,7 @@
     body {
       font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
-      background: #100818;
+      background: #ffffff;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -37,10 +37,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
-        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
-        #100818;
+      background: #ffffff;
     }
     .stage {
       position: relative;
@@ -216,6 +213,56 @@
     .row span { color: var(--muted); font-weight: 500; }
     .row strong { font-weight: 700; text-align: right; }
 
+    .spec-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #F7F4FA;
+      border: 1px solid rgba(123, 0, 255, 0.08);
+    }
+    .spec-row__av {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #eee;
+      flex-shrink: 0;
+    }
+    .spec-row__av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .spec-row__info { flex: 1; min-width: 0; }
+    .spec-row__label { margin: 0; font-size: 0.7rem; font-weight: 600; color: var(--muted); }
+    .spec-row__name { margin: 2px 0 0; font-size: 0.92rem; font-weight: 700; }
+    .spec-row__fav {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      padding: 0;
+    }
+    .spec-row__fav.is-on {
+      color: var(--pink);
+      border-color: rgba(255, 3, 200, 0.35);
+      background: #FFE8F6;
+    }
+    .spec-row__fav svg { width: 18px; height: 18px; pointer-events: none; }
+    .spec-row__hint {
+      margin: -4px 0 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #059669;
+      display: none;
+    }
+    .spec-row__hint.is-on { display: block; }
+
     .timeline {
       display: flex;
       flex-direction: column;
@@ -350,19 +397,29 @@
         <div class="body">
           <div class="hero">
             <div class="hero__media">
-              <img src="assets/salon-bg.png" alt="" style="object-position: 22% 28%;" />
+              <img id="salon-photo" src="assets/photos/salon-hair.jpg" alt="" style="object-position: 22% 28%;" />
               <span class="hero__badge" id="status-badge">Confirmed</span>
             </div>
             <div class="hero__body">
-              <h2 class="hero__salon">Luxe Curls — Indiranagar</h2>
-              <p class="hero__addr">12th Main, Indiranagar, Bengaluru · <a href="#">Map</a></p>
+              <h2 class="hero__salon" id="salon-name">Luxe Curls — Indiranagar</h2>
+              <p class="hero__addr" id="salon-addr">12th Main, Indiranagar, Bengaluru · <a href="#">Map</a></p>
             </div>
           </div>
 
           <div class="card">
             <h3 class="card__title">Appointment</h3>
             <div class="row"><span>Service</span><strong>Haircut &amp; Style</strong></div>
-            <div class="row"><span>Specialist</span><strong>Priya S.</strong></div>
+            <div class="spec-row">
+              <div class="spec-row__av"><img src="assets/photos/stylist-1.jpg" alt="" /></div>
+              <div class="spec-row__info">
+                <p class="spec-row__label">Hairstylist</p>
+                <p class="spec-row__name" id="spec-name">Priya S.</p>
+              </div>
+              <button type="button" class="spec-row__fav" id="fav-stylist" aria-label="Favourite hairstylist" title="Favourite">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </button>
+            </div>
+            <p class="spec-row__hint" id="fav-hint">Saved to favourites · you’ll see Priya on your next booking</p>
             <div class="row"><span>Date</span><strong>Tomorrow, 27 Aug</strong></div>
             <div class="row"><span>Time</span><strong>11:30 AM · 45 min</strong></div>
           </div>
@@ -405,12 +462,24 @@
             <h3 class="card__title">Cancellation policy</h3>
             <p class="policy">Free cancel while status is Booked. After confirmation, cancellation needs salon approval. Online payments refund per platform rules.</p>
           </div>
+
+          <div class="card" id="rated-card" hidden>
+            <h3 class="card__title">Your rating</h3>
+            <div class="row"><span>Overall</span><strong>★★★★★</strong></div>
+            <div class="row"><span>Hairstylist</span><strong id="rated-stylist">Priya S. · ★5</strong></div>
+            <p class="policy" style="margin-top:8px;">Saved for next booking — we’ll highlight this stylist when you book again.</p>
+            <a class="btn btn--primary" style="margin-top:12px;height:42px;font-size:.85rem;" id="rebook-stylist" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.&amp;step=2">Book this stylist again</a>
+          </div>
         </div>
       </div>
 
-      <div class="actions">
+      <div class="actions" id="actions-upcoming">
         <button type="button" class="btn btn--ghost">Cancel</button>
         <a class="btn btn--primary" href="home.html">Reschedule</a>
+      </div>
+      <div class="actions" id="actions-rate" hidden>
+        <a class="btn btn--ghost" href="bookings.html">Close</a>
+        <a class="btn btn--primary" id="rate-link" href="rate.html?id=GT-48110&amp;stylist=Priya%20S.&amp;svc=Blow%20Dry">Rate hairstylist</a>
       </div>
       <div class="home-ind" aria-hidden="true"></div>
     </div>
@@ -423,6 +492,186 @@
       if (id) {
         var el = document.getElementById('booking-id');
         if (el) el.textContent = id;
+      }
+
+      var bookings = {
+        'GT-48291': {
+          salon: 'Luxe Curls — Indiranagar',
+          addr: '12th Main, Indiranagar, Bengaluru',
+          photo: 'assets/photos/salon-hair.jpg',
+          pos: '22% 28%',
+          service: 'Haircut & Style',
+          stylist: 'Priya S.',
+          stylistPhoto: 'assets/photos/stylist-1.jpg',
+          amount: '₹899',
+          pay: 'Paid online'
+        },
+        'GT-48302': {
+          salon: 'Bloom & Brow',
+          addr: '100 Feet Rd, Indiranagar, Bengaluru',
+          photo: 'assets/photos/salon-facial.jpg',
+          pos: '50% 35%',
+          service: 'Hydra Facial',
+          stylist: 'Ananya',
+          stylistPhoto: 'assets/photos/stylist-3.jpg',
+          amount: '₹1,299',
+          pay: 'Paid online'
+        },
+        'GT-48310': {
+          salon: 'Nord Hair Lab',
+          addr: 'Koramangala 5th Block, Bengaluru',
+          photo: 'assets/photos/salon-mens.jpg',
+          pos: '40% 55%',
+          service: 'Signature Cut',
+          stylist: 'Arjun K.',
+          stylistPhoto: 'assets/photos/stylist-2.jpg',
+          amount: '₹699',
+          pay: 'Pay at salon'
+        },
+        'GT-48322': {
+          salon: 'Aura Spa Retreat',
+          addr: 'HSR Layout, Bengaluru',
+          photo: 'assets/photos/salon-spa.jpg',
+          pos: '10% 20%',
+          service: 'Deep Tissue',
+          stylist: 'Meera D.',
+          stylistPhoto: 'assets/photos/stylist-4.jpg',
+          amount: '₹1,899',
+          pay: 'Paid online'
+        },
+        'GT-48110': {
+          salon: 'Luxe Curls — Indiranagar',
+          addr: '12th Main, Indiranagar, Bengaluru',
+          photo: 'assets/photos/salon-color.jpg',
+          pos: '50% 40%',
+          service: 'Blow Dry',
+          stylist: 'Priya S.',
+          stylistPhoto: 'assets/photos/stylist-1.jpg',
+          amount: '₹499',
+          pay: 'Paid online'
+        },
+        'GT-48055': {
+          salon: 'Luxe Curls — Indiranagar',
+          addr: '12th Main, Indiranagar, Bengaluru',
+          photo: 'assets/photos/salon-hair.jpg',
+          pos: '22% 28%',
+          service: 'Haircut & Style',
+          stylist: 'Priya S.',
+          stylistPhoto: 'assets/photos/stylist-1.jpg',
+          amount: '₹899',
+          pay: 'Paid online'
+        },
+        'GT-47940': {
+          salon: 'Nord Hair Lab',
+          addr: 'Koramangala 5th Block, Bengaluru',
+          photo: 'assets/photos/salon-interior.jpg',
+          pos: '45% 50%',
+          service: 'Signature Cut',
+          stylist: 'Arjun K.',
+          stylistPhoto: 'assets/photos/stylist-2.jpg',
+          amount: '₹699',
+          pay: 'Paid online'
+        },
+        'GT-48088': {
+          salon: 'Aura Spa Retreat',
+          addr: 'HSR Layout, Bengaluru',
+          photo: 'assets/photos/salon-spa.jpg',
+          pos: '10% 20%',
+          service: 'Swedish Massage',
+          stylist: 'Meera D.',
+          stylistPhoto: 'assets/photos/stylist-4.jpg',
+          amount: '₹1,899',
+          pay: 'Refund initiated'
+        },
+        'GT-47901': {
+          salon: 'Nord Hair Lab',
+          addr: 'Koramangala 5th Block, Bengaluru',
+          photo: 'assets/photos/salon-nails.jpg',
+          pos: '50% 30%',
+          service: 'Beard Trim',
+          stylist: 'Arjun K.',
+          stylistPhoto: 'assets/photos/stylist-2.jpg',
+          amount: '₹349',
+          pay: 'Unpaid'
+        }
+      };
+
+      function applyBooking(data) {
+        if (!data) return;
+        var photo = document.getElementById('salon-photo');
+        var name = document.getElementById('salon-name');
+        var addr = document.getElementById('salon-addr');
+        if (photo) {
+          photo.src = data.photo;
+          photo.style.objectPosition = data.pos || '50% 50%';
+        }
+        if (name) name.textContent = data.salon;
+        if (addr) addr.innerHTML = data.addr + ' · <a href="#">Map</a>';
+        var rows = document.querySelectorAll('.card .row');
+        rows.forEach(function (row) {
+          var label = (row.querySelector('span') || {}).textContent;
+          var strong = row.querySelector('strong');
+          if (!strong || !label) return;
+          if (label === 'Service') strong.textContent = data.service;
+          if (label === 'Amount') strong.textContent = data.amount;
+          if (label === 'Method') strong.textContent = data.pay;
+        });
+        setStylist(data.stylist, data.stylistPhoto);
+      }
+
+      var pastNeedRate = { 'GT-48110': { stylist: 'Priya S.', svc: 'Blow Dry', photo: 'assets/photos/stylist-1.jpg' } };
+      var pastRated = {
+        'GT-48055': { stylist: 'Priya S.', stars: 5, svc: 'Haircut & Style', photo: 'assets/photos/stylist-1.jpg' },
+        'GT-47940': { stylist: 'Arjun K.', stars: 4, svc: 'Signature Cut', photo: 'assets/photos/stylist-2.jpg' }
+      };
+
+      function setStylist(name, photo) {
+        var nameEl = document.getElementById('spec-name');
+        var av = document.querySelector('.spec-row__av img');
+        var hint = document.getElementById('fav-hint');
+        if (nameEl) nameEl.textContent = name;
+        if (av && photo) av.src = photo;
+        if (hint) hint.textContent = 'Saved to favourites · you’ll see ' + name.split(' ')[0] + ' on your next booking';
+      }
+
+      if (id && bookings[id]) applyBooking(bookings[id]);
+
+      var favBtn = document.getElementById('fav-stylist');
+      var favHint = document.getElementById('fav-hint');
+      if (favBtn) {
+        favBtn.addEventListener('click', function () {
+          favBtn.classList.toggle('is-on');
+          var on = favBtn.classList.contains('is-on');
+          favBtn.setAttribute('aria-label', on ? 'Remove favourite hairstylist' : 'Favourite hairstylist');
+          if (favHint) favHint.classList.toggle('is-on', on);
+        });
+      }
+
+      if (id && pastNeedRate[id]) {
+        document.getElementById('actions-upcoming').hidden = true;
+        document.getElementById('actions-rate').hidden = false;
+        var info = pastNeedRate[id];
+        setStylist(info.stylist, info.photo);
+        document.getElementById('rate-link').href =
+          'rate.html?id=' + encodeURIComponent(id) +
+          '&stylist=' + encodeURIComponent(info.stylist) +
+          '&svc=' + encodeURIComponent(info.svc);
+        document.getElementById('status-badge').textContent = 'Completed';
+      }
+      if ((id && pastRated[id]) || params.get('rated') === '1') {
+        var rated = pastRated[id] || { stylist: 'Priya S.', stars: 5, photo: 'assets/photos/stylist-1.jpg' };
+        document.getElementById('actions-upcoming').hidden = true;
+        document.getElementById('actions-rate').hidden = true;
+        document.getElementById('rated-card').hidden = false;
+        setStylist(rated.stylist, rated.photo);
+        document.getElementById('rated-stylist').textContent = rated.stylist + ' · ★' + rated.stars;
+        document.getElementById('rebook-stylist').href =
+          'book.html?salon=luxe&service=haircut&spec=' + encodeURIComponent(rated.stylist) + '&step=2';
+        document.getElementById('status-badge').textContent = 'Completed';
+        if (favBtn) {
+          favBtn.classList.add('is-on');
+          if (favHint) favHint.classList.add('is-on');
+        }
       }
     })();
   </script>

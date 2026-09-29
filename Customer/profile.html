@@ -7,13 +7,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700&display=swap" />
   <style>
     :root {
-      --ink: #1A2330;
-      --muted: #6B7A88;
-      --line: #E5EAF0;
-      --violet: #7B00FF;
+      --ink: #241828;
+      --muted: #7A6E78;
+      --line: #EDE4EC;
+      --violet: #8B00E8;
       --pink: #FF03C8;
-      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
-      --surface: #F7F4FA;
+      --grad: linear-gradient(100deg, #8B00E8 0%, #C026D3 48%, #FF03C8 100%);
+      --surface: #FBF7FA;
       --phone-w: 390px;
       --phone-h: 844px;
     }
@@ -22,7 +22,7 @@
     body {
       font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
-      background: #100818;
+      background: #ffffff;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -37,10 +37,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
-        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
-        #100818;
+      background: #ffffff;
     }
     .stage {
       position: relative;
@@ -310,6 +307,17 @@
       font-size: 0.72rem;
       font-weight: 500;
     }
+    .foot__more {
+      margin-top: 14px;
+    }
+    .foot__more a {
+      color: #B8A8B4;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .foot__more a:active { color: var(--muted); }
     .foot strong {
       display: inline-flex;
       align-items: center;
@@ -389,7 +397,7 @@
       color: #fff;
     }
 
-    .tabbar {
+    .dock {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
@@ -397,10 +405,22 @@
       z-index: 30;
       display: flex;
       align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: calc(100% - 28px);
+    }
+    .tabbar {
+      position: relative;
+      left: auto;
+      transform: none;
+      bottom: auto;
+      z-index: 1;
+      display: flex;
+      align-items: center;
       justify-content: center;
       gap: 2px;
       width: max-content;
-      max-width: calc(100% - 48px);
+      max-width: none;
       padding: 6px;
       background: rgba(28, 28, 30, 0.92);
       backdrop-filter: blur(20px);
@@ -408,6 +428,32 @@
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+    }
+    .dock-search {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(28, 28, 30, 0.92);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s;
+      text-decoration: none;
+    }
+    .dock-search:active { transform: scale(0.94); }
+    .dock-search svg {
+      width: 22px;
+      height: 22px;
+      stroke: #fff;
+      stroke-width: 2.2;
+      color: #fff;
     }
     .tab {
       position: relative;
@@ -435,6 +481,94 @@
       right: 10px;
       border: 1.5px solid rgba(28, 28, 30, 0.92);
     }
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: rgba(18, 12, 28, 0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      border-radius: inherit;
+    }
+    .sheet-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 10px 18px 28px;
+      transform: translateY(110%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 -12px 40px rgba(30, 42, 50, 0.18);
+    }
+    .sheet.is-open { transform: translateY(0); }
+    .sheet__handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: #E5EAF0;
+      margin: 4px auto 14px;
+    }
+    .sheet__title {
+      font-family: Outfit, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+    .sheet__sub {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .dock-search-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F7F4FA;
+      border: 1.5px solid #E8E4EF;
+      border-radius: 14px;
+      padding: 12px 12px 12px 14px;
+    }
+    .dock-search-field svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
+    .dock-search-field input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 0;
+    }
+    .search-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 12px;
+    }
+    .search-suggestions a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 8px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 10px;
+    }
+    .search-suggestions a:active { background: #F7F4FA; }
+    .search-suggestions a svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
     .home-ind {
       position: absolute;
       bottom: 7px;
@@ -454,7 +588,8 @@
       .stage { width: 100%; height: 100dvh; animation: none; }
       .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
       .screen { padding-top: max(12px, env(safe-area-inset-top)); }
-      .tabbar { bottom: max(16px, env(safe-area-inset-bottom)); }
+      .tabbar { bottom: auto; }
+      .dock { bottom: max(16px, env(safe-area-inset-bottom)); }
       .body { padding-bottom: 110px; }
     }
   </style>
@@ -514,7 +649,65 @@
             </div>
           </div>
 
-          <div class="section-label">Account</div>
+          <div class="section-label">Activity</div>
+          <div class="menu">
+            <a class="menu__item" href="bookings.html">
+              <span class="menu__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5V7M16 3.5V7"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">My bookings</span>
+                <span class="menu__sub">Upcoming &amp; past</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="favorites.html">
+              <span class="menu__icon menu__icon--rose" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Saved salons</span>
+                <span class="menu__sub">4 favourites near you</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="rate.html?id=GT-48110&amp;stylist=Priya%20S.&amp;svc=Blow%20Dry">
+              <span class="menu__icon menu__icon--amber" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3 14 9l6 .5-4.5 4 1.5 6L12 16.5 6.5 19.5l1.5-6L3.5 9.5 9.5 9 12 3Z"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">My reviews</span>
+                <span class="menu__sub">Rate visits &amp; stylists</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div class="section-label">Payments</div>
+          <div class="menu">
+            <a class="menu__item" href="subscription.html">
+              <span class="menu__icon menu__icon--amber" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">My wallet</span>
+                <span class="menu__sub">Balance ₹500 · Add money</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="subscription.html">
+              <span class="menu__icon menu__icon--sky" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 15h.01M11 15h6"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Payment methods</span>
+                <span class="menu__sub">UPI · Cards · Wallets</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div class="section-label">Profile</div>
           <div class="menu">
             <a class="menu__item" href="edit-profile.html">
               <span class="menu__icon" aria-hidden="true">
@@ -526,13 +719,23 @@
               </span>
               <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
             </a>
-            <a class="menu__item" href="subscription.html">
-              <span class="menu__icon menu__icon--amber" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3 14 9l6 .5-4.5 4 1.5 6L12 16.5 6.5 19.5l1.5-6L3.5 9.5 9.5 9 12 3Z"/></svg>
+            <a class="menu__item" href="change-password.html">
+              <span class="menu__icon menu__icon--slate" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               </span>
               <span class="menu__text">
-                <span class="menu__title">Subscription</span>
-                <span class="menu__sub">GlowTap Plus · plans &amp; billing</span>
+                <span class="menu__title">Password &amp; security</span>
+                <span class="menu__sub">Change password</span>
+              </span>
+              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a class="menu__item" href="notifications.html">
+              <span class="menu__icon menu__icon--rose" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+              </span>
+              <span class="menu__text">
+                <span class="menu__title">Notifications</span>
+                <span class="menu__sub">Push · Email · SMS</span>
               </span>
               <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
             </a>
@@ -541,42 +744,8 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>
               </span>
               <span class="menu__text">
-                <span class="menu__title">Saved locations</span>
+                <span class="menu__title">Addresses</span>
                 <span class="menu__sub">Home · Work · Indiranagar</span>
-              </span>
-              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
-            </a>
-            <a class="menu__item" href="home.html">
-              <span class="menu__icon menu__icon--rose" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
-              </span>
-              <span class="menu__text">
-                <span class="menu__title">Favorites</span>
-                <span class="menu__sub">4 saved salons</span>
-              </span>
-              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
-            </a>
-          </div>
-
-          <div class="section-label">Preferences</div>
-          <div class="menu">
-            <a class="menu__item" href="notifications.html">
-              <span class="menu__icon menu__icon--sky" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
-              </span>
-              <span class="menu__text">
-                <span class="menu__title">Notification preferences</span>
-                <span class="menu__sub">Push · Email · SMS</span>
-              </span>
-              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
-            </a>
-            <a class="menu__item" href="change-password.html">
-              <span class="menu__icon menu__icon--amber" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-              </span>
-              <span class="menu__text">
-                <span class="menu__title">Change password</span>
-                <span class="menu__sub">Email &amp; password login</span>
               </span>
               <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
             </a>
@@ -604,88 +773,80 @@
               </span>
               <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
             </a>
-            <button type="button" class="menu__item menu__item--danger" id="delete-open">
-              <span class="menu__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 7h16M9 7V5h6v2M8 7l1 12h6l1-12"/></svg>
-              </span>
-              <span class="menu__text">
-                <span class="menu__title">Delete account</span>
-                <span class="menu__sub">Request data deletion</span>
-              </span>
-              <svg class="menu__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
-            </button>
           </div>
 
           <div class="foot">
             <strong><img src="assets/glowtap-mark.svg" alt="" /> GlowTap</strong><br />
             Customer app · Wireframe v1
+            <div class="foot__more"><a href="settings.html">More options</a></div>
           </div>
         </div>
       </div>
 
-      <div class="sheet-backdrop" id="del-backdrop" hidden></div>
-      <div class="sheet" id="del-sheet" role="dialog" aria-modal="true" aria-labelledby="del-title" hidden>
+      <div class="dock">
+        <nav class="tabbar" aria-label="Primary">
+          <a class="tab" href="home.html" title="Home" aria-label="Home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+          </a>
+          <a class="tab" href="bookings.html" title="Bookings" aria-label="Bookings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5V7M16 3.5V7"/></svg>
+          </a>
+          <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
+            <span class="dot" aria-hidden="true"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+          </a>
+          <a class="tab is-active" href="profile.html" title="Profile" aria-label="Profile" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0Z"/></svg>
+          </a>
+        </nav>
+        <button type="button" class="dock-search" id="dock-search" title="Search" aria-label="Search salons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-backdrop" id="search-backdrop" hidden></div>
+      <div class="sheet" id="search-sheet" role="dialog" aria-modal="true" aria-labelledby="search-sheet-title" hidden>
         <div class="sheet__handle" aria-hidden="true"></div>
-        <h2 class="sheet__title" id="del-title">Delete account?</h2>
-        <p class="sheet__sub">We’ll submit a deletion request for Super Admin review. You won’t be able to book until the request is processed.</p>
-        <div class="sheet__actions">
-          <button type="button" class="btn btn--danger" id="del-confirm">Request deletion</button>
-          <button type="button" class="btn btn--ghost" id="del-cancel">Keep account</button>
+        <h2 class="sheet__title" id="search-sheet-title">Search</h2>
+        <p class="sheet__sub">Salon, service, or area</p>
+        <div class="dock-search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="dock-search-input" placeholder="Search salon, service or area" aria-label="Search salons" />
+        </div>
+        <div class="search-suggestions">
+          <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Haircut near me</a>
+          <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Facial · Indiranagar</a>
+          <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Spa under ₹999</a>
         </div>
       </div>
 
-      <nav class="tabbar" aria-label="Primary">
-        <a class="tab" href="home.html" title="Home" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
-        </a>
-        <a class="tab" href="bookings.html" title="Bookings" aria-label="Bookings">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3.5V7M16 3.5V7"/></svg>
-        </a>
-        <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
-          <span class="dot" aria-hidden="true"></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
-        </a>
-        <a class="tab is-active" href="profile.html" title="Profile" aria-label="Profile" aria-current="page">
-          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0Z"/></svg>
-        </a>
-      </nav>
       <div class="home-ind" aria-hidden="true"></div>
     </div>
   </div>
 
   <script>
     (function () {
-      var openBtn = document.getElementById('delete-open');
-      var backdrop = document.getElementById('del-backdrop');
-      var sheet = document.getElementById('del-sheet');
-      var cancel = document.getElementById('del-cancel');
-      var confirm = document.getElementById('del-confirm');
-      if (!openBtn || !backdrop || !sheet) return;
-
-      function openSheet() {
+      var dockSearch = document.getElementById('dock-search');
+      var backdrop = document.getElementById('search-backdrop');
+      var sheet = document.getElementById('search-sheet');
+      var searchInput = document.getElementById('dock-search-input');
+      if (!dockSearch || !backdrop || !sheet) return;
+      function openSearch() {
         backdrop.hidden = false;
         sheet.hidden = false;
         requestAnimationFrame(function () {
           backdrop.classList.add('is-open');
           sheet.classList.add('is-open');
+          if (searchInput) setTimeout(function () { searchInput.focus(); }, 220);
         });
       }
-      function closeSheet() {
+      function closeSearch() {
         backdrop.classList.remove('is-open');
         sheet.classList.remove('is-open');
-        setTimeout(function () {
-          backdrop.hidden = true;
-          sheet.hidden = true;
-        }, 280);
+        setTimeout(function () { backdrop.hidden = true; sheet.hidden = true; }, 280);
       }
-
-      openBtn.addEventListener('click', openSheet);
-      backdrop.addEventListener('click', closeSheet);
-      cancel.addEventListener('click', closeSheet);
-      confirm.addEventListener('click', function () {
-        closeSheet();
-        alert('Deletion request submitted (wireframe).');
-      });
+      dockSearch.addEventListener('click', openSearch);
+      backdrop.addEventListener('click', closeSearch);
     })();
   </script>
 </body>

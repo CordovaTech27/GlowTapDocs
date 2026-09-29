@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Rate experience</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF; --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #ffffff; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: #ffffff;
+    }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px; background: #fff; flex-shrink: 0; }
+    .back { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink); text-decoration: none; background: #fff; }
+    .back svg { width: 18px; height: 18px; }
+    .nav__meta { min-width: 0; flex: 1; }
+    .nav h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .nav p { margin: 1px 0 0; font-size: .72rem; color: var(--muted); font-weight: 600; }
+    .body { flex: 1; overflow-y: auto; padding: 14px 16px 100px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .card {
+      background: #fff; border-radius: 16px; padding: 14px; margin-bottom: 12px;
+      border: 1px solid rgba(123,0,255,.08);
+    }
+    .who { display: flex; gap: 12px; align-items: center; }
+    .who__av { width: 52px; height: 52px; border-radius: 16px; overflow: hidden; background: #eee; flex-shrink: 0; }
+    .who__av img { width: 100%; height: 100%; object-fit: cover; }
+    .who__name { margin: 0; font-weight: 700; font-size: .95rem; }
+    .who__meta { margin: 3px 0 0; font-size: .75rem; color: var(--muted); font-weight: 600; }
+    h2 { margin: 0 0 6px; font-family: Outfit, sans-serif; font-size: 1.05rem; font-weight: 700; }
+    .sub { margin: 0 0 12px; font-size: .8rem; color: var(--muted); }
+    .stars { display: flex; gap: 8px; justify-content: center; margin: 8px 0 4px; }
+    .star {
+      width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--line);
+      background: #fff; color: #CBD5E1; font-size: 1.35rem; cursor: pointer; font-family: inherit;
+    }
+    .star.is-on { color: #F59E0B; border-color: rgba(245,158,11,.45); background: #FFFBEB; }
+    .labels { display: flex; justify-content: space-between; font-size: .7rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+    textarea {
+      width: 100%; min-height: 84px; border-radius: 14px; border: 1.5px solid #E8E4EF;
+      padding: 12px; font-family: inherit; font-size: .85rem; resize: vertical; outline: none;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      border: 1.5px solid var(--line); background: #fff; border-radius: 99px; padding: 8px 12px;
+      font-size: .75rem; font-weight: 700; cursor: pointer; font-family: inherit; color: var(--ink);
+    }
+    .chip.is-on { border-color: transparent; background: var(--grad); color: #fff; }
+    .footer {
+      position: absolute; left: 14px; right: 14px; bottom: 18px; z-index: 30;
+      display: grid; gap: 8px;
+    }
+    .btn {
+      height: 48px; border-radius: 14px; border: none; font-family: inherit; font-weight: 700;
+      font-size: .9rem; cursor: pointer; text-decoration: none; display: grid; place-items: center;
+    }
+    .btn--primary { background: var(--grad); color: #fff; box-shadow: 0 8px 20px rgba(123,0,255,.3); }
+    .btn--primary:disabled { opacity: .5; cursor: not-allowed; }
+    .done {
+      display: none; text-align: center; padding: 40px 16px;
+    }
+    .done.is-on { display: block; }
+    .form.is-hidden { display: none; }
+    .done__check {
+      width: 64px; height: 64px; border-radius: 50%; background: var(--grad); color: #fff;
+      display: grid; place-items: center; margin: 0 auto 14px; font-size: 1.6rem;
+    }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+      .footer { bottom: max(14px, env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="nav">
+          <a class="back" href="bookings.html" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></a>
+          <div class="nav__meta">
+            <h1>Rate experience</h1>
+            <p id="nav-sub">GT-48110 · Blow Dry</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="form" id="form">
+            <div class="card">
+              <div class="who">
+                <div class="who__av"><img src="assets/photos/stylist-1.jpg" alt="" /></div>
+                <div>
+                  <p class="who__name" id="stylist-name">Priya S.</p>
+                  <p class="who__meta">Hairstylist · Luxe Curls — Indiranagar</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Overall experience</h2>
+              <p class="sub">Required · helps other guests</p>
+              <div class="labels"><span>Poor</span><span>Excellent</span></div>
+              <div class="stars" id="stars-overall" data-group="overall"></div>
+            </div>
+
+            <div class="card">
+              <h2>Rate your hairstylist</h2>
+              <p class="sub">We’ll remember this for your next booking</p>
+              <div class="labels"><span>Poor</span><span>Loved them</span></div>
+              <div class="stars" id="stars-stylist" data-group="stylist"></div>
+              <div class="chips" style="margin-top:12px;">
+                <button type="button" class="chip" data-tag="Skilled">Skilled</button>
+                <button type="button" class="chip" data-tag="Friendly">Friendly</button>
+                <button type="button" class="chip" data-tag="On time">On time</button>
+                <button type="button" class="chip" data-tag="Listened">Listened well</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2>Comment <span style="font-weight:600;color:var(--muted);font-size:.8rem;">optional</span></h2>
+              <textarea placeholder="What did you like about Priya’s work?"></textarea>
+            </div>
+          </div>
+
+          <div class="done" id="done">
+            <div class="done__check">✓</div>
+            <h2 style="margin-bottom:6px;">Thanks for rating</h2>
+            <p class="sub" style="margin-bottom:18px;" id="done-msg">Priya S. is saved as a stylist you liked. We’ll highlight them on your next booking.</p>
+            <a class="btn btn--primary" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.&amp;step=2">Book this stylist again</a>
+            <a class="btn" style="margin-top:10px;background:#fff;border:1.5px solid var(--line);color:var(--ink);" href="bookings.html">Back to bookings</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer" id="footer">
+        <button type="button" class="btn btn--primary" id="btn-submit" disabled>Submit rating</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var state = { overall: 0, stylist: 0 };
+      var params = new URLSearchParams(location.search);
+      var stylist = params.get('stylist') || 'Priya S.';
+      var id = params.get('id') || 'GT-48110';
+      document.getElementById('stylist-name').textContent = stylist;
+      document.getElementById('nav-sub').textContent = id + ' · ' + (params.get('svc') || 'Blow Dry');
+      document.getElementById('done-msg').textContent =
+        stylist + ' is saved as a stylist you liked. We’ll highlight them on your next booking.';
+      var bookLink = document.querySelector('#done a.btn--primary');
+      if (bookLink) {
+        bookLink.href = 'book.html?salon=luxe&service=haircut&spec=' + encodeURIComponent(stylist) + '&step=2';
+      }
+
+      function buildStars(wrapId, key) {
+        var wrap = document.getElementById(wrapId);
+        for (var i = 1; i <= 5; i++) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'star';
+          btn.textContent = '★';
+          btn.setAttribute('data-n', String(i));
+          btn.addEventListener('click', function () {
+            state[key] = Number(this.getAttribute('data-n'));
+            wrap.querySelectorAll('.star').forEach(function (s) {
+              s.classList.toggle('is-on', Number(s.getAttribute('data-n')) <= state[key]);
+            });
+            document.getElementById('btn-submit').disabled = !(state.overall && state.stylist);
+          });
+          wrap.appendChild(btn);
+        }
+      }
+      buildStars('stars-overall', 'overall');
+      buildStars('stars-stylist', 'stylist');
+
+      document.querySelectorAll('.chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          chip.classList.toggle('is-on');
+        });
+      });
+
+      document.getElementById('btn-submit').addEventListener('click', function () {
+        document.getElementById('form').classList.add('is-hidden');
+        document.getElementById('done').classList.add('is-on');
+        document.getElementById('footer').style.display = 'none';
+      });
+    })();
+  </script>
+</body>
+</html>

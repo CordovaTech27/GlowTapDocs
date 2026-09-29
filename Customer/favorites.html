@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — Favorites</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #1A2330; --muted: #6B7A88; --line: #E5EAF0; --violet: #7B00FF; --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #7B00FF 0%, #9B2FD9 48%, #FF03C8 100%);
+      --surface: #F7F4FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #ffffff; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: #ffffff;
+    }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #171022, 0 0 0 11px #2c1a42, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px; background: #fff; flex-shrink: 0; }
+    .back { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink); text-decoration: none; background: #fff; }
+    .back svg { width: 18px; height: 18px; }
+    .nav__meta { min-width: 0; flex: 1; }
+    .nav h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.15rem; font-weight: 700; }
+    .nav p { margin: 1px 0 0; font-size: .72rem; color: var(--muted); font-weight: 600; }
+    .body { flex: 1; overflow-y: auto; padding: 14px 16px 28px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .hint {
+      margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #F3EEFF;
+      font-size: .78rem; font-weight: 600; color: #5B21B6;
+    }
+    .section-label {
+      margin: 6px 0 10px; font-family: Outfit, sans-serif; font-size: .85rem; font-weight: 700;
+      color: var(--muted); text-transform: uppercase; letter-spacing: .04em;
+    }
+    .stylist-row { display: grid; gap: 8px; margin-bottom: 16px; }
+    .stylist-card {
+      position: relative; display: flex; align-items: center; gap: 12px;
+      background: #fff; border-radius: 14px; padding: 12px 44px 12px 12px;
+      text-decoration: none; color: inherit; border: 1px solid rgba(123,0,255,.08);
+    }
+    .stylist-card__av {
+      width: 44px; height: 44px; border-radius: 12px; overflow: hidden; background: #F3EEFF; flex-shrink: 0;
+    }
+    .stylist-card__av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .stylist-card strong { display: block; font-size: .9rem; font-weight: 700; }
+    .stylist-card span { display: block; margin-top: 2px; font-size: .72rem; font-weight: 600; color: var(--muted); }
+    .stylist-card__fav {
+      position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
+      width: 32px; height: 32px; border-radius: 50%; border: none; background: #FFE8F6;
+      color: var(--pink); display: grid; place-items: center; cursor: pointer; padding: 0;
+    }
+    .stylist-card__fav svg { width: 15px; height: 15px; }
+    .fav {
+      display: block; text-decoration: none; color: inherit; background: #fff;
+      border-radius: 18px; overflow: hidden; margin-bottom: 12px;
+      border: 1px solid rgba(123,0,255,.08); box-shadow: 0 8px 22px rgba(30,42,50,.06);
+    }
+    .fav__media { position: relative; height: 120px; }
+    .fav__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .fav__heart {
+      position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border-radius: 50%;
+      border: none; background: rgba(255,255,255,.95); color: var(--pink); display: grid; place-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.12); cursor: pointer;
+    }
+    .fav__heart svg { width: 18px; height: 18px; }
+    .fav__body { padding: 12px 14px 14px; }
+    .fav__top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+    .fav__name { margin: 0; font-family: Outfit, sans-serif; font-size: 1rem; font-weight: 700; }
+    .fav__meta { margin: 4px 0 0; font-size: .75rem; color: var(--muted); font-weight: 600; }
+    .fav__stars { color: #F59E0B; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+    .fav__stars.is-high { color: #059669; }
+    .fav__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .fav__tags span {
+      font-size: .68rem; font-weight: 700; padding: 4px 8px; border-radius: 99px;
+      background: #F7F4FA; color: var(--muted);
+    }
+    .fav__actions { display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px; margin-top: 12px; }
+    .btn {
+      height: 40px; border-radius: 12px; display: grid; place-items: center; text-decoration: none;
+      font-weight: 700; font-size: .82rem; border: none; cursor: pointer; font-family: inherit;
+    }
+    .btn--ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+    .btn--primary { background: var(--grad); color: #fff; box-shadow: 0 6px 16px rgba(123,0,255,.28); }
+    .empty {
+      text-align: center; padding: 48px 20px; color: var(--muted);
+    }
+    .empty strong { display: block; color: var(--ink); font-family: Outfit, sans-serif; font-size: 1.1rem; margin-bottom: 6px; }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="nav">
+          <a class="back" href="home.html" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></a>
+          <div class="nav__meta">
+            <h1>Favourites near me</h1>
+            <p id="fav-sub">4 saved · near <span id="fav-near">Indiranagar</span></p>
+          </div>
+        </div>
+        <div class="body">
+          <p class="hint" id="fav-hint">Your saved salons closest to Indiranagar · sorted by distance</p>
+
+          <h2 class="section-label">Favourite hairstylists</h2>
+          <div class="stylist-row">
+            <a class="stylist-card" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.&amp;step=2">
+              <button type="button" class="stylist-card__fav is-on" aria-label="Remove favourite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+              <div class="stylist-card__av"><img src="assets/photos/stylist-1.jpg" alt="" /></div>
+              <div>
+                <strong>Priya S.</strong>
+                <span>Luxe Curls · ★ 4.9</span>
+              </div>
+            </a>
+            <a class="stylist-card" href="book.html?salon=nord&amp;service=haircut&amp;spec=Arjun%20K.&amp;step=2">
+              <button type="button" class="stylist-card__fav is-on" aria-label="Remove favourite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+              <div class="stylist-card__av"><img src="assets/photos/stylist-2.jpg" alt="" style="object-position:40% 30%;" /></div>
+              <div>
+                <strong>Arjun K.</strong>
+                <span>Nord Hair Lab · ★ 4.7</span>
+              </div>
+            </a>
+          </div>
+
+          <h2 class="section-label">Favourite salons</h2>
+
+          <article class="fav">
+            <div class="fav__media">
+              <img src="assets/photos/salon-hair.jpg" alt="" style="object-position:22% 28%;" />
+              <button type="button" class="fav__heart" aria-label="Remove favorite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+            </div>
+            <div class="fav__body">
+              <div class="fav__top">
+                <div>
+                  <h2 class="fav__name">Luxe Curls — <span class="area-name">Indiranagar</span></h2>
+                  <p class="fav__meta"><span class="dist">0.8 km</span> · Open till 8:30 PM</p>
+                </div>
+                <span class="fav__stars is-high">★ 4.8</span>
+              </div>
+              <div class="fav__tags"><span>Hair</span><span>Color</span><span>You liked Priya ★5</span></div>
+              <div class="fav__actions">
+                <a class="btn btn--ghost" href="salon-detail.html?id=bandra-glow">View</a>
+                <a class="btn btn--primary" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.">Book Priya</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="fav">
+            <div class="fav__media">
+              <img src="assets/photos/salon-makeup.jpg" alt="" style="object-position:70% 40%; filter:hue-rotate(-12deg);" />
+              <button type="button" class="fav__heart" aria-label="Remove favorite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+            </div>
+            <div class="fav__body">
+              <div class="fav__top">
+                <div>
+                  <h2 class="fav__name">Bloom &amp; Brow</h2>
+                  <p class="fav__meta"><span class="dist">1.4 km</span> · Open till 9:00 PM</p>
+                </div>
+                <span class="fav__stars is-high">★ 4.6</span>
+              </div>
+              <div class="fav__tags"><span>Brows</span><span>Makeup</span></div>
+              <div class="fav__actions">
+                <a class="btn btn--ghost" href="salon-detail.html?id=bloom">View</a>
+                <a class="btn btn--primary" href="book.html?salon=bloom&amp;service=blowdry">Book again</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="fav">
+            <div class="fav__media">
+              <img src="assets/photos/salon-mens.jpg" alt="" style="object-position:40% 55%; filter:hue-rotate(18deg);" />
+              <button type="button" class="fav__heart" aria-label="Remove favorite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+            </div>
+            <div class="fav__body">
+              <div class="fav__top">
+                <div>
+                  <h2 class="fav__name">Nord Hair Lab</h2>
+                  <p class="fav__meta"><span class="dist">2.1 km</span> · Open till 8:00 PM</p>
+                </div>
+                <span class="fav__stars is-high">★ 4.7</span>
+              </div>
+              <div class="fav__tags"><span>Men’s</span><span>You liked Arjun ★4</span></div>
+              <div class="fav__actions">
+                <a class="btn btn--ghost" href="salon-detail.html?id=nord">View</a>
+                <a class="btn btn--primary" href="book.html?salon=nord&amp;service=haircut&amp;spec=Arjun%20K.">Book Arjun</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="fav">
+            <div class="fav__media">
+              <img src="assets/photos/salon-spa.jpg" alt="" style="object-position:10% 20%; filter:saturate(1.2);" />
+              <button type="button" class="fav__heart" aria-label="Remove favorite"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg></button>
+            </div>
+            <div class="fav__body">
+              <div class="fav__top">
+                <div>
+                  <h2 class="fav__name">Aura Spa Retreat</h2>
+                  <p class="fav__meta"><span class="dist">3.2 km</span> · Open till 9:30 PM</p>
+                </div>
+                <span class="fav__stars is-high">★ 4.9</span>
+              </div>
+              <div class="fav__tags"><span>Spa</span><span>Facial</span></div>
+              <div class="fav__actions">
+                <a class="btn btn--ghost" href="salon-detail.html?id=aura">View</a>
+                <a class="btn btn--primary" href="book.html?salon=aura&amp;service=blowdry">Book again</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var near = new URLSearchParams(location.search).get('near') || 'Indiranagar';
+      var nearEl = document.getElementById('fav-near');
+      var hint = document.getElementById('fav-hint');
+      var sub = document.getElementById('fav-sub');
+      if (nearEl) nearEl.textContent = near;
+      if (hint) hint.textContent = 'Your saved salons closest to ' + near + ' · sorted by distance';
+      document.querySelectorAll('.area-name').forEach(function (el) { el.textContent = near; });
+
+      document.querySelectorAll('.fav__heart, .stylist-card__fav').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var card = btn.closest('.fav') || btn.closest('.stylist-card');
+          if (card) card.remove();
+          var left = document.querySelectorAll('.fav').length;
+          if (sub) sub.innerHTML = left + ' saved · near <span id="fav-near">' + near + '</span>';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

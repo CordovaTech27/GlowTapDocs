@@ -22,7 +22,7 @@
     body {
       font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
       -webkit-font-smoothing: antialiased;
-      background: #100818;
+      background: #ffffff;
       color: var(--ink);
       display: flex;
       align-items: center;
@@ -37,10 +37,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background:
-        radial-gradient(ellipse 55% 40% at 75% 5%, rgba(123, 0, 255, 0.35), transparent 60%),
-        radial-gradient(ellipse 45% 35% at 15% 95%, rgba(255, 3, 200, 0.2), transparent 55%),
-        #100818;
+      background: #ffffff;
     }
     .stage {
       position: relative;
@@ -584,6 +581,31 @@
       color: var(--muted);
       font-weight: 500;
     }
+    .booking__stylist {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: -2px 0 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .booking__stylist .heart {
+      width: 15px;
+      height: 15px;
+      color: var(--pink);
+      flex-shrink: 0;
+    }
+    .booking__stylist .heart.is-off { color: #CBD5E1; }
+    .booking__stylist .fav-tag {
+      font-size: 0.64rem;
+      font-weight: 800;
+      color: var(--pink);
+      background: #FFE8F6;
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
     .booking__when {
       display: flex;
       align-items: center;
@@ -614,6 +636,42 @@
       font-weight: 700;
       font-size: 0.95rem;
     }
+    .booking__actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .booking__again {
+      display: grid;
+      place-items: center;
+      height: 40px;
+      padding: 0 14px;
+      border-radius: 12px;
+      background: var(--grad);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 14px rgba(123, 0, 255, 0.22);
+    }
+    .booking__again:active { transform: scale(0.98); }
+    .booking__details {
+      display: grid;
+      place-items: center;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 12px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
 
     .empty {
       text-align: center;
@@ -638,7 +696,7 @@
       text-decoration: none;
     }
 
-    .tabbar {
+    .dock {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
@@ -646,10 +704,22 @@
       z-index: 30;
       display: flex;
       align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: calc(100% - 28px);
+    }
+    .tabbar {
+      position: relative;
+      left: auto;
+      transform: none;
+      bottom: auto;
+      z-index: 1;
+      display: flex;
+      align-items: center;
       justify-content: center;
       gap: 2px;
       width: max-content;
-      max-width: calc(100% - 48px);
+      max-width: none;
       padding: 6px;
       background: rgba(28, 28, 30, 0.92);
       backdrop-filter: blur(20px);
@@ -657,6 +727,32 @@
       border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+    }
+    .dock-search {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(28, 28, 30, 0.92);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s;
+      text-decoration: none;
+    }
+    .dock-search:active { transform: scale(0.94); }
+    .dock-search svg {
+      width: 22px;
+      height: 22px;
+      stroke: #fff;
+      stroke-width: 2.2;
+      color: #fff;
     }
     .tab {
       position: relative;
@@ -684,6 +780,94 @@
       right: 10px;
       border: 1.5px solid rgba(28, 28, 30, 0.92);
     }
+    .sheet-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      background: rgba(18, 12, 28, 0.42);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+      border-radius: inherit;
+    }
+    .sheet-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      background: #fff;
+      border-radius: 24px 24px 0 0;
+      padding: 10px 18px 28px;
+      transform: translateY(110%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 -12px 40px rgba(30, 42, 50, 0.18);
+    }
+    .sheet.is-open { transform: translateY(0); }
+    .sheet__handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: #E5EAF0;
+      margin: 4px auto 14px;
+    }
+    .sheet__title {
+      font-family: Outfit, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 4px;
+    }
+    .sheet__sub {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .dock-search-field {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F7F4FA;
+      border: 1.5px solid #E8E4EF;
+      border-radius: 14px;
+      padding: 12px 12px 12px 14px;
+    }
+    .dock-search-field svg { width: 18px; height: 18px; color: var(--muted); flex-shrink: 0; }
+    .dock-search-field input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 0;
+    }
+    .search-suggestions {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      margin-top: 12px;
+    }
+    .search-suggestions a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 8px;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      border-radius: 10px;
+    }
+    .search-suggestions a:active { background: #F7F4FA; }
+    .search-suggestions a svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
     .home-ind {
       position: absolute;
       bottom: 7px;
@@ -703,7 +887,8 @@
       .stage { width: 100%; height: 100dvh; animation: none; }
       .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
       .screen { padding-top: max(12px, env(safe-area-inset-top)); }
-      .tabbar { bottom: max(16px, env(safe-area-inset-bottom)); }
+      .tabbar { bottom: auto; }
+      .dock { bottom: max(16px, env(safe-area-inset-bottom)); }
       .body { padding-bottom: 100px; }
     }
   </style>
@@ -768,7 +953,7 @@
                 </a>
 
                 <a class="next-card next-card--photo" href="booking-detail.html?id=GT-48302">
-                  <img class="next-card__bg" src="assets/salon-bg.png" alt="" style="object-position: 70% 40%;" />
+                  <img class="next-card__bg" src="assets/photos/salon-facial.jpg" alt="" style="object-position: 50% 35%;" />
                   <div class="next-card__veil" aria-hidden="true"></div>
                   <div class="next-card__photo-thumb" aria-hidden="true">
                     <img src="assets/glowtap-mark.svg" alt="" />
@@ -819,7 +1004,7 @@
                 <span class="badge badge--confirmed">Confirmed</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:22% 28%;" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-hair.jpg" alt="" style="object-position:22% 28%;" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Luxe Curls — Indiranagar</h3>
                   <p class="booking__service">Haircut &amp; Style · Priya S.</p>
@@ -841,7 +1026,7 @@
                 <span class="badge badge--confirmed">Confirmed</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:70% 40%; filter:hue-rotate(-12deg);" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-facial.jpg" alt="" style="object-position:50% 35%;" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Bloom &amp; Brow</h3>
                   <p class="booking__service">Hydra Facial · Ananya</p>
@@ -863,7 +1048,7 @@
                 <span class="badge badge--booked">Booked</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:40% 55%; filter:hue-rotate(18deg);" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-interior.jpg" alt="" style="object-position:45% 50%;" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Nord Hair Lab</h3>
                   <p class="booking__service">Signature Cut · Arjun</p>
@@ -885,7 +1070,7 @@
                 <span class="badge badge--confirmed">Confirmed</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:10% 20%; filter:saturate(1.15);" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-spa.jpg" alt="" style="object-position:10% 20%;" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Aura Spa Retreat</h3>
                   <p class="booking__service">Deep Tissue · Meera</p>
@@ -903,16 +1088,20 @@
           </div>
 
           <div class="panel" id="panel-past" data-view="past">
-            <a class="booking" href="booking-detail.html?id=GT-48110" data-q="luxe curls completed">
+            <article class="booking" data-q="luxe curls completed priya rate blow dry">
               <div class="booking__top">
                 <span class="booking__id">GT-48110</span>
                 <span class="badge badge--completed">Completed</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:22% 28%;" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-color.jpg" alt="" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Luxe Curls — Indiranagar</h3>
-                  <p class="booking__service">Blow Dry · Priya S.</p>
+                  <p class="booking__service">Blow Dry</p>
+                  <div class="booking__stylist">
+                    <svg class="heart is-off" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                    Hairstylist · Priya S.
+                  </div>
                   <div class="booking__when">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
                     12 Aug · 2:00 PM
@@ -920,21 +1109,91 @@
                 </div>
               </div>
               <div class="booking__foot">
-                <span class="booking__pay"><strong>Rate experience</strong></span>
+                <span class="booking__pay"><a href="rate.html?id=GT-48110&amp;stylist=Priya%20S.&amp;svc=Blow%20Dry" style="color:var(--violet);font-weight:700;text-decoration:none;">Rate hairstylist</a></span>
                 <span class="booking__amt">₹499</span>
               </div>
-            </a>
+              <div class="booking__actions">
+                <a class="booking__again" href="book.html?salon=luxe&amp;service=blowdry&amp;spec=Priya%20S.&amp;step=2">Book again · Priya S.</a>
+                <a class="booking__details" href="booking-detail.html?id=GT-48110">Details</a>
+              </div>
+            </article>
 
-            <a class="booking" href="booking-detail.html?id=GT-48088" data-q="aura spa cancelled">
+            <article class="booking" data-q="luxe curls rated priya favourite haircut">
+              <div class="booking__top">
+                <span class="booking__id">GT-48055</span>
+                <span class="badge badge--completed">Completed</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/photos/salon-hair.jpg" alt="" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Luxe Curls — Indiranagar</h3>
+                  <p class="booking__service">Haircut &amp; Style</p>
+                  <div class="booking__stylist">
+                    <svg class="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                    Hairstylist · Priya S.
+                    <span class="fav-tag">Favourite</span>
+                  </div>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    28 Jul · 11:30 AM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay" style="color:#059669;font-weight:700;">You rated Priya ★5</span>
+                <span class="booking__amt">₹899</span>
+              </div>
+              <div class="booking__actions">
+                <a class="booking__again" href="book.html?salon=luxe&amp;service=haircut&amp;spec=Priya%20S.&amp;step=2">Book again · Priya S.</a>
+                <a class="booking__details" href="booking-detail.html?id=GT-48055&amp;rated=1">Details</a>
+              </div>
+            </article>
+
+            <article class="booking" data-q="nord rated arjun favourite signature cut">
+              <div class="booking__top">
+                <span class="booking__id">GT-47940</span>
+                <span class="badge badge--completed">Completed</span>
+              </div>
+              <div class="booking__main">
+                <div class="booking__thumb"><img src="assets/photos/salon-mens.jpg" alt="" style="object-position:40% 55%;" /></div>
+                <div class="booking__info">
+                  <h3 class="booking__salon">Nord Hair Lab</h3>
+                  <p class="booking__service">Signature Cut</p>
+                  <div class="booking__stylist">
+                    <svg class="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                    Hairstylist · Arjun K.
+                    <span class="fav-tag">Favourite</span>
+                  </div>
+                  <div class="booking__when">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+                    15 Jul · 6:00 PM
+                  </div>
+                </div>
+              </div>
+              <div class="booking__foot">
+                <span class="booking__pay" style="color:#059669;font-weight:700;">You rated Arjun ★4</span>
+                <span class="booking__amt">₹699</span>
+              </div>
+              <div class="booking__actions">
+                <a class="booking__again" href="book.html?salon=nord&amp;service=haircut&amp;spec=Arjun%20K.&amp;step=2">Book again · Arjun K.</a>
+                <a class="booking__details" href="booking-detail.html?id=GT-47940&amp;rated=1">Details</a>
+              </div>
+            </article>
+
+            <article class="booking" data-q="aura spa cancelled meera swedish massage">
               <div class="booking__top">
                 <span class="booking__id">GT-48088</span>
                 <span class="badge badge--cancelled">Cancelled</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:10% 20%; filter:saturate(1.2);" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-spa.jpg" alt="" style="object-position:60% 40%;" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Aura Spa Retreat</h3>
                   <p class="booking__service">Swedish Massage</p>
+                  <div class="booking__stylist">
+                    <svg class="heart is-off" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                    Therapist · Meera D.
+                  </div>
                   <div class="booking__when">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
                     3 Aug · 11:00 AM
@@ -945,18 +1204,27 @@
                 <span class="booking__pay">Refund initiated</span>
                 <span class="booking__amt">₹1,899</span>
               </div>
-            </a>
+              <div class="booking__actions">
+                <a class="booking__again" href="book.html?salon=aura&amp;service=swedish&amp;spec=Meera%20D.&amp;step=2">Book again · Meera D.</a>
+                <a class="booking__details" href="booking-detail.html?id=GT-48088">Details</a>
+              </div>
+            </article>
 
-            <a class="booking" href="booking-detail.html?id=GT-47901" data-q="nord no-show">
+            <article class="booking" data-q="nord no-show arjun beard trim">
               <div class="booking__top">
                 <span class="booking__id">GT-47901</span>
                 <span class="badge badge--noshow">No-Show</span>
               </div>
               <div class="booking__main">
-                <div class="booking__thumb"><img src="assets/salon-bg.png" alt="" style="object-position:40% 55%; filter:hue-rotate(18deg) grayscale(0.2);" /></div>
+                <div class="booking__thumb"><img src="assets/photos/salon-nails.jpg" alt="" style="object-position:50% 30%;" /></div>
                 <div class="booking__info">
                   <h3 class="booking__salon">Nord Hair Lab</h3>
-                  <p class="booking__service">Beard Trim · Arjun</p>
+                  <p class="booking__service">Beard Trim</p>
+                  <div class="booking__stylist">
+                    <svg class="heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.5 12.6 12 20l-7.5-7.4a5 5 0 0 1 7.1-7.1l.4.4.4-.4a5 5 0 0 1 7.1 7.1Z"/></svg>
+                    Hairstylist · Arjun K.
+                    <span class="fav-tag">Favourite</span>
+                  </div>
                   <div class="booking__when">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
                     28 Jul · 7:00 PM
@@ -967,7 +1235,11 @@
                 <span class="booking__pay">Unpaid</span>
                 <span class="booking__amt">₹349</span>
               </div>
-            </a>
+              <div class="booking__actions">
+                <a class="booking__again" href="book.html?salon=nord&amp;service=beard&amp;spec=Arjun%20K.&amp;step=2">Book again · Arjun K.</a>
+                <a class="booking__details" href="booking-detail.html?id=GT-47901">Details</a>
+              </div>
+            </article>
           </div>
 
           <div class="panel" id="panel-all" data-view="all">
@@ -976,24 +1248,72 @@
         </div>
       </div>
 
-      <nav class="tabbar" aria-label="Primary">
-        <a class="tab" href="home.html" title="Home" aria-label="Home">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
-        </a>
-        <a class="tab is-active" href="bookings.html" title="Bookings" aria-label="Bookings" aria-current="page">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3.5h10a.5.5 0 0 1 .5.5v1.5H6.5V4a.5.5 0 0 1 .5-.5Zm-2 3h14A1.5 1.5 0 0 1 20.5 8v12A1.5 1.5 0 0 1 19 21.5H5A1.5 1.5 0 0 1 3.5 20V8A1.5 1.5 0 0 1 5 6.5ZM8 11h3v3H8v-3Zm5 0h3v3h-3v-3ZM8 16h3v3H8v-3Zm5 0h3v3h-3v-3Z"/></svg>
-        </a>
-        <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
-          <span class="dot" aria-hidden="true"></span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
-        </a>
-        <a class="tab" href="profile.html" title="Profile" aria-label="Profile">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0"/></svg>
-        </a>
-      </nav>
+      <div class="dock">
+        <nav class="tabbar" aria-label="Primary">
+          <a class="tab" href="home.html" title="Home" aria-label="Home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z"/></svg>
+          </a>
+          <a class="tab is-active" href="bookings.html" title="Bookings" aria-label="Bookings" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 3.5h10a.5.5 0 0 1 .5.5v1.5H6.5V4a.5.5 0 0 1 .5-.5Zm-2 3h14A1.5 1.5 0 0 1 20.5 8v12A1.5 1.5 0 0 1 19 21.5H5A1.5 1.5 0 0 1 3.5 20V8A1.5 1.5 0 0 1 5 6.5ZM8 11h3v3H8v-3Zm5 0h3v3h-3v-3ZM8 16h3v3H8v-3Zm5 0h3v3h-3v-3Z"/></svg>
+          </a>
+          <a class="tab" href="notifications.html" title="Alerts" aria-label="Alerts">
+            <span class="dot" aria-hidden="true"></span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6.5 9a5.5 5.5 0 0 1 11 0c0 6.5 2.5 6.5 2.5 8.5H4c0-2 2.5-2 2.5-8.5"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>
+          </a>
+          <a class="tab" href="profile.html" title="Profile" aria-label="Profile">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 19.5a7 7 0 0 1 14 0"/></svg>
+          </a>
+        </nav>
+        <button type="button" class="dock-search" id="dock-search" title="Search" aria-label="Search salons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+      </div>
+
+      <div class="sheet-backdrop" id="search-backdrop" hidden></div>
+      <div class="sheet" id="search-sheet" role="dialog" aria-modal="true" aria-labelledby="search-sheet-title" hidden>
+        <div class="sheet__handle" aria-hidden="true"></div>
+        <h2 class="sheet__title" id="search-sheet-title">Search</h2>
+        <p class="sheet__sub">Salon, service, or area</p>
+        <div class="dock-search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="dock-search-input" placeholder="Search salon, service or area" aria-label="Search salons" />
+        </div>
+        <div class="search-suggestions">
+          <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Haircut near me</a>
+          <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Facial · Indiranagar</a>
+          <a href="home.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg> Spa under ₹999</a>
+        </div>
+      </div>
+
       <div class="home-ind" aria-hidden="true"></div>
     </div>
   </div>
+
+  <script>
+    (function () {
+      var dockSearch = document.getElementById('dock-search');
+      var backdrop = document.getElementById('search-backdrop');
+      var sheet = document.getElementById('search-sheet');
+      var searchInput = document.getElementById('dock-search-input');
+      if (!dockSearch || !backdrop || !sheet) return;
+      function openSearch() {
+        backdrop.hidden = false;
+        sheet.hidden = false;
+        requestAnimationFrame(function () {
+          backdrop.classList.add('is-open');
+          sheet.classList.add('is-open');
+          if (searchInput) setTimeout(function () { searchInput.focus(); }, 220);
+        });
+      }
+      function closeSearch() {
+        backdrop.classList.remove('is-open');
+        sheet.classList.remove('is-open');
+        setTimeout(function () { backdrop.hidden = true; sheet.hidden = true; }, 280);
+      }
+      dockSearch.addEventListener('click', openSearch);
+      backdrop.addEventListener('click', closeSearch);
+    })();
+  </script>
 
   <script>
     (function () {
@@ -1013,7 +1333,7 @@
         allPanel.appendChild(label);
 
         [panels.upcoming, panels.past].forEach(function (panel) {
-          panel.querySelectorAll('a.booking').forEach(function (node) {
+          panel.querySelectorAll('.booking').forEach(function (node) {
             allPanel.appendChild(node.cloneNode(true));
           });
         });

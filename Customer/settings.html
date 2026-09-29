@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GlowTap Customer — More options</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap" />
+  <style>
+    :root {
+      --ink: #241828; --muted: #7A6E78; --line: #EDE4EC; --violet: #8B00E8; --pink: #FF03C8;
+      --grad: linear-gradient(100deg, #8B00E8 0%, #C026D3 48%, #FF03C8 100%);
+      --surface: #FBF7FA; --phone-w: 390px; --phone-h: 844px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif; background: #ffffff; color: var(--ink);
+      display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: 24px 16px;
+    }
+    .studio {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: #ffffff;
+    }
+    .stage { position: relative; z-index: 1; width: var(--phone-w); height: var(--phone-h); }
+    .phone {
+      width: 100%; height: 100%; border-radius: 42px; overflow: hidden; background: var(--surface);
+      box-shadow: 0 0 0 9px #1a0f18, 0 0 0 11px #3a1a3a, 0 36px 70px rgba(0,0,0,.55);
+      display: flex; flex-direction: column; position: relative;
+    }
+    .island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 110px; height: 32px; background: #050308; border-radius: 20px; z-index: 40; pointer-events: none; }
+    .status { position: absolute; top: 0; left: 0; right: 0; height: 52px; z-index: 35; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 28px 10px; font-size: .72rem; font-weight: 600; pointer-events: none; }
+    .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; padding-top: 52px; }
+    .nav { display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px; background: #fff; flex-shrink: 0; }
+    .back { width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink); text-decoration: none; background: #fff; }
+    .back svg { width: 18px; height: 18px; }
+    .nav h1 { margin: 0; font-family: Outfit, sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .body { flex: 1; overflow-y: auto; padding: 14px 16px 28px; scrollbar-width: none; }
+    .body::-webkit-scrollbar { display: none; }
+    .hint {
+      margin: 0 0 16px; font-size: .78rem; color: var(--muted); line-height: 1.45; font-weight: 500;
+    }
+    .label { margin: 8px 0 8px; font-size: .72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    .menu {
+      background: #fff; border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(139,0,232,.08); margin-bottom: 14px;
+    }
+    .menu a, .menu button {
+      width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px;
+      border: none; border-bottom: 1px solid #F5EEF3; background: #fff;
+      text-decoration: none; color: inherit; font-family: inherit; text-align: left; cursor: pointer;
+    }
+    .menu a:last-child, .menu button:last-child { border-bottom: none; }
+    .menu__title { display: block; font-weight: 700; font-size: .9rem; }
+    .menu__sub { display: block; margin-top: 2px; font-size: .72rem; color: var(--muted); font-weight: 600; }
+    .chev { margin-left: auto; width: 16px; height: 16px; color: #C4B5C8; flex-shrink: 0; }
+    .danger-zone {
+      margin-top: 36px; padding-top: 20px; border-top: 1px dashed #E8DDE6; text-align: center;
+    }
+    .danger-zone p { margin: 0 0 12px; font-size: .72rem; color: #A89AA4; font-weight: 600; line-height: 1.4; }
+    .danger-link {
+      background: none; border: none; color: #C4B5C8; font-size: .72rem; font-weight: 600;
+      text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font-family: inherit;
+    }
+    .danger-link:hover { color: #B91C1C; }
+    .sheet-backdrop {
+      position: absolute; inset: 0; z-index: 50; background: rgba(20,8,22,.45);
+      opacity: 0; pointer-events: none; transition: opacity .22s;
+    }
+    .sheet-backdrop.is-open { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 55;
+      background: #fff; border-radius: 22px 22px 0 0; padding: 14px 16px 22px;
+      transform: translateY(110%); transition: transform .28s ease;
+    }
+    .sheet.is-open { transform: none; }
+    .sheet__handle { width: 40px; height: 4px; border-radius: 99px; background: #EDE4EC; margin: 0 auto 12px; }
+    .sheet__title { margin: 0 0 6px; font-family: Outfit, sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .sheet__sub { margin: 0 0 14px; font-size: .82rem; color: var(--muted); line-height: 1.45; }
+    .btn {
+      width: 100%; height: 48px; border-radius: 14px; border: none; font-family: inherit;
+      font-weight: 700; font-size: .9rem; cursor: pointer; margin-bottom: 8px;
+    }
+    .btn--warn { background: #FFEDD5; color: #C2410C; }
+    .btn--danger { background: #FEE2E2; color: #B91C1C; }
+    .btn--ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+    @media (max-width: 430px) {
+      body { padding: 0; align-items: stretch; }
+      .studio, .island, .status { display: none; }
+      .stage, .phone { width: 100%; height: 100dvh; border-radius: 0; box-shadow: none; }
+      .screen { padding-top: max(12px, env(safe-area-inset-top)); }
+    }
+  </style>
+</head>
+<body>
+  <div class="studio" aria-hidden="true"></div>
+  <div class="stage">
+    <div class="phone">
+      <div class="island" aria-hidden="true"></div>
+      <div class="status" aria-hidden="true"><span>9:41</span><span></span></div>
+      <div class="screen">
+        <div class="nav">
+          <a class="back" href="profile.html" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 6-6 6 6 6"/></svg></a>
+          <h1>More options</h1>
+        </div>
+        <div class="body">
+          <p class="hint">Less common account actions. Everyday settings live on your Profile.</p>
+
+          <p class="label">Legal</p>
+          <div class="menu">
+            <a href="faq.html">
+              <span><span class="menu__title">Privacy policy</span><span class="menu__sub">How we use your data</span></span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+            <a href="faq.html">
+              <span><span class="menu__title">Terms of use</span><span class="menu__sub">Booking &amp; refund rules</span></span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <p class="label">Account status</p>
+          <div class="menu">
+            <button type="button" id="deact-open">
+              <span><span class="menu__title">Temporarily deactivate</span><span class="menu__sub">Hide profile · pause bookings</span></span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg>
+            </button>
+          </div>
+
+          <div class="danger-zone">
+            <p>Need to leave GlowTap permanently?<br />This is hard to undo.</p>
+            <button type="button" class="danger-link" id="delete-open">Delete my account</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+
+      <div class="sheet" id="deact-sheet" role="dialog" aria-modal="true" hidden>
+        <div class="sheet__handle"></div>
+        <h2 class="sheet__title">Deactivate temporarily?</h2>
+        <p class="sheet__sub">Your profile is hidden and new bookings are paused. You can reactivate anytime by signing in again.</p>
+        <button type="button" class="btn btn--warn" id="deact-confirm">Yes, deactivate</button>
+        <button type="button" class="btn btn--ghost" data-close>Keep account active</button>
+      </div>
+
+      <div class="sheet" id="del-sheet" role="dialog" aria-modal="true" hidden>
+        <div class="sheet__handle"></div>
+        <h2 class="sheet__title">Delete account?</h2>
+        <p class="sheet__sub">We’ll submit a deletion request for Super Admin review. Upcoming bookings may be cancelled. This cannot be undone from the app.</p>
+        <button type="button" class="btn btn--danger" id="del-confirm">Yes, request deletion</button>
+        <button type="button" class="btn btn--ghost" data-close>Keep my account</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var backdrop = document.getElementById('sheet-backdrop');
+      var deactSheet = document.getElementById('deact-sheet');
+      var delSheet = document.getElementById('del-sheet');
+      var active = null;
+
+      function openSheet(sheet) {
+        active = sheet;
+        backdrop.hidden = false;
+        sheet.hidden = false;
+        requestAnimationFrame(function () {
+          backdrop.classList.add('is-open');
+          sheet.classList.add('is-open');
+        });
+      }
+      function closeSheet() {
+        if (!active) return;
+        backdrop.classList.remove('is-open');
+        active.classList.remove('is-open');
+        var closing = active;
+        active = null;
+        setTimeout(function () {
+          backdrop.hidden = true;
+          closing.hidden = true;
+        }, 280);
+      }
+
+      document.getElementById('deact-open').addEventListener('click', function () { openSheet(deactSheet); });
+      document.getElementById('delete-open').addEventListener('click', function () { openSheet(delSheet); });
+      document.getElementById('deact-confirm').addEventListener('click', function () { location.href = 'login.html'; });
+      document.getElementById('del-confirm').addEventListener('click', function () { location.href = 'login.html'; });
+      backdrop.addEventListener('click', closeSheet);
+      document.querySelectorAll('[data-close]').forEach(function (btn) {
+        btn.addEventListener('click', closeSheet);
+      });
+    })();
+  </script>
+</body>
+</html>
