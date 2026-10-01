@@ -135,6 +135,22 @@
     .pay label:has(input:checked) {
       border-color: transparent; background: var(--grad); color: #fff;
     }
+    .pay-head { margin: 16px 0 0; font-family: Outfit, sans-serif; font-size: .95rem; font-weight: 700; }
+    .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 12px; }
+    .methods[hidden], .salon-note[hidden], .row[hidden] { display: none; }
+    .method {
+      display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 14px;
+      border: 1.5px solid var(--line); background: #fff; font-family: inherit; cursor: pointer;
+      color: inherit; text-align: left;
+    }
+    .method.is-active { border-color: rgba(123,0,255,.45); box-shadow: 0 0 0 3px rgba(123,0,255,.1); }
+    .method .pay-method__icon { width: 44px; height: 36px; border-radius: 10px; font-size: .58rem; letter-spacing: -.01em; }
+    .method__name { font-weight: 700; font-size: .82rem; }
+    .method__meta { font-size: .66rem; color: var(--muted); margin-top: 1px; }
+    .salon-note {
+      margin: 0 0 12px; padding: 10px 12px; border-radius: 12px; background: #F3EEFF;
+      font-size: .76rem; font-weight: 600; color: #5B21B6; line-height: 1.4;
+    }
     textarea {
       width: 100%; min-height: 72px; border-radius: 14px; border: 1.5px solid #E8E4EF;
       padding: 12px; font-family: inherit; font-size: .85rem; resize: vertical; outline: none;
@@ -180,8 +196,8 @@
       border-color: rgba(123,0,255,.45); box-shadow: 0 0 0 3px rgba(123,0,255,.1);
     }
     .pay-method__icon {
-      width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
-      background: #F3EEFF; color: var(--violet); font-weight: 800; font-size: .78rem; flex-shrink: 0;
+      width: 48px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+      background: #F3EEFF; color: var(--violet); font-weight: 800; font-size: .68rem; flex-shrink: 0;
     }
     .pay-method__icon.card { background: #EEF6FF; color: #2563EB; }
     .pay-method__icon.wallet { background: #FFF4EC; color: #EA580C; }
@@ -278,13 +294,33 @@
               <div class="row"><span>Specialist</span><strong id="sum-spec">Priya S.</strong></div>
               <div class="row"><span>When</span><strong id="sum-when">Tomorrow · 11:30 AM</strong></div>
               <div class="row"><span>Service</span><strong id="sum-price">₹899</strong></div>
-              <div class="row"><span>Online discount</span><strong style="color:#059669;">−₹90</strong></div>
+              <div class="row" id="disc-row"><span>Online discount</span><strong id="sum-disc" style="color:#059669;">−₹90</strong></div>
               <div class="row total"><span>Total</span><strong id="sum-total">₹809</strong></div>
             </div>
+            <h3 class="pay-head">How would you like to pay?</h3>
             <div class="pay">
-              <label><input type="radio" name="pay" value="online" checked /> Pay online</label>
+              <label><input type="radio" name="pay" value="online" checked /> Pay here · online</label>
               <label><input type="radio" name="pay" value="salon" /> Pay at salon</label>
             </div>
+            <div class="methods" id="inline-methods" role="radiogroup" aria-label="Payment method">
+              <button type="button" class="method is-active" data-method="UPI">
+                <span class="pay-method__icon">UPI</span>
+                <span><div class="method__name">UPI</div><div class="method__meta">GPay · PhonePe</div></span>
+              </button>
+              <button type="button" class="method" data-method="Card">
+                <span class="pay-method__icon card">CARD</span>
+                <span><div class="method__name">Card</div><div class="method__meta">Credit · Debit</div></span>
+              </button>
+              <button type="button" class="method" data-method="Wallet">
+                <span class="pay-method__icon wallet">₹</span>
+                <span><div class="method__name">Wallet</div><div class="method__meta">Paytm · Amazon Pay</div></span>
+              </button>
+              <button type="button" class="method" data-method="Netbanking">
+                <span class="pay-method__icon wallet">NET</span>
+                <span><div class="method__name">Netbanking</div><div class="method__meta">All major banks</div></span>
+              </button>
+            </div>
+            <p class="salon-note" id="salon-note" hidden>Pay at the counter after your service — cash, UPI or card. The online discount doesn’t apply.</p>
             <textarea placeholder="Notes to salon (optional)"></textarea>
           </div>
         </div>
@@ -325,7 +361,7 @@
             <span class="pay-method__icon wallet">₹</span>
             <span>
               <div class="pay-method__name">Wallets</div>
-              <div class="pay-method__meta">Amazon Pay · Mobikwik</div>
+              <div class="pay-method__meta">Paytm · Amazon Pay · Mobikwik</div>
             </span>
           </button>
           <div class="sheet__actions">
@@ -352,63 +388,63 @@
         spec: '',
         method: 'UPI',
         salonKey: 'luxe',
-        salonName: 'Luxe Curls � Indiranagar'
+        salonName: 'Luxe Curls — Indiranagar'
       };
 
       var salonCatalog = {
         luxe: {
-          name: 'Luxe Curls � Indiranagar',
+          name: 'Luxe Curls — Indiranagar',
           short: 'Luxe Curls',
-          note: 'From past visits: you rated <strong>Priya ?5</strong> � she�s available below.',
+          note: 'From past visits: you rated <strong>Priya ★5</strong> — she’s available below.',
           services: [
-            { key: 'haircut', name: 'Haircut & Style', price: 899, dur: '45 min', meta: '45 min � Online / Pay at salon' },
-            { key: 'blowdry', name: 'Blow Dry', price: 499, dur: '30 min', meta: '30 min � Online / Pay at salon' },
-            { key: 'color', name: 'Global Color', price: 2499, dur: '90 min', meta: '90 min � Online only' }
+            { key: 'haircut', name: 'Haircut & Style', price: 899, dur: '45 min', meta: '45 min · Online / Pay at salon' },
+            { key: 'blowdry', name: 'Blow Dry', price: 499, dur: '30 min', meta: '30 min · Online / Pay at salon' },
+            { key: 'color', name: 'Global Color', price: 2499, dur: '90 min', meta: '90 min · Online only' }
           ],
           specs: [
-            { name: 'Priya S.', role: 'Senior stylist', photo: 'assets/photos/stylist-1.jpg', rate: '4.9', liked: 'You liked ?5' },
+            { name: 'Priya S.', role: 'Senior stylist', photo: 'assets/photos/stylist-1.jpg', rate: '4.9', liked: 'You liked ★5' },
             { name: 'Kavya M.', role: 'Colorist', photo: 'assets/photos/stylist-3.jpg', rate: '4.8', liked: '' }
           ]
         },
         bloom: {
           name: 'Bloom & Brow',
           short: 'Bloom & Brow',
-          note: 'Glow specialists for skin & brows � pick Neha or Ananya.',
+          note: 'Glow specialists for skin & brows — pick Neha or Ananya.',
           services: [
-            { key: 'facial', name: 'Hydra Facial', price: 1299, dur: '60 min', meta: '60 min � Online / Pay at salon' },
-            { key: 'brow', name: 'Brow Threading', price: 249, dur: '20 min', meta: '20 min � Pay at salon' },
-            { key: 'makeup', name: 'Soft Glam Makeup', price: 1799, dur: '75 min', meta: '75 min � Online only' }
+            { key: 'facial', name: 'Hydra Facial', price: 1299, dur: '60 min', meta: '60 min · Online / Pay at salon' },
+            { key: 'brow', name: 'Brow Threading', price: 249, dur: '20 min', meta: '20 min · Pay at salon' },
+            { key: 'makeup', name: 'Soft Glam Makeup', price: 1799, dur: '75 min', meta: '75 min · Online only' }
           ],
           specs: [
             { name: 'Neha R.', role: 'Facial expert', photo: 'assets/photos/stylist-3.jpg', rate: '4.8', liked: '' },
-            { name: 'Ananya M.', role: 'Brow artist', photo: 'assets/photos/stylist-4.jpg', rate: '4.7', liked: 'You liked ?5' }
+            { name: 'Ananya M.', role: 'Brow artist', photo: 'assets/photos/stylist-4.jpg', rate: '4.7', liked: 'You liked ★5' }
           ]
         },
         nord: {
           name: 'Nord Hair Lab',
           short: 'Nord Hair Lab',
-          note: 'From past visits: you rated <strong>Arjun ?4</strong> � pick him again below.',
+          note: 'From past visits: you rated <strong>Arjun ★4</strong> — pick him again below.',
           services: [
-            { key: 'haircut', name: 'Signature Cut', price: 699, dur: '40 min', meta: '40 min � Online / Pay at salon' },
-            { key: 'beard', name: 'Beard Trim', price: 349, dur: '25 min', meta: '25 min � Pay at salon' },
-            { key: 'keratin', name: 'Keratin Smooth', price: 3499, dur: '120 min', meta: '120 min � Online only' }
+            { key: 'haircut', name: 'Signature Cut', price: 699, dur: '40 min', meta: '40 min · Online / Pay at salon' },
+            { key: 'beard', name: 'Beard Trim', price: 349, dur: '25 min', meta: '25 min · Pay at salon' },
+            { key: 'keratin', name: 'Keratin Smooth', price: 3499, dur: '120 min', meta: '120 min · Online only' }
           ],
           specs: [
-            { name: 'Arjun K.', role: 'Lead barber', photo: 'assets/photos/stylist-2.jpg', rate: '4.7', liked: 'You liked ?4' },
+            { name: 'Arjun K.', role: 'Lead barber', photo: 'assets/photos/stylist-2.jpg', rate: '4.7', liked: 'You liked ★4' },
             { name: 'Rohan P.', role: 'Keratin specialist', photo: 'assets/photos/stylist-1.jpg', rate: '4.6', liked: '' }
           ]
         },
         aura: {
           name: 'Aura Spa Retreat',
           short: 'Aura Spa',
-          note: 'Therapist-led rituals � Meera or Divya for this slot.',
+          note: 'Therapist-led rituals — Meera or Divya for this slot.',
           services: [
-            { key: 'deep', name: 'Deep Tissue', price: 1899, dur: '60 min', meta: '60 min � Online / Pay at salon' },
-            { key: 'swedish', name: 'Swedish Massage', price: 1499, dur: '50 min', meta: '50 min � Online / Pay at salon' },
-            { key: 'stone', name: 'Hot Stone Ritual', price: 2299, dur: '75 min', meta: '75 min � Online only' }
+            { key: 'deep', name: 'Deep Tissue', price: 1899, dur: '60 min', meta: '60 min · Online / Pay at salon' },
+            { key: 'swedish', name: 'Swedish Massage', price: 1499, dur: '50 min', meta: '50 min · Online / Pay at salon' },
+            { key: 'stone', name: 'Hot Stone Ritual', price: 2299, dur: '75 min', meta: '75 min · Online only' }
           ],
           specs: [
-            { name: 'Meera D.', role: 'Lead therapist', photo: 'assets/photos/stylist-4.jpg', rate: '4.9', liked: 'You liked ?5' },
+            { name: 'Meera D.', role: 'Lead therapist', photo: 'assets/photos/stylist-4.jpg', rate: '4.9', liked: 'You liked ★5' },
             { name: 'Divya L.', role: 'Hot stone', photo: 'assets/photos/stylist-3.jpg', rate: '4.8', liked: '' }
           ]
         }
@@ -465,7 +501,7 @@
               '<div class="card__row"><div>' +
                 '<div class="card__title">' + esc(svc.name) + '</div>' +
                 '<div class="card__meta">' + esc(svc.meta) + '</div>' +
-              '</div><div class="card__price">?' + svc.price.toLocaleString('en-IN') + '</div></div>' +
+              '</div><div class="card__price">₹' + svc.price.toLocaleString('en-IN') + '</div></div>' +
             '</button>'
           );
         }).join('');
@@ -484,14 +520,14 @@
             '<button type="button" class="spec' + (active ? ' is-active' : '') + '" data-spec="' + esc(s.name) + '">' +
               '<span class="spec__av"><img src="' + esc(s.photo) + '" alt="" /></span>' +
               '<span><div class="spec__name">' + esc(s.name) + '</div>' +
-              '<div class="spec__meta">' + esc(s.role) + ' � <span class="rate is-high">? ' + esc(s.rate) + '</span></div></span>' +
+              '<div class="spec__meta">' + esc(s.role) + ' · <span class="rate is-high">★ ' + esc(s.rate) + '</span></div></span>' +
               (s.liked ? '<span class="spec__liked">' + esc(s.liked) + '</span>' : '') +
             '</button>'
           );
         }).join('');
         html +=
           '<button type="button" class="spec" data-spec="Auto-assign">' +
-            '<span class="spec__av" style="display:grid;place-items:center;background:#F3EEFF;color:#7B00FF;font-weight:700;">?</span>' +
+            '<span class="spec__av" style="display:grid;place-items:center;background:#F3EEFF;color:#7B00FF;font-weight:700;">⚡</span>' +
             '<span><div class="spec__name">Auto-assign</div><div class="spec__meta">Best available for this slot</div></span>' +
           '</button>';
         wrap.innerHTML = html;
@@ -515,6 +551,18 @@
       var footer = document.getElementById('footer');
       var paySheet = document.getElementById('pay-sheet');
 
+      function payMode() {
+        var checked = document.querySelector('input[name="pay"]:checked');
+        return checked ? checked.value : 'online';
+      }
+
+      function setMethod(method) {
+        state.method = method;
+        document.querySelectorAll('.method, .pay-method').forEach(function (m) {
+          m.classList.toggle('is-active', m.getAttribute('data-method') === method);
+        });
+      }
+
       function openCount() {
         return document.querySelectorAll('#slots .slot:not(:disabled)').length;
       }
@@ -523,12 +571,18 @@
         document.getElementById('sum-svc').textContent = state.svc;
         document.getElementById('sum-dur').textContent = state.dur;
         document.getElementById('sum-spec').textContent = state.spec;
-        document.getElementById('sum-when').textContent = state.date + ' � ' + state.time;
-        document.getElementById('sum-price').textContent = '?' + state.price.toLocaleString('en-IN');
-        var discount = Math.round(state.price * 0.1);
+        document.getElementById('sum-when').textContent = state.date + ' · ' + state.time;
+        document.getElementById('sum-price').textContent = '₹' + state.price.toLocaleString('en-IN');
+        var online = payMode() === 'online';
+        var discount = online ? Math.round(state.price * 0.1) : 0;
         var total = state.price - discount;
-        document.getElementById('sum-total').textContent = '?' + total.toLocaleString('en-IN');
-        document.getElementById('pay-amount').textContent = '?' + total.toLocaleString('en-IN');
+        document.getElementById('sum-disc').textContent = '−₹' + discount.toLocaleString('en-IN');
+        document.getElementById('disc-row').hidden = !online;
+        document.getElementById('inline-methods').hidden = !online;
+        document.getElementById('salon-note').hidden = online;
+        document.getElementById('sum-total').textContent = '₹' + total.toLocaleString('en-IN');
+        document.getElementById('pay-amount').textContent = '₹' + total.toLocaleString('en-IN');
+        if (step === max) btnNext.textContent = online ? 'Pay ₹' + total.toLocaleString('en-IN') : 'Confirm booking';
         document.getElementById('slot-sub').textContent = 'Slots for ' + state.date;
         document.getElementById('slot-count').textContent = openCount() + ' open';
       }
@@ -568,7 +622,7 @@
         stepBars.forEach(function (bar, idx) {
           bar.classList.toggle('is-on', idx <= step);
         });
-        stepLabel.textContent = 'Step ' + (step + 1) + ' of 4 � ' + labels[step];
+        stepLabel.textContent = 'Step ' + (step + 1) + ' of 4 · ' + labels[step];
         btnPrev.style.visibility = step === 0 ? 'hidden' : 'visible';
         btnNext.textContent = step === max ? 'Confirm booking' : 'Continue';
         footer.classList.toggle('single', step === 0);
@@ -581,12 +635,12 @@
         btnNext.disabled = true;
         var q = new URLSearchParams({
           svc: state.svc,
-          when: state.date + ' � ' + state.time,
+          when: state.date + ' · ' + state.time,
           spec: state.spec,
           salon: state.salonName,
           pay: payMode,
-          method: state.method || '',
-          total: String(state.price - Math.round(state.price * 0.1))
+          method: payMode === 'online' ? state.method || '' : '',
+          total: String(payMode === 'online' ? state.price - Math.round(state.price * 0.1) : state.price)
         });
         location.href = 'booking-confirm.html?' + q.toString();
       }
@@ -611,18 +665,16 @@
         });
       });
 
-      document.querySelectorAll('.pay-method').forEach(function (method) {
+      document.querySelectorAll('.method, .pay-method').forEach(function (method) {
         method.addEventListener('click', function () {
-          document.querySelectorAll('.pay-method').forEach(function (m) { m.classList.remove('is-active'); });
-          method.classList.add('is-active');
-          state.method = method.getAttribute('data-method');
+          setMethod(method.getAttribute('data-method'));
         });
       });
 
       document.querySelectorAll('input[name="pay"]').forEach(function (radio) {
         radio.addEventListener('change', function () {
-          if (radio.value === 'online' && radio.checked) openPaySheet();
-          else closePaySheet();
+          closePaySheet();
+          syncSummary();
         });
       });
 

@@ -346,6 +346,87 @@
       box-shadow: 0 8px 20px rgba(123, 0, 255, 0.3);
     }
 
+    .pay-due {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #F3EEFF;
+    }
+    .pay-due[hidden], .paid-hint[hidden] { display: none; }
+    .pay-due p {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #5B21B6;
+      line-height: 1.4;
+    }
+    .pay-due .btn { width: 100%; height: 44px; }
+    .paid-hint {
+      margin: 10px 0 0;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #059669;
+    }
+
+    .sheet {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: flex-end;
+      background: rgba(16, 8, 24, 0.45);
+    }
+    .sheet.is-open { display: flex; }
+    .sheet__panel {
+      width: 100%;
+      background: #fff;
+      border-radius: 22px 22px 0 0;
+      padding: 14px 16px 22px;
+      box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.18);
+    }
+    .sheet__handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 99px;
+      background: #E5EAF0;
+      margin: 0 auto 12px;
+    }
+    .sheet__title { margin: 0 0 4px; font-family: Outfit, sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .sheet__sub { margin: 0 0 14px; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+    .pay-method {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 14px;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      font-family: inherit;
+      cursor: pointer;
+      color: inherit;
+    }
+    .pay-method.is-active { border-color: rgba(123, 0, 255, 0.45); box-shadow: 0 0 0 3px rgba(123, 0, 255, 0.1); }
+    .pay-method__icon {
+      width: 48px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #F3EEFF;
+      color: var(--violet);
+      font-weight: 800;
+      font-size: 0.68rem;
+      flex-shrink: 0;
+    }
+    .pay-method__icon.card { background: #EEF6FF; color: #2563EB; }
+    .pay-method__icon.wallet { background: #FFF4EC; color: #EA580C; }
+    .pay-method__name { font-weight: 700; font-size: 0.9rem; }
+    .pay-method__meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .sheet__actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; margin-top: 12px; }
+
     .home-ind {
       position: absolute;
       bottom: 7px;
@@ -427,8 +508,13 @@
           <div class="card">
             <h3 class="card__title">Payment</h3>
             <div class="row"><span>Amount</span><strong>₹899</strong></div>
-            <div class="row"><span>Method</span><strong>Paid online</strong></div>
-            <div class="row"><span>Txn ID</span><strong>pay_9Kx2mQ</strong></div>
+            <div class="row"><span>Method</span><strong id="pay-method-label">Paid online</strong></div>
+            <div class="row"><span>Txn ID</span><strong id="txn-id">pay_9Kx2mQ</strong></div>
+            <div class="pay-due" id="pay-due" hidden>
+              <p>Due at the salon. Pay here now with UPI, card or wallet and skip the counter.</p>
+              <button type="button" class="btn btn--primary" id="pay-due-btn">Pay now</button>
+            </div>
+            <p class="paid-hint" id="paid-hint" hidden>Payment successful · receipt sent to your email</p>
           </div>
 
           <div class="card">
@@ -482,6 +568,46 @@
         <a class="btn btn--primary" id="rate-link" href="rate.html?id=GT-48110&amp;stylist=Priya%20S.&amp;svc=Blow%20Dry">Rate hairstylist</a>
       </div>
       <div class="home-ind" aria-hidden="true"></div>
+
+      <div class="sheet" id="pay-sheet" aria-hidden="true">
+        <div class="sheet__panel" role="dialog" aria-labelledby="pay-title">
+          <div class="sheet__handle"></div>
+          <h2 class="sheet__title" id="pay-title">Pay for this booking</h2>
+          <p class="sheet__sub">Pay <strong id="pay-amount">₹699</strong> now · <span id="pay-ref">GT-48310</span></p>
+          <button type="button" class="pay-method is-active" data-method="UPI">
+            <span class="pay-method__icon">UPI</span>
+            <span>
+              <div class="pay-method__name">UPI</div>
+              <div class="pay-method__meta">GPay · PhonePe · Paytm</div>
+            </span>
+          </button>
+          <button type="button" class="pay-method" data-method="Card">
+            <span class="pay-method__icon card">CARD</span>
+            <span>
+              <div class="pay-method__name">Credit / Debit card</div>
+              <div class="pay-method__meta">Visa · Mastercard · RuPay</div>
+            </span>
+          </button>
+          <button type="button" class="pay-method" data-method="Wallet">
+            <span class="pay-method__icon wallet">₹</span>
+            <span>
+              <div class="pay-method__name">Wallets</div>
+              <div class="pay-method__meta">Paytm · Amazon Pay · Mobikwik</div>
+            </span>
+          </button>
+          <button type="button" class="pay-method" data-method="Netbanking">
+            <span class="pay-method__icon wallet">NET</span>
+            <span>
+              <div class="pay-method__name">Netbanking</div>
+              <div class="pay-method__meta">All major banks</div>
+            </span>
+          </button>
+          <div class="sheet__actions">
+            <button type="button" class="btn btn--ghost" id="pay-cancel">Cancel</button>
+            <button type="button" class="btn btn--primary" id="pay-confirm">Pay now</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -635,6 +761,39 @@
       }
 
       if (id && bookings[id]) applyBooking(bookings[id]);
+
+      var payDue = document.getElementById('pay-due');
+      var paySheet = document.getElementById('pay-sheet');
+      var payMethod = 'UPI';
+      var current = id && bookings[id];
+      if (current && current.pay === 'Pay at salon') {
+        payDue.hidden = false;
+        document.getElementById('pay-due-btn').textContent = 'Pay ' + current.amount + ' now';
+        document.getElementById('pay-amount').textContent = current.amount;
+        document.getElementById('pay-ref').textContent = id;
+        document.getElementById('txn-id').textContent = 'Due at salon';
+      }
+      function setPaySheet(open) {
+        paySheet.classList.toggle('is-open', open);
+        paySheet.setAttribute('aria-hidden', open ? 'false' : 'true');
+      }
+      document.getElementById('pay-due-btn').addEventListener('click', function () { setPaySheet(true); });
+      document.getElementById('pay-cancel').addEventListener('click', function () { setPaySheet(false); });
+      paySheet.addEventListener('click', function (e) { if (e.target === paySheet) setPaySheet(false); });
+      paySheet.querySelectorAll('.pay-method').forEach(function (m) {
+        m.addEventListener('click', function () {
+          paySheet.querySelectorAll('.pay-method').forEach(function (x) { x.classList.remove('is-active'); });
+          m.classList.add('is-active');
+          payMethod = m.getAttribute('data-method');
+        });
+      });
+      document.getElementById('pay-confirm').addEventListener('click', function () {
+        setPaySheet(false);
+        payDue.hidden = true;
+        document.getElementById('pay-method-label').textContent = 'Paid online · ' + payMethod;
+        document.getElementById('txn-id').textContent = 'pay_' + Math.random().toString(36).slice(2, 8);
+        document.getElementById('paid-hint').hidden = false;
+      });
 
       var favBtn = document.getElementById('fav-stylist');
       var favHint = document.getElementById('fav-hint');
